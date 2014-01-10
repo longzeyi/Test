@@ -29,9 +29,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	int nRequestID = 0;
 	
 	//中证
-	String brokerId = "2030";
-	String userId = "8123890";
-	String password = "123456";
+	String brokerId = "7090";
+	String userId = "81001426";
+	String password = "156613";
 	
 	public MyTraderSpi(JCTPTraderApi traderApi) {
 		this.traderApi = traderApi;

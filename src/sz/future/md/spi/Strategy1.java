@@ -23,7 +23,7 @@ public class Strategy1 extends JCTPMdSpi implements Strategy {
 	private double [] priceCached1 = new double[50000];
 //	private double [] priceCached2 = new double[5000];
 	private int count = 0;
-	private final String INSTRUMENT_ID = "IF1401";
+	private final String INSTRUMENT_ID = "IF1402";
 	
 	public Strategy1(JCTPMdApi mdApi) {
 		this.mdApi = mdApi;
