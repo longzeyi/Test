@@ -24,16 +24,15 @@ public class TestTrader {
 		traderApi = JCTPTraderApi.createFtdcTraderApi(dataPath);
 
 		traderSpi = new MyTraderSpi(traderApi);
-		
 		//注册traderpi
 		traderApi.registerSpi(traderSpi);
-		//注册公有流
+		//订阅公有流
 		traderApi.subscribePublicTopic(THOST_TE_RESUME_TYPE.THOST_TERT_RESTART);
-		//注册私有流
+		//订阅私有流
 		traderApi.subscribePrivateTopic(THOST_TE_RESUME_TYPE.THOST_TERT_RESTART);
 		//注册前置机地址
 		traderApi.registerFront(frontAddr);
-		
+		//初始化API与CTP前置服务器连接
 		traderApi.init();
 //		traderApi.join();
 		TimeUnit.SECONDS.sleep(2);
