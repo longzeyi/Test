@@ -11,14 +11,18 @@ import org.junit.Test;
 
 public class TestTrader {
 	/** 前置机地址 **/
-	static String frontAddr = "tcp://gtja-front8.financial-trading-platform.com:41205";
+//	static String frontAddr = "tcp://gtja-front8.financial-trading-platform.com:41205";
+//	static String frontAddr = "tcp://ctpmn1-front1.citicsf.com:51205";
+//	static String frontAddr = "tcp://front111.ctp.gtjafutures.com:41205";//真实
+	static String frontAddr = "tcp://mn104.ctp.gtja-futures.com:41205";//模拟
+	
 	/** 行情API **/
 	static JCTPTraderApi traderApi;
 	static JCTPTraderSpi traderSpi;
 	
 
 	public static void main(String[] args) throws InterruptedException {
-		String dataPath = "ctpdata/test/";
+		String dataPath = "c:/ctpdata/";
 		
 //		traderApi = JCTPTraderApi.createFtdcTraderApi();
 		traderApi = JCTPTraderApi.createFtdcTraderApi(dataPath);

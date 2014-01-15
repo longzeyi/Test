@@ -29,9 +29,12 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	int nRequestID = 0;
 	
 	//国泰君安
-	String brokerId = "7090";
+	String brokerId = "1038";
 	String userId = "5092581";
 	String password = "888888";
+	
+//	String userId = "81001426";
+//	String password = "156613";
 	
 	public MyTraderSpi(JCTPTraderApi traderApi) {
 		this.traderApi = traderApi;
@@ -58,6 +61,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		System.out.println("TradingDay:" + traderApi.getTradingDay());
 		System.out.println(pRspInfo.getErrorID());
+		System.out.println(pRspInfo.getErrorMsg());
 		System.out.println(pRspUserLogin.getLoginTime());
 		System.out.println(pRspUserLogin.getCZCETime());
 		System.out.println(pRspUserLogin.getDCETime());
