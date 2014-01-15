@@ -7,3 +7,9 @@
 *.target
 /target
 /bin
+/.settings
+./target
+*.con
+*.classpath
+*.project
+*.properties
