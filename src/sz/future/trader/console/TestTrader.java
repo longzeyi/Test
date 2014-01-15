@@ -11,7 +11,7 @@ import org.junit.Test;
 
 public class TestTrader {
 	/** 前置机地址 **/
-	static String frontAddr = "tcp://ctpmn1-front1.citicsf.com:51205";
+	static String frontAddr = "tcp://gtja-front8.financial-trading-platform.com:41205";
 	/** 行情API **/
 	static JCTPTraderApi traderApi;
 	static JCTPTraderSpi traderSpi;
@@ -22,7 +22,6 @@ public class TestTrader {
 		
 //		traderApi = JCTPTraderApi.createFtdcTraderApi();
 		traderApi = JCTPTraderApi.createFtdcTraderApi(dataPath);
-
 		traderSpi = new MyTraderSpi(traderApi);
 		//注册traderpi
 		traderApi.registerSpi(traderSpi);
@@ -34,8 +33,8 @@ public class TestTrader {
 		traderApi.registerFront(frontAddr);
 		//初始化API与CTP前置服务器连接
 		traderApi.init();
-//		traderApi.join();
-		TimeUnit.SECONDS.sleep(2);
+		traderApi.join();
+//		TimeUnit.SECONDS.sleep(2);
 		//回收api和JCTP
 		traderApi.release();
 		

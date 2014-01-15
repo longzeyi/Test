@@ -28,14 +28,15 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	JCTPTraderApi traderApi;
 	int nRequestID = 0;
 	
-	//中证
+	//国泰君安
 	String brokerId = "7090";
-	String userId = "81001426";
-	String password = "156613";
+	String userId = "5092581";
+	String password = "888888";
 	
 	public MyTraderSpi(JCTPTraderApi traderApi) {
 		this.traderApi = traderApi;
 	}
+	@Override
 	public void onFrontConnected() {
 		System.out.println("前置机连接");
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
