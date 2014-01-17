@@ -9,7 +9,7 @@ import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 import org.junit.Test;
 
-public class TestTrader {
+public class TestTrader extends Thread{
 	/** 前置机地址 **/
 //	static String frontAddr = "tcp://gtja-front8.financial-trading-platform.com:41205";
 //	static String frontAddr = "tcp://ctpmn1-front1.citicsf.com:51205";
@@ -17,13 +17,11 @@ public class TestTrader {
 	static String frontAddr = "tcp://mn104.ctp.gtja-futures.com:41205";//模拟
 	
 	/** 行情API **/
-	static JCTPTraderApi traderApi;
-	static JCTPTraderSpi traderSpi;
-	
+	public static JCTPTraderApi traderApi;
+	public static JCTPTraderSpi traderSpi;
 
-	public static void main(String[] args) throws InterruptedException {
+	public void run()  {
 		String dataPath = "c:/ctpdata/";
-		
 //		traderApi = JCTPTraderApi.createFtdcTraderApi();
 		traderApi = JCTPTraderApi.createFtdcTraderApi(dataPath);
 		traderSpi = new MyTraderSpi(traderApi);
@@ -41,6 +39,5 @@ public class TestTrader {
 //		TimeUnit.SECONDS.sleep(2);
 		//回收api和JCTP
 		traderApi.release();
-		
 	}
 }

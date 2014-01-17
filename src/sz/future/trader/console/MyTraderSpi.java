@@ -9,11 +9,13 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionD
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionDetailField;
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradingAccountField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcReqUserLoginField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspUserLoginField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcSettlementInfoConfirmField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcTradeField;
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcTradingAccountField;
 import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 
@@ -57,26 +59,29 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspUserLogin(CThostFtdcRspUserLoginField pRspUserLogin,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		System.out.println("TradingDay:" + traderApi.getTradingDay());
-		System.out.println(pRspInfo.getErrorID());
-		System.out.println(pRspInfo.getErrorMsg());
-		System.out.println(pRspUserLogin.getLoginTime());
-		System.out.println(pRspUserLogin.getCZCETime());
-		System.out.println(pRspUserLogin.getDCETime());
-		System.out.println(pRspUserLogin.getFFEXTime());
-		System.out.println(pRspUserLogin.getSHFETime());
-		System.out.println(pRspUserLogin.getMaxOrderRef());
+		System.out.println("登录时间："+pRspUserLogin.getLoginTime());
+		System.out.println("登录状态："+pRspInfo.getErrorID() + " : " + pRspInfo.getErrorMsg());
+//		System.out.println(pRspUserLogin.getCZCETime());
+//		System.out.println(pRspUserLogin.getDCETime());
+//		System.out.println(pRspUserLogin.getFFEXTime());
+//		System.out.println(pRspUserLogin.getSHFETime());
+		System.out.println("最大OrderRef: "+pRspUserLogin.getMaxOrderRef());
 		
 		//查询持仓明细
 		CThostFtdcQryInvestorPositionDetailField positionField = new CThostFtdcQryInvestorPositionDetailField();
 		positionField.setBrokerID(brokerId);
 		positionField.setInstrumentID("cu1303");
 		positionField.setInvestorID(userId);
-		traderApi.reqQryInvestorPositionDetail(positionField, ++nRequestID);
+		System.out.println("查询持仓明细: "+traderApi.reqQryInvestorPositionDetail(positionField, ++nRequestID));
 		
+		CThostFtdcQryTradingAccountField accountField = new CThostFtdcQryTradingAccountField ();
+		accountField.setBrokerID(brokerId);
+		accountField.setInvestorID(userId);
+		System.out.println("查询资金账户: "+traderApi.reqQryTradingAccount(accountField, ++nRequestID));
 		
 		//确认结算单
 		CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
-		traderApi.reqSettlementInfoConfirm(confirmField, ++nRequestID);
+		System.out.println("确认结算单: "+traderApi.reqSettlementInfoConfirm(confirmField, ++nRequestID));;
 
 		
 		//下单操作
@@ -120,37 +125,43 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		// 自动挂起标志
 		inputOrderField.setIsAutoSuspend(0);
 		
-		traderApi.reqOrderInsert(inputOrderField, ++nRequestID);
+		System.out.println("报单录入请求: "+traderApi.reqOrderInsert(inputOrderField, ++nRequestID));
 	}
 	
 	@Override
+	public void onRspQryTradingAccount(
+			CThostFtdcTradingAccountField pTradingAccount,
+			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+		System.out.println("可用资金："+pTradingAccount.getAvailable());
+	}
+	@Override
 	public void onRtnOrder(CThostFtdcOrderField pOrder) {
-		System.out.println(pOrder.getStatusMsg());
+		System.out.println("报单通知: "+pOrder.getStatusMsg());
 	}
 	
 	@Override
 	public void onRspOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println(pRspInfo.getErrorMsg());
+		System.out.println("报单录入请求响应: "+pRspInfo.getErrorMsg());
 	}
 	
 	@Override
 	public void onRspOrderAction(
 			CThostFtdcInputOrderActionField pInputOrderAction,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println(pRspInfo.getErrorMsg());
+		System.out.println("报单操作请求响应: "+pRspInfo.getErrorMsg());
 	}
 	
 	@Override
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
-		System.out.println(pTrade.getInstrumentID());
+		System.out.println("成交通知: "+pTrade.getInstrumentID());
 	}
 	
 	@Override
 	public void onRspQryInvestorPositionDetail(
 			CThostFtdcInvestorPositionDetailField pInvestorPositionDetail,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("持仓明细查询回调");
+		System.out.println("请求查询投资者持仓明细响应");
 	}
 	
 	
