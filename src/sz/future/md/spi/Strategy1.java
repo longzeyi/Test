@@ -15,6 +15,7 @@ import org.hraink.futures.jctp.md.JCTPMdSpi;
 
 import sz.future.conn.DBConnectionManager;
 import sz.future.domain.DepthMarketData;
+import sz.future.trader.console.TestTrader;
 
 public class Strategy1 extends JCTPMdSpi implements Strategy {
 	
@@ -118,6 +119,7 @@ public class Strategy1 extends JCTPMdSpi implements Strategy {
     	
     	cached(pDepthMarketData.getLastPrice());
     	calculate();
+//    	TestTrader.traderSpi.onFrontDisconnected(0);
 //    	persistence(data);
 	}
 

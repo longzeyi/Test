@@ -3,6 +3,7 @@ package sz.future.md.console;
 import org.hraink.futures.jctp.md.JCTPMdApi;
 
 import sz.future.md.spi.Strategy1;
+import sz.future.trader.console.TestTrader;
 
 /**
  * @author Sean
@@ -19,6 +20,9 @@ public class TestMd {
 	static JCTPMdApi mdApi;
 	
 	public static void main(String[] args) throws InterruptedException {
+		TestTrader tt = new TestTrader();
+		tt.start();
+		Thread.sleep(2000);
 		//创建行情API
 		mdApi = JCTPMdApi.createFtdcTraderApi();
 		//使用策略
