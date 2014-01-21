@@ -12,9 +12,9 @@ import sz.future.trader.console.TestTrader;
 public class TestMd {
 	/** 前置机地址 **/
 //	static String frontAddr = "tcp://asp-sim2-md1.financial-trading-platform.com:26213";
-	static String frontAddr = "tcp://front112.ctp.gtjafutures.com:41213";
+//	static String frontAddr = "tcp://front112.ctp.gtjafutures.com:41213";
 //	static String frontAddr = "tcp://front111.ctp.gtjafutures.com:41213";
-//	static String frontAddr = "tcp://180.169.30.170:41213";
+	static String frontAddr = "tcp://mn101.ctp.gtja-futures.com:41213";
 //	static String frontAddr = "tcp://211.136.142.218:9116";
 	/** 行情API **/
 	static JCTPMdApi mdApi;
