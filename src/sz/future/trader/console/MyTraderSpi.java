@@ -33,7 +33,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	//国泰君安
 	String brokerId = "1038";
 	String userId = "00000015";
-	String password = "123456";
+	String password = "789456123";
 	
 	public MyTraderSpi(JCTPTraderApi traderApi) {
 		this.traderApi = traderApi;
@@ -49,10 +49,10 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		
 		traderApi.reqUserLogin(userLoginField, 112);
 		
-		CThostFtdcInputOrderField pInputOrder = new CThostFtdcInputOrderField();
+//		CThostFtdcInputOrderField pInputOrder = new CThostFtdcInputOrderField();
 		
 		
-		traderApi.reqOrderInsert(pInputOrder, ++nRequestID);
+//		traderApi.reqOrderInsert(pInputOrder, ++nRequestID);
 	}
 	
 	@Override

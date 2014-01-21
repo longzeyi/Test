@@ -39,7 +39,7 @@ public class Strategy1 extends JCTPMdSpi implements Strategy {
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
 		userLoginField.setBrokerID("1038");
 		userLoginField.setUserID("00000015");
-		userLoginField.setPassword("123456");
+		userLoginField.setPassword("789456123");
 		mdApi.reqUserLogin(userLoginField, 112);
 	}
 	
@@ -189,5 +189,8 @@ public class Strategy1 extends JCTPMdSpi implements Strategy {
 		return data;
 	}
 	
-	
+	private void orderInsert(String instrument, double price, boolean directionFlag, boolean positionFlag){
+		
+//		TestTrader.traderApi.reqOrderInsert(pInputOrder, nRequestID);
+	}
 }
