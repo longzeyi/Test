@@ -33,7 +33,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	//国泰君安
 	String brokerId = "1038";
 	String userId = "00000015";
-	String password = "789456123";
+	String password = "789456123"; 
 	
 	public MyTraderSpi(JCTPTraderApi traderApi) {
 		this.traderApi = traderApi;
