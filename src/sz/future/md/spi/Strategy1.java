@@ -39,7 +39,7 @@ public class Strategy1 extends JCTPMdSpi implements Strategy {
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
 		userLoginField.setBrokerID("1038");
 		userLoginField.setUserID("00000015");
-		userLoginField.setPassword("789456123");
+		userLoginField.setPassword("123456");
 		mdApi.reqUserLogin(userLoginField, 112);
 	}
 	

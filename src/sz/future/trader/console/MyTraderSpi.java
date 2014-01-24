@@ -33,7 +33,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	//国泰君安
 	String brokerId = "1038";
 	String userId = "00000015";
-	String password = "789456123"; 
+	String password = "123456"; 
 	
 	public MyTraderSpi(JCTPTraderApi traderApi) {
 		this.traderApi = traderApi;
@@ -99,17 +99,17 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		// 报单价格条件
 		inputOrderField.setOrderPriceType(THOST_FTDC_OPT_LimitPrice);
 		// 买卖方向
-		inputOrderField.setDirection(THOST_FTDC_D_Buy);
+//		inputOrderField.setDirection(THOST_FTDC_D_Buy);
 		//卖空
-//		inputOrderField.setDirection(THOST_FTDC_D_Sell);
+		inputOrderField.setDirection(THOST_FTDC_D_Sell);
 		// 组合开平标志
-		inputOrderField.setCombOffsetFlag("0");
+		inputOrderField.setCombOffsetFlag("3");
 		// 组合投机套保标志
 		inputOrderField.setCombHedgeFlag("1");
 		// 申买、申卖价格
-		inputOrderField.setLimitPrice(16425);
+		inputOrderField.setLimitPrice(16570);
 		// 手数量
-		inputOrderField.setVolumeTotalOriginal(1);
+		inputOrderField.setVolumeTotalOriginal(20);
 		// 有效期类型
 		inputOrderField.setTimeCondition(THOST_FTDC_TC_GFD);
 		// GTD日期
@@ -156,7 +156,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	
 	@Override
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
-		System.out.println("成交通知: "+pTrade.getInstrumentID());
+//		System.out.println("成交通知: "+pTrade.getInstrumentID());
 	}
 	
 	@Override
