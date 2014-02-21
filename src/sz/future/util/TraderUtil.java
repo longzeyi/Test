@@ -18,7 +18,7 @@ import sz.future.trader.comm.M;
 import sz.future.trader.console.TestTrader;
 
 public class TraderUtil {
-	private static int requestID = 0;
+//	private static int requestID = 0;
 
 	/**
 	 * @param instrumentId 合约代码
@@ -38,7 +38,7 @@ public class TraderUtil {
 				// 合约代码
 				inputOrderField.setInstrumentID(instrumentId);
 				///报单引用
-//				inputOrderField.setOrderRef("000000000001");
+				inputOrderField.setOrderRef(instrumentId+(++M.orderRef));
 				// 用户代码
 				inputOrderField.setUserID(ServerParams.USER_ID);
 				// 报单价格条件
@@ -74,7 +74,7 @@ public class TraderUtil {
 				// 自动挂起标志
 				inputOrderField.setIsAutoSuspend(0);
 				
-				int returnMsg = TestTrader.traderApi.reqOrderInsert(inputOrderField, ++requestID);
+				int returnMsg = TestTrader.traderApi.reqOrderInsert(inputOrderField, ++M.requestID);
 				return returnMsg;
 	}
 	
@@ -85,8 +85,7 @@ public class TraderUtil {
 		actionField.setInvestorID(M.userId);
 		actionField.setInstrumentID(M.instrumentId);
 		actionField.setActionFlag('0');//0删除 3修改
-		TestTrader.traderApi.reqOrderAction(actionField, ++requestID);
-		return 0;
+		return TestTrader.traderApi.reqOrderAction(actionField, ++M.requestID);
 	}
 	
 	/**
@@ -98,8 +97,8 @@ public class TraderUtil {
 		positionField.setBrokerID(M.brokerId);
 		positionField.setInstrumentID(M.instrumentId);
 		positionField.setInvestorID(M.userId);
-		System.out.println("查询持仓明细: "+TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++requestID));
-		return 0;
+		System.out.println("查询持仓明细......");
+		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++M.requestID);
 	}
 	
 	/**
@@ -111,8 +110,8 @@ public class TraderUtil {
 		orderField.setBrokerID(M.brokerId);
 		orderField.setInstrumentID(M.instrumentId);
 		orderField.setInvestorID(M.userId);
-		System.out.println("查询报单: "+TestTrader.traderApi.reqQryOrder(orderField, ++requestID));
-		return 0;
+		System.out.println("查询报单......");
+		return TestTrader.traderApi.reqQryOrder(orderField, ++M.requestID);
 	}
 	
 	/**
@@ -124,7 +123,8 @@ public class TraderUtil {
 		tradeField.setBrokerID(M.brokerId);
 		tradeField.setInstrumentID(M.instrumentId);
 		tradeField.setInvestorID(M.userId);
-		System.out.println("查询成交: "+TestTrader.traderApi.reqQryTrade(tradeField, ++requestID));
-		return 0;
+		tradeField.setTradeID(M.instrumentId+M.orderRef);
+		System.out.println("查询成交......");
+		return TestTrader.traderApi.reqQryTrade(tradeField, ++M.requestID);
 	}
 }

@@ -76,21 +76,22 @@ public class Strategy1 extends JCTPMdSpi {
 	}
 
 	public int calculate() {
+		int returnMsg = 0;
 		System.err.println("===============================================");
 			int i = M.count;
 			//第一次入场
 			if (Global.positionPrice == 0){
 				double enterFlag = M.priceArray[i-M.interval] - M.priceArray[i] ;
 				if (enterFlag > 1) {
-					TraderUtil.orderInsert(M.instrumentId, false, 1, "0", M.lowerLimitPrice);//开仓卖空
-					TraderUtil.qryTrade();
+					returnMsg = TraderUtil.orderInsert(M.instrumentId, false, 1, "0", M.lowerLimitPrice);//开仓卖空
+					System.out.println("a: "+ TraderUtil.qryTrade());
 //					shortSelling(Global.priceB1Array[i]);//卖空
 				} else if (enterFlag < 1) {
-					TraderUtil.orderInsert(M.instrumentId, true, 1, "0", M.upperLimitPrice);//开仓买多
-					TraderUtil.qryTrade();
+					returnMsg = TraderUtil.orderInsert(M.instrumentId, true, 1, "0", M.upperLimitPrice);//开仓买多
+					System.out.println("b: "+ TraderUtil.qryTrade());
 //					buyingLong(Global.priceS1Array[i]);//买多
 				}
-				return 0;
+				return returnMsg;
 			}
 //    		TraderUtil.orderInsert(M.instrumentId, true, 1, "3", M.upperLimitPrice);//平今天卖空的订单
 //    		TraderUtil.orderInsert(M.instrumentId, false, 1, "3", M.lowerLimitPrice);//平今天买多的订单
@@ -104,16 +105,16 @@ public class Strategy1 extends JCTPMdSpi {
 			M.level1 = M.priceArray[i-2];
 			
 			if((M.level3 < M.level2) && (M.level2 < M.level1) && (M.level1 < Global.priceArray[i]) && (Global.priceArray[i] - M.level3) > Global.floatSpace){//up
-				TraderUtil.orderInsert(M.instrumentId, true, 1, "3", M.upperLimitPrice);
-				//平仓买多
-				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
-				buyingLong(Global.priceS1Array[i]);
+//				TraderUtil.orderInsert(M.instrumentId, true, 1, "3", M.upperLimitPrice);
+//				//平仓买多
+//				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
+//				buyingLong(Global.priceS1Array[i]);
 			}
 			if ((M.level3 > M.level2) && (M.level2 > M.level1) && (M.level1 > Global.priceArray[i]) && (Global.priceArray[i] - M.level3) < Global.floatSpace) {//down
-				TraderUtil.orderInsert(M.instrumentId, false, 1, "3", M.lowerLimitPrice);
-				//平仓卖空
-				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
-				shortSelling(Global.priceB1Array[i]);
+//				TraderUtil.orderInsert(M.instrumentId, false, 1, "3", M.lowerLimitPrice);
+//				//平仓卖空
+//				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
+//				shortSelling(Global.priceB1Array[i]);
 			}
 		return 0;
 	}

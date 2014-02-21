@@ -169,10 +169,16 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	 */
 	@Override
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
-		System.out.println("成交通知: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume());
+		System.out.println("成交回报: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume() + "订单引用：" + pTrade.getOrderRef());
 		M.positionPrice = pTrade.getPrice();
 	}
 	
+	@Override
+	public void onRspQryTrade(CThostFtdcTradeField pTrade,
+			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+		super.onRspQryTrade(pTrade, pRspInfo, nRequestID, bIsLast);
+		System.out.println("成交通知: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume() + "订单引用：" + pTrade.getOrderRef());
+	}
 	/* 
 	 * 请求查询投资者持仓明细响应。当客户端发出请求请求查询投资者持仓明细指令后，交易托管系统返回响应时，该方法会被调用
 	 */

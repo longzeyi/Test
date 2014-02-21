@@ -10,6 +10,8 @@ public class Super {
 	private static final int size = 50000;
 	
 	public static int count = 0;
+	public static int requestID = 0;
+	public static int orderRef = 0;
 	public static double[] priceArray = new double[size];		//最新价
 	public static double[] priceB1Array = new double[size];		//申买价1
 	public static double[] priceS1Array = new double[size];		//申卖价1
