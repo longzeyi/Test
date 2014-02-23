@@ -77,7 +77,7 @@ public class Strategy1 extends JCTPMdSpi {
 
 	public int calculate() {
 		int returnMsg = 0;
-		System.err.println("================================================");
+		System.err.println("================================================+");
 			int i = M.count;
 			//第一次入场
 			if (Global.positionPrice == 0){
