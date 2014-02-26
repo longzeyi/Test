@@ -14,7 +14,6 @@ import org.hraink.futures.jctp.md.JCTPMdSpi;
 
 import sz.future.conn.DBConnectionManager;
 import sz.future.domain.DepthMarketData;
-import sz.future.test.Global;
 import sz.future.trader.comm.M;
 import sz.future.util.TraderUtil;
 
@@ -34,7 +33,7 @@ public class Strategy1 extends JCTPMdSpi {
 		userLoginField.setBrokerID(M.brokerId);
 		userLoginField.setUserID(M.userId);
 		userLoginField.setPassword(M.pwd);
-		mdApi.reqUserLogin(userLoginField, 112);
+		mdApi.reqUserLogin(userLoginField, M.requestID);
 	}
 	
 	/**登录请求响应*/
@@ -59,12 +58,12 @@ public class Strategy1 extends JCTPMdSpi {
 			M.upperLimitPrice = pDepthMarketData.getUpperLimitPrice();
 		}
     	cached(pDepthMarketData.getLastPrice(), pDepthMarketData.getBidVolume1(), pDepthMarketData.getAskPrice1());
-    	M.j++;
+    	M.j++;//获取行情数据多少次计算一次
     	if(M.count > M.calculateThreshold && M.j > M.interval){
-    		calculate();
+    		if(calculate() == 0){
+    			M.j = 0;
+    		}
     	}
-    	
-    	
 //    	persistence(createData(pDepthMarketData));
 	}
 
@@ -77,46 +76,50 @@ public class Strategy1 extends JCTPMdSpi {
 
 	public int calculate() {
 		int returnMsg = 0;
-		System.err.println("================================================+");
+		System.err.println("No." + M.count + "================================================ 方向："+M.currDirection + " 持仓价格：" + M.positionPrice);
 			int i = M.count;
 			//第一次入场
-			if (Global.positionPrice == 0){
+			if (M.positionPrice == 0){
 				double enterFlag = M.priceArray[i-M.interval] - M.priceArray[i] ;
-				if (enterFlag > 1) {
+				if (enterFlag > 0) {
 					returnMsg = TraderUtil.orderInsert(M.instrumentId, false, 1, "0", M.lowerLimitPrice);//开仓卖空
-					System.out.println("a: "+ TraderUtil.qryTrade());
-//					shortSelling(Global.priceB1Array[i]);//卖空
-				} else if (enterFlag < 1) {
+					System.err.println("开仓卖空1手，报价：" + M.lowerLimitPrice);
+//					System.out.println("a: "+ TraderUtil.qryTrade());
+				} else if (enterFlag < 0) {
 					returnMsg = TraderUtil.orderInsert(M.instrumentId, true, 1, "0", M.upperLimitPrice);//开仓买多
-					System.out.println("b: "+ TraderUtil.qryTrade());
-//					buyingLong(Global.priceS1Array[i]);//买多
+					System.err.println("开仓买多1手，报价：" + M.upperLimitPrice);
+//					System.out.println("b: "+ TraderUtil.qryTrade());
+				} else {
+					return -1;
 				}
 				return returnMsg;
 			}
 //    		TraderUtil.orderInsert(M.instrumentId, true, 1, "3", M.upperLimitPrice);//平今天卖空的订单
 //    		TraderUtil.orderInsert(M.instrumentId, false, 1, "3", M.lowerLimitPrice);//平今天买多的订单
 			
-//			double b = Global.priceArray[i-12];
-//			double c = Global.priceArray[i-6];
-//			double d = Global.priceArray[i-2];
-//			
-			M.level3 = M.priceArray[i-12];
-			M.level2 = M.priceArray[i-6];
-			M.level1 = M.priceArray[i-2];
+			M.level3 = M.priceArray[i-M.levelCount3];
+			M.level2 = M.priceArray[i-M.levelCount2];
+			M.level1 = M.priceArray[i-M.levelCount1];
 			
-			if((M.level3 < M.level2) && (M.level2 < M.level1) && (M.level1 < Global.priceArray[i]) && (Global.priceArray[i] - M.level3) > Global.floatSpace){//up
-//				TraderUtil.orderInsert(M.instrumentId, true, 1, "3", M.upperLimitPrice);
-//				//平仓买多
-//				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
-//				buyingLong(Global.priceS1Array[i]);
+			if((M.level3 < M.level2) && (M.level2 < M.level1) && (M.level1 < M.priceArray[i]) && (M.priceArray[i] - M.level3) > M.floatSpace){//up
+				System.err.println("涨啦....................................................................................................................................................................................");
+				//平仓买多(反手买多)
+				if(!M.currDirection){
+					returnMsg = TraderUtil.orderInsert(M.instrumentId, true, 1, "3", M.upperLimitPrice);//平
+					returnMsg = TraderUtil.orderInsert(M.instrumentId, true, 1, "1", M.upperLimitPrice);//开
+					System.err.println("平仓1手卖空，开仓1手买多，报价：" + M.upperLimitPrice);
+				}
 			}
-			if ((M.level3 > M.level2) && (M.level2 > M.level1) && (M.level1 > Global.priceArray[i]) && (Global.priceArray[i] - M.level3) < Global.floatSpace) {//down
-//				TraderUtil.orderInsert(M.instrumentId, false, 1, "3", M.lowerLimitPrice);
-//				//平仓卖空
-//				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
-//				shortSelling(Global.priceB1Array[i]);
+			if ((M.level3 > M.level2) && (M.level2 > M.level1) && (M.level1 > M.priceArray[i]) && Math.abs(M.priceArray[i] - M.level3) > M.floatSpace) {//down
+				System.err.println("跌啦....................................................................................................................................................................................");
+				//平仓卖空(反手卖空)
+				if(M.currDirection) {
+					returnMsg = TraderUtil.orderInsert(M.instrumentId, false, 1, "3", M.lowerLimitPrice);//平
+					returnMsg = TraderUtil.orderInsert(M.instrumentId, false, 1, "1", M.lowerLimitPrice);//开
+					System.err.println("平仓1手买多，开仓1手卖空，报价：" + M.lowerLimitPrice);
+				}
 			}
-		return 0;
+		return returnMsg;
 	}
 
 	public void cached(double lastPrice, double bPrice, double sPrice) {
@@ -125,7 +128,7 @@ public class Strategy1 extends JCTPMdSpi {
 		M.priceS1Array[M.count] = sPrice;
 		M.count++;
 	}
-
+	
 	public void persistence(Object obj) {
 		Connection conn = DBConnectionManager.getConnection();
 		DepthMarketData data = (DepthMarketData)obj;

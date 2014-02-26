@@ -1,13 +1,8 @@
 package sz.future.trader.console;
 
-import java.util.concurrent.TimeUnit;
-
 import org.hraink.futures.ctp.thostftdcuserapidatatype.ThostFtdcUserApiDataTypeLibrary.THOST_TE_RESUME_TYPE;
-import org.hraink.futures.ctp.thosttraderapi.CThostFtdcTraderApi;
-import org.hraink.futures.ctp.thosttraderapi.ThosttraderapiLibrary;
 import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
-import org.junit.Test;
 
 public class TestTrader extends Thread{
 	/** 前置机地址 **/

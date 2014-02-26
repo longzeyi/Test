@@ -7,13 +7,32 @@ import sz.future.util.CsvDataUtil;
 public class Test1 {
 
 
+	private static double ds = 0;
+	private static int count = 0;
 	/**
 	 * @param args
+	 * @throws InterruptedException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
+		for (int i = 100; i <= 900; i+=100) {
+			for (int j = 1; j <= 31; j++) {
+				try {
+					init("F:/baiduyundownload/20130"+(i+j)+"/M05_20130"+(i+j)+".csv");
+				} catch (Exception e) {
+					continue;
+				}
+				strategy();
+				ds += Global.point;
+				count += Global.transactionCount;
+				Global.init();
+				Thread.sleep(500);
+			}
+			
+//			init("F:/baiduyundownload/20131114/M05_20131114.csv");
+		}
+		System.out.println(ds);
+		System.out.println(count);
 //		init("E:/NEW/Book1.csv");
-		init("E:/BaiduYunDownload/20131101/CU01_20131101.csv");
-		strategy();
 	}
 
 	private static void init(String path) {
@@ -34,33 +53,36 @@ public class Test1 {
 			Global.volumeTotalArray[row] = Integer.parseInt(csvList.get(row)[4]);
 			Global.priceS1Array[row] = Double.parseDouble(csvList.get(row)[6]);
 			Global.priceB1Array[row] = Double.parseDouble(csvList.get(row)[8]);
-			System.out.println(Global.priceArray[row]);
+//			System.out.println(Global.priceArray[row]);
 		}
 	}
 	
 	private static void strategy(){
-		for (int i = 10; i < Global.priceArray.length; i=i+Global.interval) {
+		System.err.println("====================================================================================================");
+		for (int i = 40; i < Global.priceArray.length; i=i+Global.interval) {
 			//第一次入场
 			if (Global.positionPrice == 0){
 				double a = Global.priceArray[i-Global.interval] - Global.priceArray[i] ;
-				if (a > 1) {
+				if (a > 0) {
 					shortSelling(Global.priceB1Array[i]);//卖空
-				} else if (a < 1) {
+				} else if (a < 0) {
 					buyingLong(Global.priceS1Array[i]);//买多
+				} else {
+					continue;
 				}
 				continue;
 			}
 			
-			double b = Global.priceArray[i-12];
-			double c = Global.priceArray[i-6];
-			double d = Global.priceArray[i-2];
+			double b = Global.priceArray[i-30];
+			double c = Global.priceArray[i-20];
+			double d = Global.priceArray[i-10];
 			
 			if((b < c) && (c < d) && (d < Global.priceArray[i]) && (Global.priceArray[i] - b) > Global.floatSpace){//up
 				//平仓买多
 				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
 				buyingLong(Global.priceS1Array[i]);
 			}
-			if ((b > c) && (c > d) && (d > Global.priceArray[i]) && (Global.priceArray[i] - b) < Global.floatSpace) {//down
+			if ((b > c) && (c > d) && (d > Global.priceArray[i]) && Math.abs(Global.priceArray[i] - b) < Global.floatSpace) {//down
 				//平仓卖空
 				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
 				shortSelling(Global.priceB1Array[i]);

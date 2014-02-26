@@ -38,7 +38,7 @@ public class TraderUtil {
 				// 合约代码
 				inputOrderField.setInstrumentID(instrumentId);
 				///报单引用
-				inputOrderField.setOrderRef(instrumentId+(++M.orderRef));
+				inputOrderField.setOrderRef(instrumentId+(++M.currOrderRef));
 				// 用户代码
 				inputOrderField.setUserID(ServerParams.USER_ID);
 				// 报单价格条件
@@ -123,7 +123,7 @@ public class TraderUtil {
 		tradeField.setBrokerID(M.brokerId);
 		tradeField.setInstrumentID(M.instrumentId);
 		tradeField.setInvestorID(M.userId);
-		tradeField.setTradeID(M.instrumentId+M.orderRef);
+		tradeField.setTradeID(M.instrumentId+M.currOrderRef);
 		System.out.println("查询成交......");
 		return TestTrader.traderApi.reqQryTrade(tradeField, ++M.requestID);
 	}
