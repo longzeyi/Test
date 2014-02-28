@@ -101,7 +101,7 @@ public class Strategy1 extends JCTPMdSpi {
 			M.level2 = M.priceArray[i-M.levelCount2];
 			M.level1 = M.priceArray[i-M.levelCount1];
 			
-			if((M.level3 < M.level2) && (M.level2 < M.level1) && (M.level1 < M.priceArray[i]) && (M.priceArray[i] - M.level3) > M.floatSpace){//up
+			if((M.level3 < M.level2) && (M.level2 < M.level1) && (M.level1 < M.priceArray[i]) && (M.priceArray[i] - M.positionPrice) > M.floatSpace){//up
 				System.err.println("涨啦....................................................................................................................................................................................");
 				//平仓买多(反手买多)
 				if(!M.currDirection){
@@ -110,7 +110,7 @@ public class Strategy1 extends JCTPMdSpi {
 					System.err.println("平仓1手卖空，开仓1手买多，报价：" + M.upperLimitPrice);
 				}
 			}
-			if ((M.level3 > M.level2) && (M.level2 > M.level1) && (M.level1 > M.priceArray[i]) && Math.abs(M.priceArray[i] - M.level3) > M.floatSpace) {//down
+			if ((M.level3 > M.level2) && (M.level2 > M.level1) && (M.level1 > M.priceArray[i]) && Math.abs(M.priceArray[i] - M.positionPrice) > M.floatSpace) {//down
 				System.err.println("跌啦....................................................................................................................................................................................");
 				//平仓卖空(反手卖空)
 				if(M.currDirection) {

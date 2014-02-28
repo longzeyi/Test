@@ -4,7 +4,7 @@ import java.util.List;
 
 import sz.future.util.CsvDataUtil;
 
-public class Test1 {
+public class Test2 {
 
 
 	private static double ds = 0;
@@ -59,7 +59,7 @@ public class Test1 {
 	
 	private static void strategy(){
 		System.err.println("====================================================================================================");
-		for (int i = 30; i < Global.priceArray.length; i=i+Global.interval) {
+		for (int i = 70; i < Global.priceArray.length; i=i+Global.interval) {
 			//第一次入场
 			if (Global.positionPrice == 0){
 				double a = Global.priceArray[i-Global.interval] - Global.priceArray[i] ;
@@ -73,16 +73,16 @@ public class Test1 {
 				continue;
 			}
 			
-			double b = Global.priceArray[i-30];
-			double c = Global.priceArray[i-20];
-			double d = Global.priceArray[i-10];
+			double b = Global.priceArray[i-18];
+			double c = Global.priceArray[i-12];
+			double d = Global.priceArray[i-6];
 			
-			if((b < c) && (c < d) && (d < Global.priceArray[i]) && ((Global.priceArray[i] - b) > Global.floatSpace) && !Global.type){//up
+			if((b < c) && (c < d) && (d < Global.priceArray[i]) && ((Global.priceArray[i] - Global.positionPrice) > Global.floatSpace) && !Global.type){//up
 				//平仓买多
 				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
 				buyingLong(Global.priceS1Array[i]);
 			}
-			if ((b > c) && (c > d) && (d > Global.priceArray[i]) && ((b - Global.priceArray[i]) > Global.floatSpace) && Global.type) {//down
+			if ((b > c) && (c > d) && (d > Global.priceArray[i]) && ((Global.positionPrice - Global.priceArray[i]) > Global.floatSpace) && Global.type) {//down
 				//平仓卖空
 				closeOutPosition(Global.priceB1Array[i], Global.priceS1Array[i]);
 				shortSelling(Global.priceB1Array[i]);
