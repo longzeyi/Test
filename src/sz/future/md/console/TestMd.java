@@ -20,13 +20,13 @@ public class TestMd {
 	static JCTPMdApi mdApi;
 	
 	public static void main(String[] args) throws InterruptedException {
-		TestTrader tt = new TestTrader();
-		tt.start();
-		Thread.sleep(2000);
+//		TestTrader tt = new TestTrader();
+//		tt.start();
+//		Thread.sleep(2000);
 		//创建行情API
 		mdApi = JCTPMdApi.createFtdcTraderApi();
 		//使用策略
-		Strategy1 mdSpi = new Strategy1(mdApi);
+		MyMdSpi mdSpi = new MyMdSpi(mdApi);
 		//注册spi
 		mdApi.registerSpi(mdSpi);
 		//注册前置机地址

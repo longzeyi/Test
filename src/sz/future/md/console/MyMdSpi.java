@@ -58,7 +58,7 @@ public class MyMdSpi extends JCTPMdSpi {
     	System.out.println("申买量1:"+pDepthMarketData.getBidVolume1());
     	System.out.println("今收盘:"+pDepthMarketData.getClosePrice());
     	System.out.println("当日均价:"+pDepthMarketData.getAveragePrice());
-    	System.out.println("今虚实度:"+pDepthMarketData.getCurrDelta());
+//    	System.out.println("今虚实度:"+pDepthMarketData.getCurrDelta());
     	System.out.println("最高价:"+pDepthMarketData.getHighestPrice());
     	System.out.println("最低价:"+pDepthMarketData.getLowestPrice());
     	System.out.println("最新价:"+pDepthMarketData.getLastPrice());
@@ -66,8 +66,8 @@ public class MyMdSpi extends JCTPMdSpi {
     	System.out.println("持仓量:"+pDepthMarketData.getOpenInterest());
     	System.out.println("今开盘:"+pDepthMarketData.getOpenPrice());
     	System.out.println("昨收盘:"+pDepthMarketData.getPreClosePrice());
-    	System.out.println("昨虚实度:"+pDepthMarketData.getPreDelta());
-    	System.out.println("昨持仓量:"+pDepthMarketData.getPreOpenInterest());
+//    	System.out.println("昨虚实度:"+pDepthMarketData.getPreDelta());
+//    	System.out.println("昨持仓量:"+pDepthMarketData.getPreOpenInterest());
     	System.out.println("上次结算价:"+pDepthMarketData.getPreSettlementPrice());
     	System.out.println("本次结算价:"+pDepthMarketData.getSettlementPrice());
     	System.out.println("交易日:"+pDepthMarketData.getTradingDay());
