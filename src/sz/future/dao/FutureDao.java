@@ -4,10 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,7 +51,7 @@ public class FutureDao {
 		for(int i=0; i < data.size(); i++){
 			insert.append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?),");
 		}
-		String query = "INSERT INTO tb_md_tick_2013 (instrument_id, trading_day, update_time, last_price, volume, property, bs, b1_price, s1_price, b1_volume, s1_volume, total_volume) VALUES "+insert.toString().substring(0,insert.length()-1);
+		String query = "INSERT INTO tb_md_day_2013 (instrument_id, trading_day, update_time, last_price, volume, property, bs, b1_price, s1_price, b1_volume, s1_volume, total_volume) VALUES "+insert.toString().substring(0,insert.length()-1);
 		
 		try {
 			conn.setAutoCommit(false);
@@ -62,6 +60,7 @@ public class FutureDao {
 			for (MdTick tick : data) {
 				pst.setString(index+1, ImportData.INSTRUMENT_ID);
 				try {
+					System.err.println("......."+tick.getTradingDay()); 
 					pst.setDate(index+2, new java.sql.Date(sfDate.parse(tick.getTradingDay()).getTime()));
 					pst.setTime(index+3, new java.sql.Time(sfTime.parse(tick.getUpdateTime()).getTime()));
 				} catch (ParseException e) {

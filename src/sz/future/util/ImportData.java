@@ -40,12 +40,16 @@ public class ImportData {
 					System.out.println(path);
 					INSTRUMENT_ID = tmp.toString();
 //					System.out.println(INSTRUMENT_ID);
-					saveData(path);
+					saveDayData(path);
 				}
 			}
 		}
 	}
-	private static void saveData(String path) {
+	/**
+	 * 保存Tick数据
+	 * @param path
+	 */
+	private static void saveTickData(String path) {
 		FutureDao dao = new FutureDao();
 		// load csv
 		List<String[]> csvList = CsvDataUtil
@@ -74,6 +78,49 @@ public class ImportData {
 				i = 0;
 			}
 		}
+	}
+	
+	/**
+	 * 保存日数据
+	 * @param path
+	 */
+	private static void saveDayData(String path) {
+		FutureDao dao = new FutureDao();
+		// load csv
+		List<String[]> csvList = CsvDataUtil
+				.readeCsv(path);
+		int listSize = csvList.size()-1;
+		List<MdTick> data = new ArrayList<MdTick>();
+		// fill to array
+		MdTick mt = new MdTick();
+		mt.setTradingDay(csvList.get(0)[0]);
+		mt.setUpdateTime(csvList.get(0)[1]);
+		mt.setLastPrice(Double.parseDouble(csvList.get(0)[2]));
+		mt.setVolume(Integer.parseInt(csvList.get(0)[3]));
+		mt.setTotalVolume(Integer.parseInt(csvList.get(0)[4]));
+		mt.setProperty(Integer.parseInt(csvList.get(0)[5]));
+		mt.setB1Price(Double.parseDouble(csvList.get(0)[6]));
+		mt.setB1Volume(Integer.parseInt(csvList.get(0)[7]));
+		mt.setS1Price(Double.parseDouble(csvList.get(0)[8]));
+		mt.setS1Volume(Integer.parseInt(csvList.get(0)[9]));
+		mt.setBs(csvList.get(0)[10]);
+		data.add(mt);
+		MdTick mt1 = new MdTick();
+		mt1.setTradingDay(csvList.get(listSize)[0]);
+		mt1.setUpdateTime(csvList.get(listSize)[1]);
+		mt1.setLastPrice(Double.parseDouble(csvList.get(listSize)[2]));
+		mt1.setVolume(Integer.parseInt(csvList.get(listSize)[3]));
+		mt1.setTotalVolume(Integer.parseInt(csvList.get(listSize)[4]));
+		mt1.setProperty(Integer.parseInt(csvList.get(listSize)[5]));
+		mt1.setB1Price(Double.parseDouble(csvList.get(listSize)[6]));
+		mt1.setB1Volume(Integer.parseInt(csvList.get(listSize)[7]));
+		mt1.setS1Price(Double.parseDouble(csvList.get(listSize)[8]));
+		mt1.setS1Volume(Integer.parseInt(csvList.get(listSize)[9]));
+		mt1.setBs(csvList.get(listSize)[10]);
+		data.add(mt1);
+		System.out.println(csvList.get(0)[0] + " " + csvList.get(0)[1] + " " + INSTRUMENT_ID+": " + csvList.get(0)[2]);
+		System.out.println(csvList.get(listSize)[0] + " " + csvList.get(listSize)[1] + " " + INSTRUMENT_ID+": " + csvList.get(listSize)[2]);
+		dao.saveMdTick(data);
 	}
 	
 	public static List<String> getListFiles(String path, String suffix, boolean isdepth) {

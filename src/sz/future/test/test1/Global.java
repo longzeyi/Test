@@ -20,7 +20,8 @@ public class Global {
 	public static int longCount = 0;				//买多交易次数
 	public static int shortCount = 0;				//卖空交易次数
 	public static int closeCount = 0;				//平仓交易次数
-	public static boolean type = true ; 			//交易类型
+	public static boolean openOrClose = true ; 		//交易类型
+	public static boolean bs = true;					//交易方向
 	
 	public final static int interval = 10 ;			//间隙
 	public final static double floatSpace = 2;		//忍受浮动空间
@@ -45,7 +46,8 @@ public class Global {
 		longCount = 0;				//买多交易次数
 		shortCount = 0;				//卖空交易次数
 		closeCount = 0;				//平仓交易次数
-		type = true ; 			//交易类型
+		openOrClose = true ; 			//交易类型
+		bs = true;
 		
 		profitCount = 0;				//盈利次数
 		lossCount = 0;				//亏损次数
