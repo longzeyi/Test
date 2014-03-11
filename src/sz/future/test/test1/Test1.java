@@ -25,7 +25,7 @@ public class Test1 {
 				strategy();
 				ds += Global.point;
 				count += Global.transactionCount;
-				Global.init();
+//				Global.init();
 				Thread.sleep(500);
 			}
 
@@ -40,18 +40,12 @@ public class Test1 {
 		// load csv
 		List<String[]> csvList = CsvDataUtil.readeCsv(path);
 		int size = csvList.size();
-		Global.priceArray = new double[size];
-		Global.priceB1Array = new double[size];
-		Global.priceS1Array = new double[size];
-		Global.volumeArray = new int[size];
-		Global.volumeTotalArray = new int[size];
-
+		Global.initArray(size);
 		// fill to array
 		for (int row = 0; row < csvList.size(); row++) {
-			Global.priceArray[row] = Double.parseDouble(csvList.get(row)[2]);
+			Global.lastPriceArray[row] = Double.parseDouble(csvList.get(row)[2]);
 			Global.volumeArray[row] = Integer.parseInt(csvList.get(row)[3]);
-			Global.volumeTotalArray[row] = Integer
-					.parseInt(csvList.get(row)[4]);
+			Global.volumeTotalArray[row] = Integer.parseInt(csvList.get(row)[4]);
 			Global.priceS1Array[row] = Double.parseDouble(csvList.get(row)[6]);
 			Global.priceB1Array[row] = Double.parseDouble(csvList.get(row)[8]);
 			// System.out.println(Global.priceArray[row]);
@@ -72,7 +66,7 @@ public class Test1 {
 	 * @param oc 开平标志 open:true close:false
 	 * @param bs 买卖方向 buy:true sell:false
 	 */
-	private static void buyingLong(double priceB1, double priceS1, boolean oc,
+	private static void trader(double priceB1, double priceS1, boolean oc,
 			boolean bs) {
 		double profit = 0;
 		if (bs) {
