@@ -1,7 +1,7 @@
 package sz.future.trader.comm;
 
 public class M extends Super{
-	public static final String instrumentId = "m1405";											//合约名称
+	public static final String instrumentId = "m1409";											//合约名称
 	
 //	public static int dianshu = 300;																		//合约乘数
 //	public static double bzjRate = 0.12 * dianshu;													//保证金比率/每点
