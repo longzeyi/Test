@@ -12,11 +12,31 @@ import sz.future.domain.MdTick;
 public class ImportData {
 
 	public static String INSTRUMENT_ID = "";
-	public static Pattern pt = Pattern.compile("(.*?)_([0-9]+).CSV", Pattern.DOTALL);
+	public static Pattern pt = Pattern.compile("(.*?)_([0-9]+).CSV", Pattern.DOTALL+Pattern.CASE_INSENSITIVE);
 	public static Matcher mt = null;
 	public static void main(String[] args) {
-//		saveData("E:/baiduyundownload/20131202/M05_20131202.csv");
-		List<String> list = getListFiles("E:/baiduyundownload/","CSV",true);
+//		saveDataByMonth();
+		saveDataByMI();
+	}
+	
+	private static void saveDataByMI(){
+		List<String> list = getListFiles("E:/BaiduYunDownload/","", true);
+		for (String path : list) {
+			if(path.contains("MI_")){
+				System.out.println(path);
+				String fileName = path.substring(29);
+				mt = pt.matcher(fileName);
+				if(mt.find()){
+					INSTRUMENT_ID = mt.group(1);
+				}
+//				saveTickData(path);
+				saveDayData(path);
+			}
+		}
+	}
+	
+	private static void saveDataByMonth(){
+		List<String> list = getListFiles("E:/BaiduYunDownload","CSV",true);
 		for (String path : list) {
 			String fileName = path.substring(29);
 //			System.out.println(fileName);
@@ -40,6 +60,7 @@ public class ImportData {
 					System.out.println(path);
 					INSTRUMENT_ID = tmp.toString();
 //					System.out.println(INSTRUMENT_ID);
+//					saveTickData(path);
 					saveDayData(path);
 				}
 			}
@@ -92,19 +113,20 @@ public class ImportData {
 		int listSize = csvList.size()-1;
 		List<MdTick> data = new ArrayList<MdTick>();
 		// fill to array
-		MdTick mt = new MdTick();
-		mt.setTradingDay(csvList.get(0)[0]);
-		mt.setUpdateTime(csvList.get(0)[1]);
-		mt.setLastPrice(Double.parseDouble(csvList.get(0)[2]));
-		mt.setVolume(Integer.parseInt(csvList.get(0)[3]));
-		mt.setTotalVolume(Integer.parseInt(csvList.get(0)[4]));
-		mt.setProperty(Integer.parseInt(csvList.get(0)[5]));
-		mt.setB1Price(Double.parseDouble(csvList.get(0)[6]));
-		mt.setB1Volume(Integer.parseInt(csvList.get(0)[7]));
-		mt.setS1Price(Double.parseDouble(csvList.get(0)[8]));
-		mt.setS1Volume(Integer.parseInt(csvList.get(0)[9]));
-		mt.setBs(csvList.get(0)[10]);
-		data.add(mt);
+//		MdTick mt = new MdTick();
+//		mt.setTradingDay(csvList.get(0)[0]);
+//		mt.setUpdateTime(csvList.get(0)[1]);
+//		mt.setLastPrice(Double.parseDouble(csvList.get(0)[2]));
+//		mt.setVolume(Integer.parseInt(csvList.get(0)[3]));
+//		mt.setTotalVolume(Integer.parseInt(csvList.get(0)[4]));
+//		mt.setProperty(Integer.parseInt(csvList.get(0)[5]));
+//		mt.setB1Price(Double.parseDouble(csvList.get(0)[6]));
+//		mt.setB1Volume(Integer.parseInt(csvList.get(0)[7]));
+//		mt.setS1Price(Double.parseDouble(csvList.get(0)[8]));
+//		mt.setS1Volume(Integer.parseInt(csvList.get(0)[9]));
+//		mt.setBs(csvList.get(0)[10]);
+//		data.add(mt);
+		//只需要收盘价
 		MdTick mt1 = new MdTick();
 		mt1.setTradingDay(csvList.get(listSize)[0]);
 		mt1.setUpdateTime(csvList.get(listSize)[1]);
@@ -118,7 +140,7 @@ public class ImportData {
 		mt1.setS1Volume(Integer.parseInt(csvList.get(listSize)[9]));
 		mt1.setBs(csvList.get(listSize)[10]);
 		data.add(mt1);
-		System.out.println(csvList.get(0)[0] + " " + csvList.get(0)[1] + " " + INSTRUMENT_ID+": " + csvList.get(0)[2]);
+//		System.out.println(csvList.get(0)[0] + " " + csvList.get(0)[1] + " " + INSTRUMENT_ID+": " + csvList.get(0)[2]);
 		System.out.println(csvList.get(listSize)[0] + " " + csvList.get(listSize)[1] + " " + INSTRUMENT_ID+": " + csvList.get(listSize)[2]);
 		dao.saveMdTick(data);
 	}
