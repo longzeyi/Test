@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>future-auto-transaction</groupId>
-	<artifactId>future-auto-transaction</artifactId>
+	<groupId>test</groupId>
+	<artifactId>test</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>future-auto-transaction</name>
+	<name>test</name>
 	
 	<build>
 	  <sourceDirectory>src</sourceDirectory>
@@ -92,6 +92,12 @@
 		    <groupId>net.sourceforge.javacsv</groupId>
 		    <artifactId>javacsv</artifactId>
 		    <version>2.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.12.0</version>
 		</dependency>
 	</dependencies>
 	

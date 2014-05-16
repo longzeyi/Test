@@ -15,8 +15,8 @@ public class ImportData {
 	public static Pattern pt = Pattern.compile("(.*?)_([0-9]+).CSV", Pattern.DOTALL+Pattern.CASE_INSENSITIVE);
 	public static Matcher mt = null;
 	public static void main(String[] args) {
-//		saveDataByMonth();
-		saveDataByMI();
+		saveDataByMonth();
+//		saveDataByMI();
 	}
 	
 	private static void saveDataByMI(){
@@ -36,7 +36,7 @@ public class ImportData {
 	}
 	
 	private static void saveDataByMonth(){
-		List<String> list = getListFiles("E:/BaiduYunDownload","CSV",true);
+		List<String> list = getListFiles("f:/BaiduYunDownload","CSV",true);
 		for (String path : list) {
 			String fileName = path.substring(29);
 //			System.out.println(fileName);
@@ -59,9 +59,9 @@ public class ImportData {
 				if(!flag){
 					System.out.println(path);
 					INSTRUMENT_ID = tmp.toString();
-//					System.out.println(INSTRUMENT_ID);
-//					saveTickData(path);
-					saveDayData(path);
+					System.out.println(INSTRUMENT_ID);
+					saveTickData(path);
+//					saveDayData(path);
 				}
 			}
 		}
