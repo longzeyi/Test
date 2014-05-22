@@ -45,7 +45,7 @@ public class CsvDataUtil {
 			  }
 			  reader.close();
          }catch(Exception ex){
-             System.out.println(ex);
+//             System.out.println(ex);
          }
 		return i;
      }

@@ -2,8 +2,10 @@ package sz.future.util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,48 +57,60 @@ public class ImportData {
 				String dateDir = year + months[i] + days[j];
 				sb.append(dateDir).append("/");
 				for (int k = 0; k < strs.length; k++) {
-					Map<String, Integer> map = new TreeMap<String, Integer>();
+					Map<Integer, String> map = new TreeMap<Integer, String>();
 					for (int k2 = 0; k2 < months.length; k2++) {
 						StringBuffer sb2 = new StringBuffer();
 						sb2.append(strs[k]).append(months[k2]).append("_")
 								.append(dateDir).append(".csv");
 						String path = sb.toString()+sb2.toString();
-						CsvDataUtil.readCsvCount(path);
-						map.put(path, CsvDataUtil.readCsvCount(path));
-						//Map排序
-					}
-				}
-				List<String> list = getListFiles("e:/BaiduYunDownload/" + year
-						+ months[i] + days[j], "CSV", false);
-				for (String path : list) {
-					System.out.println(path);
-					String fileName = path.substring(29);
-					// System.out.println(fileName);
-					mt = pt.matcher(fileName);
-					if (mt.find()) {
-						String str1 = mt.group(1);
-						// String str2 = mt.group(2);
-						StringBuffer tmp = new StringBuffer();
-						boolean flag = true;
-						// for (int i = 0; i < str1.length(); i++) {
-						// // System.out.println(str1.charAt(i));
-						// if(Character.isDigit(str1.charAt(i)) && flag){
-						// tmp.append("13");
-						// tmp.append(str1.charAt(i));
-						// flag = false;
-						// } else {
-						// tmp.append(str1.charAt(i));
-						// }
-						// }
-						if (!flag) {
-							// System.out.println(path);
-							INSTRUMENT_ID = tmp.toString();
-							// System.out.println(INSTRUMENT_ID);
-							// saveTickData(path);
-							// saveDayData(path);
+						int count = CsvDataUtil.readCsvCount(path);
+						if(count>0){
+							map.put(CsvDataUtil.readCsvCount(path), path);
 						}
 					}
+					if(map.size()==0){
+						continue;
+					}
+					Iterator<Entry<Integer, String>> it = map.entrySet().iterator();
+					Entry<Integer, String> entry = null;
+					while (it.hasNext()){
+						entry = it.next();
+					}
+					System.out.println("行数："+entry.getKey());
+					System.out.println("路径："+entry.getValue());
+					//保存数据
 				}
+//				List<String> list = getListFiles("e:/BaiduYunDownload/" + year
+//						+ months[i] + days[j], "CSV", false);
+//				for (String path : list) {
+//					System.out.println(path);
+//					String fileName = path.substring(29);
+//					// System.out.println(fileName);
+//					mt = pt.matcher(fileName);
+//					if (mt.find()) {
+//						String str1 = mt.group(1);
+//						// String str2 = mt.group(2);
+//						StringBuffer tmp = new StringBuffer();
+//						boolean flag = true;
+//						// for (int i = 0; i < str1.length(); i++) {
+//						// // System.out.println(str1.charAt(i));
+//						// if(Character.isDigit(str1.charAt(i)) && flag){
+//						// tmp.append("13");
+//						// tmp.append(str1.charAt(i));
+//						// flag = false;
+//						// } else {
+//						// tmp.append(str1.charAt(i));
+//						// }
+//						// }
+//						if (!flag) {
+//							// System.out.println(path);
+//							INSTRUMENT_ID = tmp.toString();
+//							// System.out.println(INSTRUMENT_ID);
+//							// saveTickData(path);
+//							// saveDayData(path);
+//						}
+//					}
+//				}
 			}
 		}
 
