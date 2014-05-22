@@ -22,7 +22,7 @@ public class ImportData {
 			"18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
 			"29", "30", "31" };
 	private static final int year = 2013;
-	private static String INSTRUMENT_ID = "";
+	public static String INSTRUMENT_ID = "";
 	private static Pattern pt = Pattern.compile("(.*?)_([0-9]+).CSV",
 			Pattern.DOTALL + Pattern.CASE_INSENSITIVE);
 	private static Matcher mt = null;
