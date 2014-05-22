@@ -35,6 +35,20 @@ public class CsvDataUtil {
 		return null;
      }
      
+     public static int readCsvCount(String path){
+    	 int i = 0;
+         try {
+			  CsvReader reader = new CsvReader(path);
+			  reader.readHeaders();
+			  while(reader.readRecord()){
+			      i++;
+			  }
+			  reader.close();
+         }catch(Exception ex){
+             System.out.println(ex);
+         }
+		return i;
+     }
      
      /**
       * 更新CSV
