@@ -24,9 +24,11 @@ public class ImportData {
 			"18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
 			"29", "30", "31" };
 	private static final int year = 2013;
-	public static String INSTRUMENT_ID = "";
-	private static Pattern pt = Pattern.compile("(.*?)_([0-9]+).CSV",
-			Pattern.DOTALL + Pattern.CASE_INSENSITIVE);
+	public static String instrument_id = "";
+	public static String full_path = "";
+	private static Pattern pt = Pattern.compile(
+			"([A-Z]+)([0-9]+)_([0-9]+).CSV", Pattern.DOTALL
+					+ Pattern.CASE_INSENSITIVE);
 	private static Matcher mt = null;
 
 	public static void main(String[] args) {
@@ -51,6 +53,7 @@ public class ImportData {
 	// }
 
 	private static void queryDoc() {
+		String instrumentYear = "";
 		for (int i = 0; i < months.length; i++) {
 			for (int j = 0; j < days.length; j++) {
 				StringBuffer sb = new StringBuffer("e:/BaiduYunDownload/");
@@ -62,55 +65,76 @@ public class ImportData {
 						StringBuffer sb2 = new StringBuffer();
 						sb2.append(strs[k]).append(months[k2]).append("_")
 								.append(dateDir).append(".csv");
-						String path = sb.toString()+sb2.toString();
+						String path = sb.toString() + sb2.toString();
 						int count = CsvDataUtil.readCsvCount(path);
-						if(count>0){
+						if (count > 0) {
 							map.put(CsvDataUtil.readCsvCount(path), path);
 						}
 					}
-					if(map.size()==0){
+					if (map.size() == 0) {
 						continue;
 					}
-					Iterator<Entry<Integer, String>> it = map.entrySet().iterator();
+					Iterator<Entry<Integer, String>> it = map.entrySet()
+							.iterator();
 					Entry<Integer, String> entry = null;
-					while (it.hasNext()){
+					while (it.hasNext()) {
 						entry = it.next();
 					}
-					System.out.println("行数："+entry.getKey());
-					System.out.println("路径："+entry.getValue());
-					//保存数据
+					full_path = entry.getValue();
+					System.out.println("行数：" + entry.getKey());
+					System.out.println("路径：" + entry.getValue());
+					// 保存数据
+					mt = pt.matcher(entry.getValue());
+					if (mt.find()) {
+//						System.out.println(months[i] +" : "+mt.group(2));
+						// 如果行情月份小于合约月份，年份为13
+						if (Integer.parseInt(months[i]) < Integer.parseInt(mt
+								.group(2))) {
+							instrumentYear = "13";
+						} else {
+							instrumentYear = "14";
+						}
+						instrument_id = mt.group(1) + instrumentYear + mt.group(2);
+//						System.out.println("合约名: "+mt.group(1) + instrumentYear
+//								+ mt.group(2));
+//						System.out.println("合约商品: " + mt.group(1));
+//						System.out.println("合约月份: " + mt.group(2));
+//						System.out.println("行情日期: " + mt.group(3));
+					}
+					saveTickData(full_path);
 				}
-//				List<String> list = getListFiles("e:/BaiduYunDownload/" + year
-//						+ months[i] + days[j], "CSV", false);
-//				for (String path : list) {
-//					System.out.println(path);
-//					String fileName = path.substring(29);
-//					// System.out.println(fileName);
-//					mt = pt.matcher(fileName);
-//					if (mt.find()) {
-//						String str1 = mt.group(1);
-//						// String str2 = mt.group(2);
-//						StringBuffer tmp = new StringBuffer();
-//						boolean flag = true;
-//						// for (int i = 0; i < str1.length(); i++) {
-//						// // System.out.println(str1.charAt(i));
-//						// if(Character.isDigit(str1.charAt(i)) && flag){
-//						// tmp.append("13");
-//						// tmp.append(str1.charAt(i));
-//						// flag = false;
-//						// } else {
-//						// tmp.append(str1.charAt(i));
-//						// }
-//						// }
-//						if (!flag) {
-//							// System.out.println(path);
-//							INSTRUMENT_ID = tmp.toString();
-//							// System.out.println(INSTRUMENT_ID);
-//							// saveTickData(path);
-//							// saveDayData(path);
-//						}
-//					}
-//				}
+				// List<String> list = getListFiles("e:/BaiduYunDownload/" +
+				// year
+				// + months[i] + days[j], "CSV", false);
+				// for (String path : list) {
+				// System.out.println(path);
+				// String fileName = path.substring(29);
+				// // System.out.println(fileName);
+				// mt = pt.matcher(fileName);
+				// if (mt.find()) {
+				// String str1 = mt.group(1);
+				// // String str2 = mt.group(2);
+				// StringBuffer tmp = new StringBuffer();
+				// boolean flag = true;
+				// // for (int i = 0; i < str1.length(); i++) {
+				// // // System.out.println(str1.charAt(i));
+				// // if(Character.isDigit(str1.charAt(i)) && flag){
+				// // tmp.append("13");
+				// // tmp.append(str1.charAt(i));
+				// // flag = false;
+				// // } else {
+				// // tmp.append(str1.charAt(i));
+				// // }
+				// // }
+				// if (!flag) {
+				// // System.out.println(path);
+				// INSTRUMENT_ID = tmp.toString();
+				// // System.out.println(INSTRUMENT_ID);
+				// // saveTickData(path);
+				// // saveDayData(path);
+				// }
+				// }
+				// }
 			}
 		}
 
@@ -193,7 +217,7 @@ public class ImportData {
 		// System.out.println(csvList.get(0)[0] + " " + csvList.get(0)[1] + " "
 		// + INSTRUMENT_ID+": " + csvList.get(0)[2]);
 		System.out.println(csvList.get(listSize)[0] + " "
-				+ csvList.get(listSize)[1] + " " + INSTRUMENT_ID + ": "
+				+ csvList.get(listSize)[1] + " " + instrument_id + ": "
 				+ csvList.get(listSize)[2]);
 		dao.saveMdTick(data);
 	}

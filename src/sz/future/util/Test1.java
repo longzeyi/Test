@@ -11,16 +11,9 @@ import sz.future.conn.DBConnectionManager;
 public class Test1 {
 	
 	public static void main(String[] args) {
-		Map map = new TreeMap();
-		map.put(31, "31313131");
-		map.put(8, "888888888");
-		map.put(1, "11");
-		map.put(11, "1111111111");
-		map.put(11, "1111111111");
-		Iterator it = map.entrySet().iterator();
-		while(it.hasNext()){
-			System.out.println(it.next());
-		}
+		String a = "02";
+		String b = "03";
+		System.out.println(Integer.parseInt(a));
 	}
 	
 	private static void getData(){

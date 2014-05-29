@@ -1,5 +1,6 @@
 package sz.future.dao;
 
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,6 +17,11 @@ import sz.future.conn.DBConnectionManager;
 import sz.future.domain.MdTick;
 import sz.future.util.ImportData;
 
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+
 
 
 public class MgFutureDao {
@@ -27,10 +33,27 @@ public class MgFutureDao {
 	private SimpleDateFormat sfDate = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat sfTime = new SimpleDateFormat("HH:mm:ss");
 	
-	public MgFutureDao(){
-		conn = null;
-	    rs = null;
-	    pst = null;
+	private Mongo mongo;
+	private DB db;
+	private DBCollection collection;
+	private MgFutureDao dao;
+	
+	private MgFutureDao(){
+		try {
+			mongo = new MongoClient("localhost", 27017);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		db = mongo.getDB("local");
+		collection = db.getCollection("testcollection");
+	}
+	
+	public MgFutureDao getInstance(){
+		if(dao==null){
+			return new MgFutureDao();
+		} else {
+			return dao;
+		}
 	}
 	
 	public void saveFutureHistory(List<String []> data) throws SQLException{
@@ -45,6 +68,7 @@ public class MgFutureDao {
 	}
 	
 	public void saveMdTick(List<MdTick> data){
+		
 		conn = DBConnectionManager.getConnection();
 		int index = 0;
 		StringBuffer insert = new StringBuffer("");
@@ -58,7 +82,7 @@ public class MgFutureDao {
 			pst = conn.prepareStatement(query);
 			pst.execute("SET FOREIGN_KEY_CHECKS=0");
 			for (MdTick tick : data) {
-				pst.setString(index+1, ImportData.INSTRUMENT_ID);
+				pst.setString(index+1, ImportData.instrument_id);
 				try {
 					System.err.println("......."+tick.getTradingDay()); 
 					pst.setDate(index+2, new java.sql.Date(sfDate.parse(tick.getTradingDay()).getTime()));
@@ -88,6 +112,20 @@ public class MgFutureDao {
 			DBConnectionManager.closePreparedStatement(pst);
 			DBConnectionManager.closeConnection(conn);
 		}
+	}
+
+	/**
+	 * @return the collection
+	 */
+	public DBCollection getCollection() {
+		return collection;
+	}
+
+	/**
+	 * @param collection the collection to set
+	 */
+	public void setCollection(DBCollection collection) {
+		this.collection = collection;
 	}
 	
 //	public boolean saveTbDocument(TbDocument tbDocument) throws HttpGrasperException {
