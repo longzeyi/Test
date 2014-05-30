@@ -11,7 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import sz.future.dao.FutureDao;
+import sz.future.dao.MgFutureDao;
 import sz.future.domain.MdTick;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 public class ImportData {
 
@@ -146,26 +150,27 @@ public class ImportData {
 	 * @param path
 	 */
 	private static void saveTickData(String path) {
-		FutureDao dao = new FutureDao();
+		MgFutureDao dao = MgFutureDao.getInstance();
 		// load csv
 		List<String[]> csvList = CsvDataUtil.readeCsv(path);
-		List<MdTick> data = new ArrayList<MdTick>();
+		List<DBObject> data = new ArrayList<DBObject>();
 		int i = 0;
 		// fill to array
 		for (int row = 0; row < csvList.size(); row++) {
-			MdTick mt = new MdTick();
-			mt.setTradingDay(csvList.get(row)[0]);
-			mt.setUpdateTime(csvList.get(row)[1]);
-			mt.setLastPrice(Double.parseDouble(csvList.get(row)[2]));
-			mt.setVolume(Integer.parseInt(csvList.get(row)[3]));
-			mt.setTotalVolume(Integer.parseInt(csvList.get(row)[4]));
-			mt.setProperty(Integer.parseInt(csvList.get(row)[5]));
-			mt.setB1Price(Double.parseDouble(csvList.get(row)[6]));
-			mt.setB1Volume(Integer.parseInt(csvList.get(row)[7]));
-			mt.setS1Price(Double.parseDouble(csvList.get(row)[8]));
-			mt.setS1Volume(Integer.parseInt(csvList.get(row)[9]));
-			mt.setBs(csvList.get(row)[10]);
-			data.add(mt);
+			DBObject tick = new BasicDBObject();
+			tick.put("instrument_id", instrument_id);
+			tick.put("trading_day", csvList.get(row)[0]);
+			tick.put("update_time", csvList.get(row)[1]);
+			tick.put("last_price", Double.parseDouble(csvList.get(row)[2]));
+			tick.put("volume", Integer.parseInt(csvList.get(row)[3]));
+			tick.put("total_volume", Integer.parseInt(csvList.get(row)[4]));
+			tick.put("property", Integer.parseInt(csvList.get(row)[5]));
+			tick.put("b1_price", Double.parseDouble(csvList.get(row)[6]));
+			tick.put("b1_volume", Integer.parseInt(csvList.get(row)[7]));
+			tick.put("s1_price", Double.parseDouble(csvList.get(row)[8]));
+			tick.put("s1_volume", Integer.parseInt(csvList.get(row)[9]));
+			tick.put("bs", csvList.get(row)[10]);
+			data.add(tick);
 			i++;
 			if (i == 1000 || row == csvList.size() - 1) {
 				dao.saveMdTick(data);
