@@ -85,8 +85,7 @@ public class ImportData {
 						entry = it.next();
 					}
 					full_path = entry.getValue();
-					System.out.println("行数：" + entry.getKey());
-					System.out.println("路径：" + entry.getValue());
+					System.out.println("行数：" + entry.getKey() + "路径：" + entry.getValue());
 					// 保存数据
 					mt = pt.matcher(entry.getValue());
 					if (mt.find()) {
@@ -107,38 +106,6 @@ public class ImportData {
 					}
 					saveTickData(full_path);
 				}
-				// List<String> list = getListFiles("e:/BaiduYunDownload/" +
-				// year
-				// + months[i] + days[j], "CSV", false);
-				// for (String path : list) {
-				// System.out.println(path);
-				// String fileName = path.substring(29);
-				// // System.out.println(fileName);
-				// mt = pt.matcher(fileName);
-				// if (mt.find()) {
-				// String str1 = mt.group(1);
-				// // String str2 = mt.group(2);
-				// StringBuffer tmp = new StringBuffer();
-				// boolean flag = true;
-				// // for (int i = 0; i < str1.length(); i++) {
-				// // // System.out.println(str1.charAt(i));
-				// // if(Character.isDigit(str1.charAt(i)) && flag){
-				// // tmp.append("13");
-				// // tmp.append(str1.charAt(i));
-				// // flag = false;
-				// // } else {
-				// // tmp.append(str1.charAt(i));
-				// // }
-				// // }
-				// if (!flag) {
-				// // System.out.println(path);
-				// INSTRUMENT_ID = tmp.toString();
-				// // System.out.println(INSTRUMENT_ID);
-				// // saveTickData(path);
-				// // saveDayData(path);
-				// }
-				// }
-				// }
 			}
 		}
 
@@ -158,17 +125,17 @@ public class ImportData {
 		// fill to array
 		for (int row = 0; row < csvList.size(); row++) {
 			DBObject tick = new BasicDBObject();
-			tick.put("instrument_id", instrument_id);
-			tick.put("trading_day", csvList.get(row)[0]);
-			tick.put("update_time", csvList.get(row)[1]);
-			tick.put("last_price", Double.parseDouble(csvList.get(row)[2]));
-			tick.put("volume", Integer.parseInt(csvList.get(row)[3]));
-			tick.put("total_volume", Integer.parseInt(csvList.get(row)[4]));
+			tick.put("i_id", instrument_id);
+			tick.put("t_day", csvList.get(row)[0]);
+			tick.put("u_time", csvList.get(row)[1]);
+			tick.put("l_price", Double.parseDouble(csvList.get(row)[2]));
+			tick.put("vol", Integer.parseInt(csvList.get(row)[3]));
+			tick.put("t_vol", Integer.parseInt(csvList.get(row)[4]));
 			tick.put("property", Integer.parseInt(csvList.get(row)[5]));
 			tick.put("b1_price", Double.parseDouble(csvList.get(row)[6]));
-			tick.put("b1_volume", Integer.parseInt(csvList.get(row)[7]));
+			tick.put("b1_vol", Integer.parseInt(csvList.get(row)[7]));
 			tick.put("s1_price", Double.parseDouble(csvList.get(row)[8]));
-			tick.put("s1_volume", Integer.parseInt(csvList.get(row)[9]));
+			tick.put("s1_vol", Integer.parseInt(csvList.get(row)[9]));
 			tick.put("bs", csvList.get(row)[10]);
 			data.add(tick);
 			i++;
@@ -178,6 +145,7 @@ public class ImportData {
 				i = 0;
 			}
 		}
+		System.out.println("保存完成...");
 	}
 
 	/**
