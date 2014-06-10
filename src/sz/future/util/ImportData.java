@@ -104,7 +104,8 @@ public class ImportData {
 //						System.out.println("合约月份: " + mt.group(2));
 //						System.out.println("行情日期: " + mt.group(3));
 					}
-					saveTickData(full_path);
+//					saveTickData(full_path);
+					saveDayData(full_path);
 				}
 			}
 		}

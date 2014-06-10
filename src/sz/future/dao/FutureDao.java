@@ -51,7 +51,7 @@ public class FutureDao {
 		for(int i=0; i < data.size(); i++){
 			insert.append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?),");
 		}
-		String query = "INSERT INTO tb_md_tick_2013 (instrument_id, trading_day, update_time, last_price, volume, property, bs, b1_price, s1_price, b1_volume, s1_volume, total_volume) VALUES "+insert.toString().substring(0,insert.length()-1);
+		String query = "INSERT INTO tb_md_day_2013 (instrument_id, trading_day, update_time, last_price, volume, property, bs, b1_price, s1_price, b1_volume, s1_volume, total_volume) VALUES "+insert.toString().substring(0,insert.length()-1);
 		
 		try {
 			conn.setAutoCommit(false);
