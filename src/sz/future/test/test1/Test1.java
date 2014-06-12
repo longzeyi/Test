@@ -3,11 +3,13 @@ package sz.future.test.test1;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import sz.future.dao.FutureDao;
+import sz.future.domain.MdDay;
 import sz.future.util.CsvDataUtil;
 
 public class Test1 {
@@ -21,6 +23,7 @@ public class Test1 {
 			"18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
 			"29", "30", "31" };
 	private static final int year = 2013;
+	public static final String test_instrument_id = "RM1401";
 	public static String instrument_id = "";
 	public static String full_path = "";
 	private static Pattern pt = Pattern.compile(
@@ -29,12 +32,15 @@ public class Test1 {
 	private static Matcher mt = null;
 	private static double ds = 0;
 	private static int count = 0;
+	private static FutureDao dao = new FutureDao();
 
 	/**
 	 * @param args
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
+		List<MdDay> list = dao.loadDayData(test_instrument_id);
+		
 		queryMd();
 //		for (int i = 100; i <= 900; i += 100) {
 //			for (int j = 1; j <= 31; j++) {
@@ -122,7 +128,10 @@ public class Test1 {
 //						System.out.println("合约月份: " + mt.group(2));
 //						System.out.println("行情日期: " + mt.group(3));
 					}
-					testTrading(full_path);
+					//如果查找出的合约和要测试的合约相同就进行测试
+					if(test_instrument_id.equals(instrument_id)){
+						testTrading(full_path);
+					}
 				}
 			}
 		}

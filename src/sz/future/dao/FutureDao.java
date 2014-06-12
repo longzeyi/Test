@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import sz.future.conn.DBConnectionManager;
+import sz.future.domain.MdDay;
 import sz.future.domain.MdTick;
 import sz.future.util.ImportData;
 
@@ -90,62 +92,31 @@ public class FutureDao {
 		}
 	}
 	
-//	public boolean saveTbDocument(TbDocument tbDocument) throws HttpGrasperException {
-//		conn = DBConnectionManager.getConnection();
-//		String sql = "INSERT INTO tb_document (data_source_id, cybermedia_id, title, publish_date, modified_date, download_uri, uri_doc_index, author, new_doc, master_doc_id, parent_doc_id, content, dsg_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//		boolean isSuccess = false;
-////		System.out.println("tbDocument.getContent()-------------"+tbDocument.getContent());
-//		try {
-//			conn.setAutoCommit(false);
-//			pstm = (PreparedStatement) conn.prepareStatement(sql);
-//			pstm.setInt(1, tbDocument.getDataSourceId());
-//			pstm.setByte(2, tbDocument.getTbCybermedia());
-//			pstm.setString(3, tbDocument.getTitle());
-//			pstm.setTimestamp(4, (Timestamp) new Timestamp(tbDocument.getPublishDate().getTime()));
-//			pstm.setTimestamp(5, (Timestamp) new Timestamp(tbDocument.getModifiedDate().getTime()));
-//			pstm.setString(6, tbDocument.getDownloadUri());
-//			pstm.setInt(7, tbDocument.getUriDocIndex());
-//			if(tbDocument.getAuthor() != null){
-//				pstm.setString(8, tbDocument.getAuthor());
-//			}else{
-//				pstm.setNull(8, Types.VARCHAR);
-//			}
-//			if(tbDocument.isNewDoc()) pstm.setInt(9, 1); else pstm.setInt(9, 0);
-//			if(tbDocument.getMasterDocId() != null){
-//				pstm.setLong(10, tbDocument.getMasterDocId());
-//			}else{
-//				pstm.setNull(10, Types.BIGINT);
-//			}
-//			if(tbDocument.getParentDocId() != null){
-//				pstm.setLong(11, tbDocument.getParentDocId());
-//			}else{
-//				pstm.setNull(11, Types.BIGINT);
-//			}
-//			pstm.setString(12, tbDocument.getContent());
-//			if(tbDocument.getDsgId() != null){
-//				pstm.setInt(13, tbDocument.getDsgId());
-//			}else{
-//				pstm.setNull(13, Types.INTEGER);
-//			}
-//			if(pstm.executeUpdate() > 0) isSuccess = true;
-//			conn.commit();
-//			conn.setAutoCommit(true);
-//		} catch (SQLException e) {
-//			if(e.getMessage().startsWith("Duplicate")){
-//				log.warn(e);
-//				throw new HttpGrasperException();
-//			} else {
-//				e.printStackTrace();
-//			}
-//			try {
-//				conn.rollback();
-//			} catch (SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//			log.error("Save failed", e);
-//		} finally{
-//			closed();
-//		}
-//		return isSuccess;
-//	}
+	
+	
+	public List<MdDay> loadDayData(String instrumentId){
+		List<MdDay> list = new ArrayList<MdDay>();
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT instrument_id,trading_day,last_price,total_volume FROM tb_md_day_2013 WHERE instrument_id = ? ORDER BY trading_day";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				MdDay md = new MdDay();
+				md.setInstrumentID(rs.getString("instrument_id"));
+				md.setTradingDay(rs.getDate("trading_day"));
+				md.setLastPrice(rs.getDouble("last_price"));
+				md.setTotalVolume(rs.getInt("total_volume"));
+				list.add(md);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return list;
+	}
 }
