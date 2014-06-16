@@ -2,18 +2,25 @@ package sz.future.util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import sz.future.conn.DBConnectionManager;
 
 public class Test1 {
 	
 	public static void main(String[] args) {
-		String a = "02";
-		String b = "03";
-		System.out.println(Integer.parseInt(a));
+		List list = new ArrayList();
+		list.add("bbb");
+		list.add("ccc");
+		list.add("333");
+		list.add("aaa");
+		list.add("ddd");
+		list.add("eee");
+		list.add("111");
+		for (Object object : list) {
+			System.out.println(object.toString());
+		}
 	}
 	
 	private static void getData(){

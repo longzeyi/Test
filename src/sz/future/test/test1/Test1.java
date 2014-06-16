@@ -1,5 +1,6 @@
 package sz.future.test.test1;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +34,13 @@ public class Test1 {
 	private static double ds = 0;
 	private static int count = 0;
 	private static FutureDao dao = new FutureDao();
-
+	private static List<MdDay> list = new ArrayList<MdDay>();
 	/**
 	 * @param args
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		List<MdDay> list = dao.loadDayData(test_instrument_id);
+		list = dao.loadDayData(test_instrument_id);
 		
 		queryMd();
 //		for (int i = 100; i <= 900; i += 100) {
@@ -78,6 +79,7 @@ public class Test1 {
 			Global.priceB1Array[row] = Double.parseDouble(csvList.get(row)[8]);
 			// System.out.println(Global.priceArray[row]);
 		}
+		strategy();
 	}
 	
 	private static void queryMd() {
@@ -140,7 +142,14 @@ public class Test1 {
 
 	private static void strategy() {
 		System.err.println("================================================");
+		//10日均线判断
+		boolean md = false;
 		
+		//tick判断
+		boolean tick = false;
+		for (int i = 200; i < Global.lastPriceArray.length; i=i+Global.interval) {
+			
+		}
 		print();
 	}
 

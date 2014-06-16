@@ -26,7 +26,7 @@ public class Global {
 	public static boolean openOrClose = true ; 		//交易类型
 	public static boolean bs = true;					//交易方向
 	
-	public final static int interval = 10 ;			//间隙
+	public final static int interval = 100 ;			//间隙
 	public final static double floatSpace = 2;		//忍受浮动空间
 	
 	public static int profitCount = 0;				//盈利次数
