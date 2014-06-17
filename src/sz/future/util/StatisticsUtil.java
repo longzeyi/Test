@@ -2,12 +2,12 @@ package sz.future.util;
 
 public class StatisticsUtil {
 	
-     public static double getMovingAverage(int day, double[] closePriceArray){
+     public static double getMovingAverage(double[] closePriceArray){
     	 double ma = 0d;
-    	 for (int i = 0; i < day; i++) {
+    	 for (int i = 0; i < closePriceArray.length; i++) {
     		 ma += closePriceArray[i];
 		 }
-    	 ma = ma/day;
+    	 ma = ma/closePriceArray.length;
     	 return ma;
      }
      

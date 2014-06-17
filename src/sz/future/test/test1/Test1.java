@@ -1,6 +1,9 @@
 package sz.future.test.test1;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +15,7 @@ import java.util.regex.Pattern;
 import sz.future.dao.FutureDao;
 import sz.future.domain.MdDay;
 import sz.future.util.CsvDataUtil;
+import sz.future.util.StatisticsUtil;
 
 public class Test1 {
 
@@ -34,13 +38,14 @@ public class Test1 {
 	private static double ds = 0;
 	private static int count = 0;
 	private static FutureDao dao = new FutureDao();
-	private static List<MdDay> list = new ArrayList<MdDay>();
+	private static List<MdDay> dayList = new ArrayList<MdDay>();
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
 	 * @param args
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		list = dao.loadDayData(test_instrument_id);
+		dayList = dao.loadDayData(test_instrument_id);
 		
 		queryMd();
 //		for (int i = 100; i <= 900; i += 100) {
@@ -70,6 +75,11 @@ public class Test1 {
 		List<String[]> csvList = CsvDataUtil.readeCsv(path);
 		int size = csvList.size();
 		Global.initArray(size);
+		try {
+			Global.tradingDay = sdf.parse(csvList.get(0)[0]);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		// fill to array
 		for (int row = 0; row < csvList.size(); row++) {
 			Global.lastPriceArray[row] = Double.parseDouble(csvList.get(row)[2]);
@@ -144,6 +154,12 @@ public class Test1 {
 		System.err.println("================================================");
 		//10日均线判断
 		boolean md = false;
+		double[] priceArray = dao.getPriceArray(12, test_instrument_id, Global.tradingDay);
+		double maPrice = StatisticsUtil.getMovingAverage(priceArray);
+		//连续两天高于MA
+		if((priceArray[1] < priceArray[0])&& (priceArray[1] < maPrice)){
+			
+		}
 		
 		//tick判断
 		boolean tick = false;

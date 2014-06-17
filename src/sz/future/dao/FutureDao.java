@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -118,5 +119,36 @@ public class FutureDao {
 			DBConnectionManager.closeConnection(conn);
 		}
 		return list;
+	}
+	
+	/**
+	 * @param days 获取几天前的价格
+	 * @param instrumentId 当前合约名
+	 * @param tradingDay 当前交易日
+	 * @return
+	 */
+	public double[] getPriceArray(int days, String instrumentId, Date tradingDay){
+		double[] array = new double[days];
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			pst.setDate(2, (java.sql.Date) tradingDay);
+			pst.setInt(3, days);
+			rs = pst.executeQuery();
+			int i = 0;
+			while (rs.next()) {
+				array[i] = rs.getDouble("last_price");
+				i ++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return array;
 	}
 }

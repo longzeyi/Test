@@ -10,17 +10,8 @@ import sz.future.conn.DBConnectionManager;
 public class Test1 {
 	
 	public static void main(String[] args) {
-		List list = new ArrayList();
-		list.add("bbb");
-		list.add("ccc");
-		list.add("333");
-		list.add("aaa");
-		list.add("ddd");
-		list.add("eee");
-		list.add("111");
-		for (Object object : list) {
-			System.out.println(object.toString());
-		}
+		String [] strs = {"11","22"};
+		System.out.println(strs.length);
 	}
 	
 	private static void getData(){

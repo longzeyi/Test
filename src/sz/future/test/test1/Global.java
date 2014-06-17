@@ -1,5 +1,7 @@
 package sz.future.test.test1;
 
+import java.util.Date;
+
 public class Global {
 	public static String[] updateTimeArray = null;
 	public static double[] lastPriceArray = null;	//最新价
@@ -9,6 +11,7 @@ public class Global {
 	public static int[] volumeTotalArray = null;	//成交总量
 	public static int[] volumeB1Array = null;
 	public static int[] volumeS1Array = null;
+	public static Date tradingDay = null;
 	
 //	public static int dianshu = 300;				//合约乘数
 //	public static double bzjRate = 0.12 * dianshu;	//保证金比率/每点
