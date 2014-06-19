@@ -93,6 +93,7 @@ public class Test1 {
 	}
 	
 	private static void queryMd() {
+		//20130104/AG01_20130104.csv
 		String instrumentYear = "";
 		for (int i = 0; i < months.length; i++) {
 			for (int j = 0; j < days.length; j++) {
@@ -108,7 +109,7 @@ public class Test1 {
 						String path = sb.toString() + sb2.toString();
 						int count = CsvDataUtil.readCsvCount(path);
 						if (count > 0) {
-							map.put(CsvDataUtil.readCsvCount(path), path);
+							map.put(count, path);
 						}
 					}
 					if (map.size() == 0) {
@@ -154,7 +155,11 @@ public class Test1 {
 		System.err.println("================================================");
 		//10日均线判断
 		boolean md = false;
-		double[] priceArray = dao.getPriceArray(12, test_instrument_id, Global.tradingDay);
+		double[] priceArray = dao.getPriceArray(11, test_instrument_id, StatisticsUtil.moveDate(Global.tradingDay, -1));
+		double[] priceArray1 = dao.getPriceArray(12, test_instrument_id, StatisticsUtil.moveDate(Global.tradingDay, -1));//1天前
+		double[] priceArray2 = dao.getPriceArray(12, test_instrument_id, StatisticsUtil.moveDate(Global.tradingDay, -2));//2天前
+		double[] priceArray3 = dao.getPriceArray(12, test_instrument_id, StatisticsUtil.moveDate(Global.tradingDay, -3));//3天前
+		
 		double maPrice = StatisticsUtil.getMovingAverage(priceArray);
 		//连续两天高于MA
 		if((priceArray[1] < priceArray[0])&& (priceArray[1] < maPrice)){

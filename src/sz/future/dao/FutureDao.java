@@ -130,7 +130,7 @@ public class FutureDao {
 	public double[] getPriceArray(int days, String instrumentId, Date tradingDay){
 		double[] array = new double[days];
 		conn = DBConnectionManager.getConnection();
-		String query = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+		String query = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day <= ? ORDER BY trading_day desc limit ?";
 		try {
 			pst = conn.prepareStatement(query);
 			pst.setString(1, instrumentId);
