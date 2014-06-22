@@ -3,6 +3,7 @@ package sz.future.test.test1;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -155,20 +156,51 @@ public class Test1 {
 		System.err.println("================================================");
 		//10日均线判断
 		boolean md = false;
-		double[] priceArray = dao.getPriceArray(11, test_instrument_id, StatisticsUtil.moveDate(Global.tradingDay, -1));
-		double[] priceArray1 = dao.getPriceArray(12, test_instrument_id, StatisticsUtil.moveDate(Global.tradingDay, -1));//1天前
-		double[] priceArray2 = dao.getPriceArray(12, test_instrument_id, StatisticsUtil.moveDate(Global.tradingDay, -2));//2天前
-		double[] priceArray3 = dao.getPriceArray(12, test_instrument_id, StatisticsUtil.moveDate(Global.tradingDay, -3));//3天前
-		
-		double maPrice = StatisticsUtil.getMovingAverage(priceArray);
-		//连续两天高于MA
-		if((priceArray[1] < priceArray[0])&& (priceArray[1] < maPrice)){
-			
+		//获取15天之内的收盘价
+		List<Double> priceArray = dao.getPriceArray(15, test_instrument_id, Global.tradingDay);
+//		double yesterdayPrice = priceArray.get(priceArray.size()-1);//昨日收盘价
+		if(priceArray != null){
+			Collections.sort(priceArray);
+		} else {
+			System.err.println("没有找到对应的结果...");
+			return;
 		}
+		double lowestPrice = priceArray.get(0);//15天之内最低收盘价
+		double highestPrice = priceArray.get(priceArray.size()-1);//15天之内最高收盘价
 		
-		//tick判断
-		boolean tick = false;
+//		double maPrice = StatisticsUtil.getMovingAverage(priceArray);
+		
 		for (int i = 200; i < Global.lastPriceArray.length; i=i+Global.interval) {
+			//如果持仓为0
+			if(Global.positionPrice == 0){
+				//进场条件
+				if(Global.lastPriceArray[i] > highestPrice) {
+					//买多开仓
+					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
+				} else if (Global.lastPriceArray[i] < lowestPrice) {
+					//卖空开仓
+					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
+				}
+			} else {
+				boolean closeFlag1 = false ;
+				boolean closeFlag2 = false ;
+				boolean closeFlag3 = false ;
+				boolean closeFlag4 = false ;
+				//出场条件
+				if(Global.bs){//持有多头头寸
+					//浮动盈亏超过50点，平仓
+					closeFlag1 = (Global.positionPrice-Global.lastPriceArray[i])>50;
+					//连续两日收盘价在MA10之下
+					
+					if(closeFlag1||closeFlag2||closeFlag3||closeFlag4){
+						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
+					}
+				} else {//持有空头头寸
+					if((Global.lastPriceArray[i]-Global.positionPrice)>50){//浮动盈亏超过50点，平仓
+						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
+					}
+				}
+			}
 			
 		}
 		print();

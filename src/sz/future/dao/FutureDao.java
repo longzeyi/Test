@@ -127,20 +127,27 @@ public class FutureDao {
 	 * @param tradingDay 当前交易日
 	 * @return
 	 */
-	public double[] getPriceArray(int days, String instrumentId, Date tradingDay){
-		double[] array = new double[days];
+	public List<Double> getPriceArray(int days, String instrumentId, Date tradingDay){
+		List<Double> array = new ArrayList<Double>();
 		conn = DBConnectionManager.getConnection();
-		String query = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day <= ? ORDER BY trading_day desc limit ?";
+		String query1 = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day = ?";
+		String query2 = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
 		try {
-			pst = conn.prepareStatement(query);
+			pst = conn.prepareStatement(query1);
 			pst.setString(1, instrumentId);
 			pst.setDate(2, (java.sql.Date) tradingDay);
-			pst.setInt(3, days);
 			rs = pst.executeQuery();
-			int i = 0;
-			while (rs.next()) {
-				array[i] = rs.getDouble("last_price");
-				i ++;
+			if(rs.next()){
+				pst = conn.prepareStatement(query2);
+				pst.setString(1, instrumentId);
+				pst.setDate(2, (java.sql.Date) tradingDay);
+				pst.setInt(3, days);
+				rs = pst.executeQuery();
+				while (rs.next()) {
+					array.add(rs.getDouble("last_price"));
+				}
+			} else {
+				return null;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
