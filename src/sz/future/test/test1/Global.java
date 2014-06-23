@@ -1,6 +1,8 @@
 package sz.future.test.test1;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Global {
 	public static String[] updateTimeArray = null;
@@ -35,6 +37,8 @@ public class Global {
 	public static int profitCount = 0;				//盈利次数
 	public static int lossCount = 0;				//亏损次数
 	public static int balanceCount = 0;				//平衡次数
+	
+	public static Map<Date, Double> dayMd = new HashMap<Date, Double>();
 	
 	public static void initArray(int size){
 		updateTimeArray = new String[size];

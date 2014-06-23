@@ -8,8 +8,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -98,7 +100,7 @@ public class FutureDao {
 	public List<MdDay> loadDayData(String instrumentId){
 		List<MdDay> list = new ArrayList<MdDay>();
 		conn = DBConnectionManager.getConnection();
-		String query = "SELECT instrument_id,trading_day,last_price,total_volume FROM tb_md_day_2013 WHERE instrument_id = ? ORDER BY trading_day";
+		String query = "SELECT instrument_id,trading_day,last_price,total_volume FROM tb_md_day_2013 WHERE instrument_id = ? ORDER BY trading_day desc";
 		try {
 			pst = conn.prepareStatement(query);
 			pst.setString(1, instrumentId);
@@ -119,6 +121,27 @@ public class FutureDao {
 			DBConnectionManager.closeConnection(conn);
 		}
 		return list;
+	}
+	
+	public Map<Date, Double> loadDayData1(String instrumentId){
+		Map<Date, Double> map = new HashMap<Date, Double>();
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT instrument_id,trading_day,last_price,total_volume FROM tb_md_day_2013 WHERE instrument_id = ? ORDER BY trading_day desc";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				map.put(rs.getDate("trading_day"), rs.getDouble("last_price"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return map;
 	}
 	
 	/**

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,6 @@ import java.util.regex.Pattern;
 import sz.future.dao.FutureDao;
 import sz.future.domain.MdDay;
 import sz.future.util.CsvDataUtil;
-import sz.future.util.StatisticsUtil;
 
 public class Test1 {
 
@@ -39,33 +39,17 @@ public class Test1 {
 	private static double ds = 0;
 	private static int count = 0;
 	private static FutureDao dao = new FutureDao();
-	private static List<MdDay> dayList = new ArrayList<MdDay>();
+//	private static List<MdDay> dayList = new ArrayList<MdDay>();
+	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
 	 * @param args
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		dayList = dao.loadDayData(test_instrument_id);
+		Global.dayMd = dao.loadDayData1(test_instrument_id);
 		
 		queryMd();
-//		for (int i = 100; i <= 900; i += 100) {
-//			for (int j = 1; j <= 31; j++) {
-//				try {
-//					init("F:/baiduyundownload/20130" + (i + j) + "/M05_20130"
-//							+ (i + j) + ".csv");
-//				} catch (Exception e) {
-//					continue;
-//				}
-//				strategy();
-//				ds += Global.point;
-//				count += Global.transactionCount;
-////				Global.init();
-//				Thread.sleep(500);
-//			}
-//
-//			// init("F:/baiduyundownload/20131114/M05_20131114.csv");
-//		}
 		System.out.println(ds);
 		System.out.println(count);
 		// init("E:/NEW/Book1.csv");

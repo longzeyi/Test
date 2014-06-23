@@ -2,8 +2,9 @@ package sz.future.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
-import sz.future.dao.FutureDao;
+import sz.future.test.test1.Global;
 
 public class StatisticsUtil {
 	
@@ -33,12 +34,34 @@ public class StatisticsUtil {
     	 return cal.getTime();
      }
     
+    /**
+     * 判断指定日期的收盘价是高于MA10还是低于MA10
+     * @param date 指定日期
+     * @return 高于或等于MA10返回true,低于MA10返回false
+     */
     public static boolean belowOrUnderMA(Date date){
     	boolean bool = false;
+    	double [] prices = new double[10];
+    	double closePrice = Global.dayMd.get(date);
     	double maPrice = 0d;
-    	double closePrice = 0d;
-    	FutureDao dao = new FutureDao();
-    	//还是加到内存中吧，map
+    	Iterator<Date> it = Global.dayMd.keySet().iterator();
+    	while(it.hasNext()){
+    		Date da = it.next();
+    		int i = 0;
+    		if(da.getTime()<date.getTime()){
+    			prices[i] = Global.dayMd.get(da);
+    			i++;
+    		}
+    		if(i>prices.length){
+    			break;
+    		}
+    	}
+    	maPrice = getMovingAverage(prices);
+    	if(closePrice<maPrice){
+    		bool = false;
+    	} else {
+    		bool = true;
+    	}
     	return bool;
     }
 }
