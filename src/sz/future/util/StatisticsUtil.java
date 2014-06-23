@@ -3,6 +3,8 @@ package sz.future.util;
 import java.util.Calendar;
 import java.util.Date;
 
+import sz.future.dao.FutureDao;
+
 public class StatisticsUtil {
 	
      /**
@@ -30,6 +32,15 @@ public class StatisticsUtil {
     	 cal.add(Calendar.DATE, count);
     	 return cal.getTime();
      }
+    
+    public static boolean belowOrUnderMA(Date date){
+    	boolean bool = false;
+    	double maPrice = 0d;
+    	double closePrice = 0d;
+    	FutureDao dao = new FutureDao();
+    	//还是加到内存中吧，map
+    	return bool;
+    }
 }
 
 
