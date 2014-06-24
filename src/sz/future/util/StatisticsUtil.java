@@ -1,5 +1,6 @@
 package sz.future.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -40,6 +41,7 @@ public class StatisticsUtil {
      * @return 高于或等于MA10返回true,低于MA10返回false
      */
     public static boolean belowOrUnderMA(Date date){
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     	boolean bool = false;
     	double [] prices = new double[10];
     	double closePrice = Global.dayMd.get(date);

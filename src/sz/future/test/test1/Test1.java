@@ -2,10 +2,8 @@ package sz.future.test.test1;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +13,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import sz.future.dao.FutureDao;
-import sz.future.domain.MdDay;
 import sz.future.util.CsvDataUtil;
+import sz.future.util.StatisticsUtil;
 
 public class Test1 {
 
-	private static final String[] strs = { "AG", "AU", "CU", "FG", "J", "JM",
-		"L", "M", "ME", "OI", "P", "RB", "RM", "RU", "SR", "TA", "V", "Y" };
+//	private static final String[] strs = { "AG", "AU", "CU", "FG", "J", "JM",
+//		"L", "M", "ME", "OI", "P", "RB", "RM", "RU", "SR", "TA", "V", "Y" };
+	private static final String[] strs = { "RM" };
 	private static final String[] months = { "01", "02", "03", "04", "05",
 			"06", "07", "08", "09", "10", "11", "12" };
 	private static final String[] days = { "01", "02", "03", "04", "05", "06",
@@ -36,8 +35,8 @@ public class Test1 {
 			"([A-Z]+)([0-9]+)_([0-9]+).CSV", Pattern.DOTALL
 					+ Pattern.CASE_INSENSITIVE);
 	private static Matcher mt = null;
-	private static double ds = 0;
-	private static int count = 0;
+//	private static double ds = 0;
+//	private static int count = 0;
 	private static FutureDao dao = new FutureDao();
 //	private static List<MdDay> dayList = new ArrayList<MdDay>();
 	
@@ -48,10 +47,10 @@ public class Test1 {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		Global.dayMd = dao.loadDayData1(test_instrument_id);
-		
+		System.out.println("Global.dayMd SIZE : " + Global.dayMd.size());
 		queryMd();
-		System.out.println(ds);
-		System.out.println(count);
+//		System.out.println(ds);
+//		System.out.println(count);
 		// init("E:/NEW/Book1.csv");
 	}
 
@@ -92,9 +91,9 @@ public class Test1 {
 						sb2.append(strs[k]).append(months[k2]).append("_")
 								.append(dateDir).append(".csv");
 						String path = sb.toString() + sb2.toString();
-						int count = CsvDataUtil.readCsvCount(path);
-						if (count > 0) {
-							map.put(count, path);
+						int total = CsvDataUtil.readCsvCount(path);
+						if (total > 0) {
+							map.put(total, path);
 						}
 					}
 					if (map.size() == 0) {
@@ -138,12 +137,10 @@ public class Test1 {
 
 	private static void strategy() {
 		System.err.println("================================================");
-		//10日均线判断
-		boolean md = false;
 		//获取15天之内的收盘价
 		List<Double> priceArray = dao.getPriceArray(15, test_instrument_id, Global.tradingDay);
 //		double yesterdayPrice = priceArray.get(priceArray.size()-1);//昨日收盘价
-		if(priceArray != null){
+		if(priceArray.size() > 0){
 			Collections.sort(priceArray);
 		} else {
 			System.err.println("没有找到对应的结果...");
@@ -151,8 +148,6 @@ public class Test1 {
 		}
 		double lowestPrice = priceArray.get(0);//15天之内最低收盘价
 		double highestPrice = priceArray.get(priceArray.size()-1);//15天之内最高收盘价
-		
-//		double maPrice = StatisticsUtil.getMovingAverage(priceArray);
 		
 		for (int i = 200; i < Global.lastPriceArray.length; i=i+Global.interval) {
 			//如果持仓为0
@@ -169,18 +164,41 @@ public class Test1 {
 				boolean closeFlag1 = false ;
 				boolean closeFlag2 = false ;
 				boolean closeFlag3 = false ;
-				boolean closeFlag4 = false ;
 				//出场条件
 				if(Global.bs){//持有多头头寸
-					//浮动盈亏超过50点，平仓
-					closeFlag1 = (Global.positionPrice-Global.lastPriceArray[i])>50;
-					//连续两日收盘价在MA10之下
+					//浮动亏损超过50点
+					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > 50;
 					
-					if(closeFlag1||closeFlag2||closeFlag3||closeFlag4){
+					if(StatisticsUtil.belowOrUnderMA(StatisticsUtil.moveDate(new Date(), -1))){
+						closeFlag2 = false;//一天前收盘价在MA10之上
+					} else {
+						closeFlag2 = true;//一天前收盘价在MA10之下
+					}
+					if(StatisticsUtil.belowOrUnderMA(StatisticsUtil.moveDate(new Date(), -2))){
+						closeFlag3 = false;//两天前收盘价在MA10之上
+					} else {
+						closeFlag3 = true;//两天前收盘价在MA10之下
+					}
+					if(closeFlag1||closeFlag2||closeFlag3){
+						//多头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
 					}
 				} else {//持有空头头寸
-					if((Global.lastPriceArray[i]-Global.positionPrice)>50){//浮动盈亏超过50点，平仓
+					//浮动盈亏超过50点
+					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > 50;
+					
+					if(StatisticsUtil.belowOrUnderMA(StatisticsUtil.moveDate(new Date(), -1))){
+						closeFlag2 = true;//一天前收盘价在MA10之上
+					} else {
+						closeFlag2 = false;//一天前收盘价在MA10之下
+					}
+					if(StatisticsUtil.belowOrUnderMA(StatisticsUtil.moveDate(new Date(), -2))){
+						closeFlag3 = true;//两天前收盘价在MA10之上
+					} else {
+						closeFlag3 = false;//两天前收盘价在MA10之下
+					}
+					if(closeFlag1||closeFlag2||closeFlag3){
+						//空头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
 					}
 				}

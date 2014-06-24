@@ -158,12 +158,12 @@ public class FutureDao {
 		try {
 			pst = conn.prepareStatement(query1);
 			pst.setString(1, instrumentId);
-			pst.setDate(2, (java.sql.Date) tradingDay);
+			pst.setDate(2, new java.sql.Date(tradingDay.getTime()));
 			rs = pst.executeQuery();
 			if(rs.next()){
 				pst = conn.prepareStatement(query2);
 				pst.setString(1, instrumentId);
-				pst.setDate(2, (java.sql.Date) tradingDay);
+				pst.setDate(2, new java.sql.Date(tradingDay.getTime()));
 				pst.setInt(3, days);
 				rs = pst.executeQuery();
 				while (rs.next()) {
