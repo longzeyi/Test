@@ -35,8 +35,7 @@ public class Test1 {
 			"([A-Z]+)([0-9]+)_([0-9]+).CSV", Pattern.DOTALL
 					+ Pattern.CASE_INSENSITIVE);
 	private static Matcher mt = null;
-//	private static double ds = 0;
-//	private static int count = 0;
+	private static int n = 1;
 	private static FutureDao dao = new FutureDao();
 //	private static List<MdDay> dayList = new ArrayList<MdDay>();
 	
@@ -47,21 +46,21 @@ public class Test1 {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		Global.dayMd = dao.loadDayData1(test_instrument_id);
-		Iterator<Date> it = Global.dayMd.keySet().iterator();
-		while(it.hasNext()){
-			System.out.println(it.next());
-		}
-		System.out.println("Global.dayMd SIZE : " + Global.dayMd.size());
+//		Iterator<Date> it = Global.dayMd.keySet().iterator();
+//		while(it.hasNext()){
+//			System.out.println(it.next());
+//		}
+//		System.out.println("Global.dayMd SIZE : " + Global.dayMd.size());
 		queryMd();
-//		System.out.println(ds);
-//		System.out.println(count);
-		// init("E:/NEW/Book1.csv");
+		print();
 	}
 
 	private static void testTrading(String path) {
 		// load csv
 		List<String[]> csvList = CsvDataUtil.readeCsv(path);
 		int size = csvList.size();
+//		System.out.println(path + " : " + size);
+//		System.out.println("第"+ n++ + "天");
 		Global.initArray(size);
 		try {
 			Global.tradingDay = sdf.parse(csvList.get(0)[0]);
@@ -110,7 +109,7 @@ public class Test1 {
 						entry = it.next();
 					}
 					full_path = entry.getValue();
-					System.out.println("行数：" + entry.getKey() + "路径：" + entry.getValue());
+//					System.out.println("行数：" + entry.getKey() + "路径：" + entry.getValue());
 					// 保存数据
 					mt = pt.matcher(entry.getValue());
 					if (mt.find()) {
@@ -140,20 +139,19 @@ public class Test1 {
 	}
 
 	private static void strategy() {
-		System.err.println("================================================");
-		//获取15天之内的收盘价
-		List<Double> priceArray = dao.getPriceArray(15, test_instrument_id, Global.tradingDay);
-//		double yesterdayPrice = priceArray.get(priceArray.size()-1);//昨日收盘价
-		if(priceArray.size() >= 15){
+		System.err.println("======================="+Global.tradingDay.toLocaleString()+"=========================");
+		//获取12天之内的收盘价
+		List<Double> priceArray = dao.getPriceArray(12, test_instrument_id, Global.tradingDay);
+		if(priceArray.size() >= 12){
 			Collections.sort(priceArray);
 		} else {
 			System.err.println("没有找到对应的结果...");
 			return;
 		}
-		double lowestPrice = priceArray.get(0);//15天之内最低收盘价
-		double highestPrice = priceArray.get(priceArray.size()-1);//15天之内最高收盘价
+		double lowestPrice = priceArray.get(0);//12天之内最低收盘价
+		double highestPrice = priceArray.get(priceArray.size()-1);//12天之内最高收盘价
 		
-		for (int i = 200; i < Global.lastPriceArray.length; i=i+Global.interval) {
+		for (int i = 500; i < Global.lastPriceArray.length; i=i+Global.interval) {
 			//如果持仓为0
 			if(Global.positionPrice == 0){
 				//进场条件
@@ -171,7 +169,7 @@ public class Test1 {
 				//出场条件
 				if(Global.bs){//持有多头头寸
 					//浮动亏损超过50点
-					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > 50;
+					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > 80;
 					
 					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = false;//一天前收盘价在MA10之上
@@ -183,13 +181,14 @@ public class Test1 {
 					} else {
 						closeFlag3 = true;//两天前收盘价在MA10之下
 					}
-					if(closeFlag1||closeFlag2||closeFlag3){
+					if(closeFlag1||(closeFlag2&&closeFlag3)){
+						if(closeFlag1)System.out.println("浮亏80...............");
 						//多头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
 					}
 				} else {//持有空头头寸
 					//浮动盈亏超过50点
-					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > 50;
+					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > 80;
 					
 					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = true;//一天前收盘价在MA10之上
@@ -201,7 +200,8 @@ public class Test1 {
 					} else {
 						closeFlag3 = false;//两天前收盘价在MA10之下
 					}
-					if(closeFlag1||closeFlag2||closeFlag3){
+					if(closeFlag1||(closeFlag2&&closeFlag3)){
+						if(closeFlag1)System.out.println("浮亏80...............");
 						//空头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
 					}
@@ -209,7 +209,7 @@ public class Test1 {
 			}
 			
 		}
-		print();
+//		print();
 	}
 
 	/**
@@ -230,11 +230,13 @@ public class Test1 {
 				Global.positionPrice = priceS1;
 				Global.transactionCount++;
 				Global.longCount++;
+				System.out.println("多头开仓价:" + Global.positionPrice);
 			} else {// 买多平仓
 				profit = priceB1 - Global.positionPrice;
 				Global.point = Global.point + profit;
 				System.out.println("第" + Global.transactionCount + "次交易："
 						+ profit);
+				System.out.println("多头持仓价:" + Global.positionPrice + "多头平仓价:" + priceB1);
 				if (profit > 0) {
 					Global.profitCount++;
 				} else if (profit < 0) {
@@ -251,11 +253,13 @@ public class Test1 {
 				Global.positionPrice = priceB1;
 				Global.transactionCount++;
 				Global.shortCount++;
+				System.out.println("空头开仓价:" + Global.positionPrice);
 			} else {// 卖空平仓
 				profit = Global.positionPrice - priceS1;
 				Global.point = Global.point + profit;
 				System.out.println("第" + Global.transactionCount + "次交易："
 						+ profit);
+				System.out.println("空头持仓价:" + Global.positionPrice + "空头平仓价:" + priceS1);
 				if (profit > 0) {
 					Global.profitCount++;
 				} else if (profit < 0) {

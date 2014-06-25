@@ -63,11 +63,11 @@ public class StatisticsUtil {
     				falg = true;
     			}
     			if (falg){
-    				prices[i] = Global.dayMd.get(da);
-    				i++;
-    				if(i > prices.length){
+    				if(i == prices.length){
     	    			break;
     	    		}
+    				prices[i] = Global.dayMd.get(da);
+    				i++;
     			}
     		}
     	}
