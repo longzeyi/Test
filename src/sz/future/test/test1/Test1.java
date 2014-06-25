@@ -47,6 +47,10 @@ public class Test1 {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		Global.dayMd = dao.loadDayData1(test_instrument_id);
+		Iterator<Date> it = Global.dayMd.keySet().iterator();
+		while(it.hasNext()){
+			System.out.println(it.next());
+		}
 		System.out.println("Global.dayMd SIZE : " + Global.dayMd.size());
 		queryMd();
 //		System.out.println(ds);
@@ -140,7 +144,7 @@ public class Test1 {
 		//获取15天之内的收盘价
 		List<Double> priceArray = dao.getPriceArray(15, test_instrument_id, Global.tradingDay);
 //		double yesterdayPrice = priceArray.get(priceArray.size()-1);//昨日收盘价
-		if(priceArray.size() > 0){
+		if(priceArray.size() >= 15){
 			Collections.sort(priceArray);
 		} else {
 			System.err.println("没有找到对应的结果...");
@@ -169,12 +173,12 @@ public class Test1 {
 					//浮动亏损超过50点
 					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > 50;
 					
-					if(StatisticsUtil.belowOrUnderMA(StatisticsUtil.moveDate(new Date(), -1))){
+					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = false;//一天前收盘价在MA10之上
 					} else {
 						closeFlag2 = true;//一天前收盘价在MA10之下
 					}
-					if(StatisticsUtil.belowOrUnderMA(StatisticsUtil.moveDate(new Date(), -2))){
+					if(StatisticsUtil.belowOrUnderMA(2)){
 						closeFlag3 = false;//两天前收盘价在MA10之上
 					} else {
 						closeFlag3 = true;//两天前收盘价在MA10之下
@@ -187,12 +191,12 @@ public class Test1 {
 					//浮动盈亏超过50点
 					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > 50;
 					
-					if(StatisticsUtil.belowOrUnderMA(StatisticsUtil.moveDate(new Date(), -1))){
+					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = true;//一天前收盘价在MA10之上
 					} else {
 						closeFlag2 = false;//一天前收盘价在MA10之下
 					}
-					if(StatisticsUtil.belowOrUnderMA(StatisticsUtil.moveDate(new Date(), -2))){
+					if(StatisticsUtil.belowOrUnderMA(2)){
 						closeFlag3 = true;//两天前收盘价在MA10之上
 					} else {
 						closeFlag3 = false;//两天前收盘价在MA10之下

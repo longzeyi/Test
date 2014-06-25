@@ -8,10 +8,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -124,7 +125,7 @@ public class FutureDao {
 	}
 	
 	public Map<Date, Double> loadDayData1(String instrumentId){
-		Map<Date, Double> map = new HashMap<Date, Double>();
+		Map<Date, Double> map = new LinkedHashMap<Date, Double>();
 		conn = DBConnectionManager.getConnection();
 		String query = "SELECT instrument_id,trading_day,last_price,total_volume FROM tb_md_day_2013 WHERE instrument_id = ? ORDER BY trading_day desc";
 		try {

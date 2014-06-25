@@ -1,5 +1,6 @@
 package sz.future.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,22 +41,34 @@ public class StatisticsUtil {
      * @param date 指定日期
      * @return 高于或等于MA10返回true,低于MA10返回false
      */
-    public static boolean belowOrUnderMA(Date date){
-    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    public static boolean belowOrUnderMA(int day) {
+//    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//    	String strDate = sdf.format(date);
+//    	System.out.println("date:  "+strDate);
     	boolean bool = false;
     	double [] prices = new double[10];
-    	double closePrice = Global.dayMd.get(date);
+    	double closePrice = 0;
     	double maPrice = 0d;
     	Iterator<Date> it = Global.dayMd.keySet().iterator();
+    	int i = 0;
+    	int j = 0;
+    	boolean falg = false;
+    	//取10天的收盘价
     	while(it.hasNext()){
     		Date da = it.next();
-    		int i = 0;
-    		if(da.getTime()<date.getTime()){
-    			prices[i] = Global.dayMd.get(da);
-    			i++;
-    		}
-    		if(i>prices.length){
-    			break;
+    		if(da.getTime() < Global.tradingDay.getTime()){//交易当天的前1天
+    			j++;
+    			if(j==day){
+    				closePrice = Global.dayMd.get(da);//day天前的收盘价
+    				falg = true;
+    			}
+    			if (falg){
+    				prices[i] = Global.dayMd.get(da);
+    				i++;
+    				if(i > prices.length){
+    	    			break;
+    	    		}
+    			}
     		}
     	}
     	maPrice = getMovingAverage(prices);
