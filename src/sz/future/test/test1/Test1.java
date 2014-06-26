@@ -3,7 +3,6 @@ package sz.future.test.test1;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class Test1 {
 
 //	private static final String[] strs = { "AG", "AU", "CU", "FG", "J", "JM",
 //		"L", "M", "ME", "OI", "P", "RB", "RM", "RU", "SR", "TA", "V", "Y" };
-	private static final String[] strs = { "RM" };
+	private static final String[] strs = { "P" };
 	private static final String[] months = { "01", "02", "03", "04", "05",
 			"06", "07", "08", "09", "10", "11", "12" };
 	private static final String[] days = { "01", "02", "03", "04", "05", "06",
@@ -28,7 +27,7 @@ public class Test1 {
 			"18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
 			"29", "30", "31" };
 	private static final int year = 2013;
-	public static final String test_instrument_id = "RM1401";
+	public static final String test_instrument_id = "P1309";
 	public static String instrument_id = "";
 	public static String full_path = "";
 	private static Pattern pt = Pattern.compile(
@@ -139,26 +138,28 @@ public class Test1 {
 	}
 
 	private static void strategy() {
-		System.err.println("======================="+Global.tradingDay.toLocaleString()+"=========================");
+		System.err.println("-----------------------------------------------"+Global.tradingDay.toLocaleString()+"-----------------------------------------------");
 		//获取12天之内的收盘价
 		List<Double> priceArray = dao.getPriceArray(12, test_instrument_id, Global.tradingDay);
 		if(priceArray.size() >= 12){
 			Collections.sort(priceArray);
 		} else {
-			System.err.println("没有找到对应的结果...");
+			System.out.println("没有找到对应的结果...");
 			return;
 		}
 		double lowestPrice = priceArray.get(0);//12天之内最低收盘价
 		double highestPrice = priceArray.get(priceArray.size()-1);//12天之内最高收盘价
 		
-		for (int i = 500; i < Global.lastPriceArray.length; i=i+Global.interval) {
+		for (int i = 100; i < Global.lastPriceArray.length; i=i+Global.interval) {
 			//如果持仓为0
 			if(Global.positionPrice == 0){
 				//进场条件
 				if(Global.lastPriceArray[i] > highestPrice) {
+					System.out.println("大于12天最高价"+ highestPrice);
 					//买多开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
 				} else if (Global.lastPriceArray[i] < lowestPrice) {
+					System.out.println("小于12天最低价"+ lowestPrice);
 					//卖空开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
 				}
@@ -169,7 +170,7 @@ public class Test1 {
 				//出场条件
 				if(Global.bs){//持有多头头寸
 					//浮动亏损超过50点
-					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > 80;
+					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > 15;
 					
 					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = false;//一天前收盘价在MA10之上
@@ -182,13 +183,14 @@ public class Test1 {
 						closeFlag3 = true;//两天前收盘价在MA10之下
 					}
 					if(closeFlag1||(closeFlag2&&closeFlag3)){
-						if(closeFlag1)System.out.println("浮亏80...............");
+						if(closeFlag1)System.out.println("浮亏超过30..............."+Global.lastPriceArray[i]);
 						//多头平仓
-						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
+						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
 					}
+					break;
 				} else {//持有空头头寸
 					//浮动盈亏超过50点
-					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > 80;
+					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > 15;
 					
 					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = true;//一天前收盘价在MA10之上
@@ -201,11 +203,12 @@ public class Test1 {
 						closeFlag3 = false;//两天前收盘价在MA10之下
 					}
 					if(closeFlag1||(closeFlag2&&closeFlag3)){
-						if(closeFlag1)System.out.println("浮亏80...............");
+						if(closeFlag1)System.out.println("浮亏超过30..............."+Global.lastPriceArray[i]);
 						//空头平仓
-						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
+						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
 					}
 				}
+				break;
 			}
 			
 		}
@@ -224,19 +227,17 @@ public class Test1 {
 			boolean bs) {
 		double profit = 0;
 		if (bs) {
-			if (oc) {// 买多开仓
+			if (oc) {// 多头开仓
 				Global.bs = true;
 				Global.openOrClose = true;
 				Global.positionPrice = priceS1;
 				Global.transactionCount++;
 				Global.longCount++;
-				System.out.println("多头开仓价:" + Global.positionPrice);
-			} else {// 买多平仓
+				System.out.println("多头开仓：第" + Global.transactionCount + "次交易： 多头持仓价："  + Global.positionPrice);
+			} else {// 多头平仓
 				profit = priceB1 - Global.positionPrice;
 				Global.point = Global.point + profit;
-				System.out.println("第" + Global.transactionCount + "次交易："
-						+ profit);
-				System.out.println("多头持仓价:" + Global.positionPrice + "多头平仓价:" + priceB1);
+				System.err.println("多头平仓： 第" + Global.transactionCount + "次交易： 多头持仓价：" + Global.positionPrice + "  多头平仓价：" + priceB1 + "  浮动盈亏：" + profit);
 				if (profit > 0) {
 					Global.profitCount++;
 				} else if (profit < 0) {
@@ -247,19 +248,17 @@ public class Test1 {
 				mark();
 			}
 		} else {
-			if (oc) {// 卖空开仓
+			if (oc) {// 空头开仓
 				Global.bs = false;
 				Global.openOrClose = false;
 				Global.positionPrice = priceB1;
 				Global.transactionCount++;
 				Global.shortCount++;
-				System.out.println("空头开仓价:" + Global.positionPrice);
-			} else {// 卖空平仓
+				System.out.println("空头开仓：第" + Global.transactionCount + "次交易： 空头持仓价："  + Global.positionPrice);
+			} else {// 空头平仓
 				profit = Global.positionPrice - priceS1;
 				Global.point = Global.point + profit;
-				System.out.println("第" + Global.transactionCount + "次交易："
-						+ profit);
-				System.out.println("空头持仓价:" + Global.positionPrice + "空头平仓价:" + priceS1);
+				System.err.println("空头平仓： 第" + Global.transactionCount + "次交易： 空头持仓价：" + Global.positionPrice + "  空头平仓价：" + priceS1 + "  浮动盈亏：" + profit);
 				if (profit > 0) {
 					Global.profitCount++;
 				} else if (profit < 0) {
@@ -280,9 +279,9 @@ public class Test1 {
 
 	private static void print() {
 		System.out.println("总交易次数: " + Global.transactionCount);
-		System.out.println("买多交易次数:" + Global.longCount);
-		System.out.println("卖空交易次数:" + Global.closeCount);
-		System.out.println("点数:" + Global.point);
+		System.out.println("多头交易次数:" + Global.longCount);
+		System.out.println("空头交易次数:" + Global.closeCount);
+		System.out.println("盈亏点数:" + Global.point);
 		System.out.println("盈次数：" + Global.profitCount);
 		System.out.println("亏次数：" + Global.lossCount);
 		System.out.println("平次数：" + Global.balanceCount);
