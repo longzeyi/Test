@@ -71,7 +71,7 @@ public class ImportData {
 								.append(dateDir).append(".csv");
 						String path = sb.toString() + sb2.toString();
 						int count = CsvDataUtil.readCsvCount(path);
-						if (count > 0) {
+						if (count > 2000) {
 							map.put(CsvDataUtil.readCsvCount(path), path);
 						}
 					}
@@ -83,29 +83,30 @@ public class ImportData {
 					Entry<Integer, String> entry = null;
 					while (it.hasNext()) {
 						entry = it.next();
-					}
-					full_path = entry.getValue();
-					System.out.println("行数：" + entry.getKey() + "路径：" + entry.getValue());
-					// 保存数据
-					mt = pt.matcher(entry.getValue());
-					if (mt.find()) {
-//						System.out.println(months[i] +" : "+mt.group(2));
-						// 如果行情月份小于合约月份，年份为13
-						if (Integer.parseInt(months[i]) < Integer.parseInt(mt
-								.group(2))) {
-							instrumentYear = "13";
-						} else {
-							instrumentYear = "14";
+						full_path = entry.getValue();
+						System.out.println("行数：" + entry.getKey() + "路径：" + entry.getValue());
+						// 保存数据
+						mt = pt.matcher(entry.getValue());
+						if (mt.find()) {
+//							System.out.println(months[i] +" : "+mt.group(2));
+							// 如果行情月份小于合约月份，年份为13
+							if (Integer.parseInt(months[i]) < Integer.parseInt(mt
+									.group(2))) {
+								instrumentYear = "13";
+							} else {
+								instrumentYear = "14";
+							}
+							instrument_id = mt.group(1) + instrumentYear + mt.group(2);
+//							System.out.println("合约名: "+mt.group(1) + instrumentYear
+//									+ mt.group(2));
+//							System.out.println("合约商品: " + mt.group(1));
+//							System.out.println("合约月份: " + mt.group(2));
+//							System.out.println("行情日期: " + mt.group(3));
 						}
-						instrument_id = mt.group(1) + instrumentYear + mt.group(2);
-//						System.out.println("合约名: "+mt.group(1) + instrumentYear
-//								+ mt.group(2));
-//						System.out.println("合约商品: " + mt.group(1));
-//						System.out.println("合约月份: " + mt.group(2));
-//						System.out.println("行情日期: " + mt.group(3));
+//						saveTickData(full_path);
+						saveDayData(full_path);
 					}
-//					saveTickData(full_path);
-					saveDayData(full_path);
+					
 				}
 			}
 		}

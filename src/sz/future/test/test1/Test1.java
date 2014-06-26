@@ -3,6 +3,7 @@ package sz.future.test.test1;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,24 +18,13 @@ import sz.future.util.StatisticsUtil;
 
 public class Test1 {
 
-//	private static final String[] strs = { "AG", "AU", "CU", "FG", "J", "JM",
-//		"L", "M", "ME", "OI", "P", "RB", "RM", "RU", "SR", "TA", "V", "Y" };
-	private static final String[] strs = { "P" };
-	private static final String[] months = { "01", "02", "03", "04", "05",
-			"06", "07", "08", "09", "10", "11", "12" };
-	private static final String[] days = { "01", "02", "03", "04", "05", "06",
-			"07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17",
-			"18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28",
-			"29", "30", "31" };
-	private static final int year = 2013;
-	public static final String test_instrument_id = "P1309";
 	public static String instrument_id = "";
 	public static String full_path = "";
 	private static Pattern pt = Pattern.compile(
 			"([A-Z]+)([0-9]+)_([0-9]+).CSV", Pattern.DOTALL
 					+ Pattern.CASE_INSENSITIVE);
+	
 	private static Matcher mt = null;
-	private static int n = 1;
 	private static FutureDao dao = new FutureDao();
 //	private static List<MdDay> dayList = new ArrayList<MdDay>();
 	
@@ -44,7 +34,7 @@ public class Test1 {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		Global.dayMd = dao.loadDayData1(test_instrument_id);
+		Global.dayMd = dao.loadDayData1(Global.test_instrument_id);
 //		Iterator<Date> it = Global.dayMd.keySet().iterator();
 //		while(it.hasNext()){
 //			System.out.println(it.next());
@@ -59,7 +49,6 @@ public class Test1 {
 		List<String[]> csvList = CsvDataUtil.readeCsv(path);
 		int size = csvList.size();
 //		System.out.println(path + " : " + size);
-//		System.out.println("第"+ n++ + "天");
 		Global.initArray(size);
 		try {
 			Global.tradingDay = sdf.parse(csvList.get(0)[0]);
@@ -76,25 +65,30 @@ public class Test1 {
 			// System.out.println(Global.priceArray[row]);
 		}
 		strategy();
+		if(++Global.dayCount == 1){
+			Global.startDate = Global.tradingDay;
+		} else {
+			Global.endDate = Global.tradingDay;
+		}
 	}
 	
 	private static void queryMd() {
 		//20130104/AG01_20130104.csv
 		String instrumentYear = "";
-		for (int i = 0; i < months.length; i++) {
-			for (int j = 0; j < days.length; j++) {
+		for (int i = 0; i < Global.months.length; i++) {
+			for (int j = 0; j < Global.days.length; j++) {
 				StringBuffer sb = new StringBuffer("e:/BaiduYunDownload/");
-				String dateDir = year + months[i] + days[j];
+				String dateDir = Global.year + Global.months[i] + Global.days[j];
 				sb.append(dateDir).append("/");
-				for (int k = 0; k < strs.length; k++) {
+				for (int k = 0; k < Global.strs.length; k++) {
 					Map<Integer, String> map = new TreeMap<Integer, String>();
-					for (int k2 = 0; k2 < months.length; k2++) {
+					for (int k2 = 0; k2 < Global.months.length; k2++) {
 						StringBuffer sb2 = new StringBuffer();
-						sb2.append(strs[k]).append(months[k2]).append("_")
+						sb2.append(Global.strs[k]).append(Global.months[k2]).append("_")
 								.append(dateDir).append(".csv");
 						String path = sb.toString() + sb2.toString();
 						int total = CsvDataUtil.readCsvCount(path);
-						if (total > 0) {
+						if (total > 2000) {
 							map.put(total, path);
 						}
 					}
@@ -106,31 +100,32 @@ public class Test1 {
 					Entry<Integer, String> entry = null;
 					while (it.hasNext()) {
 						entry = it.next();
-					}
-					full_path = entry.getValue();
-//					System.out.println("行数：" + entry.getKey() + "路径：" + entry.getValue());
-					// 保存数据
-					mt = pt.matcher(entry.getValue());
-					if (mt.find()) {
-//						System.out.println(months[i] +" : "+mt.group(2));
-						// 如果行情月份小于合约月份，年份为13
-						if (Integer.parseInt(months[i]) < Integer.parseInt(mt
-								.group(2))) {
-							instrumentYear = "13";
-						} else {
-							instrumentYear = "14";
+						full_path = entry.getValue();
+//						System.out.println("行数：" + entry.getKey() + "路径：" + entry.getValue());
+						// 保存数据
+						mt = pt.matcher(entry.getValue());
+						if (mt.find()) {
+//							System.out.println(months[i] +" : "+mt.group(2));
+							// 如果行情月份小于合约月份，年份为13
+							if (Integer.parseInt(Global.months[i]) < Integer.parseInt(mt
+									.group(2))) {
+								instrumentYear = "13";
+							} else {
+								instrumentYear = "14";
+							}
+							instrument_id = mt.group(1) + instrumentYear + mt.group(2);
+//							System.out.println("合约名: "+mt.group(1) + instrumentYear
+//									+ mt.group(2));
+//							System.out.println("合约商品: " + mt.group(1));
+//							System.out.println("合约月份: " + mt.group(2));
+//							System.out.println("行情日期: " + mt.group(3));
 						}
-						instrument_id = mt.group(1) + instrumentYear + mt.group(2);
-//						System.out.println("合约名: "+mt.group(1) + instrumentYear
-//								+ mt.group(2));
-//						System.out.println("合约商品: " + mt.group(1));
-//						System.out.println("合约月份: " + mt.group(2));
-//						System.out.println("行情日期: " + mt.group(3));
+						//如果查找出的合约和要测试的合约相同就进行测试
+						if(Global.test_instrument_id.equals(instrument_id)){
+							testTrading(full_path);
+						}
 					}
-					//如果查找出的合约和要测试的合约相同就进行测试
-					if(test_instrument_id.equals(instrument_id)){
-						testTrading(full_path);
-					}
+					
 				}
 			}
 		}
@@ -140,8 +135,8 @@ public class Test1 {
 	private static void strategy() {
 		System.err.println("-----------------------------------------------"+Global.tradingDay.toLocaleString()+"-----------------------------------------------");
 		//获取12天之内的收盘价
-		List<Double> priceArray = dao.getPriceArray(12, test_instrument_id, Global.tradingDay);
-		if(priceArray.size() >= 12){
+		List<Double> priceArray = dao.getPriceArray(Global.period, Global.test_instrument_id, Global.tradingDay);
+		if(priceArray.size() >= Global.period){
 			Collections.sort(priceArray);
 		} else {
 			System.out.println("没有找到对应的结果...");
@@ -155,11 +150,11 @@ public class Test1 {
 			if(Global.positionPrice == 0){
 				//进场条件
 				if(Global.lastPriceArray[i] > highestPrice) {
-					System.out.println("大于12天最高价"+ highestPrice);
+					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
 					//买多开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
 				} else if (Global.lastPriceArray[i] < lowestPrice) {
-					System.out.println("小于12天最低价"+ lowestPrice);
+					System.out.println("小于"+Global.period+"天最低价"+ lowestPrice);
 					//卖空开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
 				}
@@ -170,7 +165,7 @@ public class Test1 {
 				//出场条件
 				if(Global.bs){//持有多头头寸
 					//浮动亏损超过50点
-					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > 15;
+					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > Global.floatSpace;
 					
 					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = false;//一天前收盘价在MA10之上
@@ -183,14 +178,14 @@ public class Test1 {
 						closeFlag3 = true;//两天前收盘价在MA10之下
 					}
 					if(closeFlag1||(closeFlag2&&closeFlag3)){
-						if(closeFlag1)System.out.println("浮亏超过30..............."+Global.lastPriceArray[i]);
+						if(closeFlag1)System.out.println("浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
 						//多头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
 					}
 					break;
 				} else {//持有空头头寸
 					//浮动盈亏超过50点
-					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > 15;
+					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > Global.floatSpace;
 					
 					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = true;//一天前收盘价在MA10之上
@@ -203,7 +198,7 @@ public class Test1 {
 						closeFlag3 = false;//两天前收盘价在MA10之下
 					}
 					if(closeFlag1||(closeFlag2&&closeFlag3)){
-						if(closeFlag1)System.out.println("浮亏超过30..............."+Global.lastPriceArray[i]);
+						if(closeFlag1)System.out.println("浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
 						//空头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
 					}
@@ -278,6 +273,9 @@ public class Test1 {
 	}
 
 	private static void print() {
+		System.out.println("当前测试合约：" + Global.test_instrument_id);
+		System.out.println("测试合约时间范围：" + Global.startDate.toLocaleString() + "-" + Global.endDate.toLocaleString());
+		System.out.println("测试合约天数：" + Global.dayCount);
 		System.out.println("总交易次数: " + Global.transactionCount);
 		System.out.println("多头交易次数:" + Global.longCount);
 		System.out.println("空头交易次数:" + Global.closeCount);
