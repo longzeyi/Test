@@ -3,7 +3,6 @@ package sz.future.test.test1;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -135,15 +134,17 @@ public class Test1 {
 	private static void strategy() {
 		System.err.println("-----------------------------------------------"+Global.tradingDay.toLocaleString()+"-----------------------------------------------");
 		//获取12天之内的收盘价
-		List<Double> priceArray = dao.getPriceArray(Global.period, Global.test_instrument_id, Global.tradingDay);
-		if(priceArray.size() >= Global.period){
-			Collections.sort(priceArray);
+		List<Double> highestPpriceArray = dao.getPriceArray(Global.period, Global.test_instrument_id, Global.tradingDay, 2);
+		List<Double> lowestPriceArray = dao.getPriceArray(Global.period, Global.test_instrument_id, Global.tradingDay, 3);
+		if(highestPpriceArray.size() >= Global.period){
+			Collections.sort(highestPpriceArray);
+			Collections.sort(lowestPriceArray);
 		} else {
 			System.out.println("没有找到对应的结果...");
 			return;
 		}
-		double lowestPrice = priceArray.get(0);//12天之内最低收盘价
-		double highestPrice = priceArray.get(priceArray.size()-1);//12天之内最高收盘价
+		double lowestPrice = lowestPriceArray.get(0);//12天之内最低收盘价
+		double highestPrice = highestPpriceArray.get(highestPpriceArray.size()-1);//12天之内最高收盘价
 		
 		for (int i = 100; i < Global.lastPriceArray.length; i=i+Global.interval) {
 			//如果持仓为0
@@ -164,9 +165,15 @@ public class Test1 {
 				boolean closeFlag3 = false ;
 				//出场条件
 				if(Global.bs){//持有多头头寸
+					//更新为最大盈利值
+					if(Global.highestProfit < (Global.lastPriceArray[i] - Global.positionPrice)){
+						Global.highestProfit = Global.lastPriceArray[i] - Global.positionPrice;
+					}
+					//亏损超过最高盈利的50%
+					
 					//浮动亏损超过50点
 					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > Global.floatSpace;
-					
+//					System.out.println(Global.lastPriceArray[i]);
 					if(StatisticsUtil.belowOrUnderMA(1)){
 						closeFlag2 = false;//一天前收盘价在MA10之上
 					} else {
@@ -181,9 +188,13 @@ public class Test1 {
 						if(closeFlag1)System.out.println("浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
 						//多头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
+						break;//平仓当天不会再开仓
 					}
-					break;
 				} else {//持有空头头寸
+					//更新为最大盈利值
+					if(Global.highestProfit < (Global.positionPrice - Global.lastPriceArray[i])){
+						Global.highestProfit = Global.positionPrice - Global.lastPriceArray[i];
+					}
 					//浮动盈亏超过50点
 					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > Global.floatSpace;
 					
@@ -201,9 +212,9 @@ public class Test1 {
 						if(closeFlag1)System.out.println("浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
 						//空头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
+						break;//平仓当天不会再开仓
 					}
 				}
-				break;
 			}
 			
 		}

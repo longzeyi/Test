@@ -11,7 +11,7 @@ public class MdTick implements Serializable {
 	
 	private String instrumentID, bs, tradingDay, updateTime = "";
 //	private Date tradingDay, updateTime = null;
-	private double lastPrice, b1Price, s1Price;
+	private double lastPrice, b1Price, s1Price, lowestPrice, highestPrice;
 	private int volume,totalVolume, property, b1Volume, s1Volume;
 
 	public MdTick() {
@@ -72,6 +72,22 @@ public class MdTick implements Serializable {
 
 	public void setS1Price(double s1Price) {
 		this.s1Price = s1Price;
+	}
+
+	public double getLowestPrice() {
+		return lowestPrice;
+	}
+
+	public void setLowestPrice(double lowestPrice) {
+		this.lowestPrice = lowestPrice;
+	}
+
+	public double getHighestPrice() {
+		return highestPrice;
+	}
+
+	public void setHighestPrice(double highestPrice) {
+		this.highestPrice = highestPrice;
 	}
 
 	public int getVolume() {

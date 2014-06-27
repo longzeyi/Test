@@ -2,6 +2,7 @@ package sz.future.util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -157,10 +158,21 @@ public class ImportData {
 	 */
 	private static void saveDayData(String path) {
 		FutureDao dao = new FutureDao();
+		List<Double> list = new ArrayList<Double>();
 		// load csv
 		List<String[]> csvList = CsvDataUtil.readeCsv(path);
+		Iterator<String[]> it = csvList.iterator();
+		//排序价格，取得最大值和最小值
+		while(it.hasNext()){
+			list.add(Double.parseDouble(it.next()[2]));
+		}
+		Collections.sort(list);
+		double lowestPrice = list.get(0);
+		double highestPrice = list.get(list.size()-1);
+		
 		int listSize = csvList.size() - 1;
 		List<MdTick> data = new ArrayList<MdTick>();
+		
 		// fill to array
 		// MdTick mt = new MdTick();
 		// mt.setTradingDay(csvList.get(0)[0]);
@@ -188,6 +200,8 @@ public class ImportData {
 		mt1.setS1Price(Double.parseDouble(csvList.get(listSize)[8]));
 		mt1.setS1Volume(Integer.parseInt(csvList.get(listSize)[9]));
 		mt1.setBs(csvList.get(listSize)[10]);
+		mt1.setLowestPrice(lowestPrice);
+		mt1.setHighestPrice(highestPrice);
 		data.add(mt1);
 		// System.out.println(csvList.get(0)[0] + " " + csvList.get(0)[1] + " "
 		// + INSTRUMENT_ID+": " + csvList.get(0)[2]);

@@ -37,14 +37,15 @@ public class Global {
 	public static int closeCount = 0;				//平仓交易次数
 	public static boolean openOrClose = true ; 		//交易类型
 	public static boolean bs = true;				//交易方向
+	public static double highestProfit = 0;	//盈利最大值 
 	
 	public static int dayCount = 0;
 	public static Date startDate ;
 	public static Date endDate ;
 	
-	public final static int period = 12;			//这段时间内的收盘价
+	public final static int period = 10;			//这段时间内的收盘价
 	public final static int interval = 20 ;			//间隙
-	public final static double floatSpace = 20;		//忍受浮动空间
+	public final static double floatSpace = 20d;		//忍受浮动空间
 	
 	public static int profitCount = 0;				//盈利次数
 	public static int lossCount = 0;				//亏损次数

@@ -54,9 +54,9 @@ public class FutureDao {
 		int index = 0;
 		StringBuffer insert = new StringBuffer("");
 		for(int i=0; i < data.size(); i++){
-			insert.append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?),");
+			insert.append("(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?),");
 		}
-		String query = "INSERT INTO tb_md_day_2013 (instrument_id, trading_day, update_time, last_price, volume, property, bs, b1_price, s1_price, b1_volume, s1_volume, total_volume) VALUES "+insert.toString().substring(0,insert.length()-1);
+		String query = "INSERT INTO tb_md_day_2013 (instrument_id, trading_day, update_time, last_price, volume, property, bs, b1_price, s1_price, b1_volume, s1_volume, total_volume, highest_price, lowest_price) VALUES "+insert.toString().substring(0,insert.length()-1);
 		
 		try {
 			conn.setAutoCommit(false);
@@ -72,6 +72,7 @@ public class FutureDao {
 					e.printStackTrace();
 				}
 				pst.setDouble(index+4, tick.getLastPrice());
+				
 				pst.setInt(index+5, tick.getVolume());
 				pst.setInt(index+6, tick.getProperty());
 				pst.setString(index+7, tick.getBs());
@@ -80,7 +81,9 @@ public class FutureDao {
 				pst.setInt(index+10, tick.getB1Volume());
 				pst.setInt(index+11, tick.getS1Volume());
 				pst.setInt(index+12, tick.getTotalVolume());
-				index = index+12;
+				pst.setDouble(index+13, tick.getHighestPrice());
+				pst.setDouble(index+14, tick.getLowestPrice());
+				index = index+14;
 			}
 //			System.out.println(query);
 			pst.executeUpdate();
@@ -150,11 +153,23 @@ public class FutureDao {
 	 * @param tradingDay 当前交易日
 	 * @return
 	 */
-	public List<Double> getPriceArray(int days, String instrumentId, Date tradingDay){
+	public List<Double> getPriceArray(int days, String instrumentId, Date tradingDay, int type){
 		List<Double> array = new ArrayList<Double>();
 		conn = DBConnectionManager.getConnection();
 		String query1 = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day = ?";
-		String query2 = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+		String query2 = "";
+//		switch (type){
+//			case 1:query2 = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+//			case 2:query2 = "SELECT highest_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+//			case 3:query2 = "SELECT lowest_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+//		}
+		if(type == 1){
+			query2 = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+		} else if (type == 2) {
+			query2 = "SELECT highest_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+		} else if (type == 3) {
+			query2 = "SELECT lowest_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
+		}
 		try {
 			pst = conn.prepareStatement(query1);
 			pst.setString(1, instrumentId);
@@ -167,7 +182,18 @@ public class FutureDao {
 				pst.setInt(3, days);
 				rs = pst.executeQuery();
 				while (rs.next()) {
-					array.add(rs.getDouble("last_price"));
+					if(type == 1){
+						array.add(rs.getDouble("last_price"));
+					} else if (type == 2) {
+						array.add(rs.getDouble("highest_price"));
+					} else if (type == 3) {
+						array.add(rs.getDouble("lowest_price"));
+					}
+//					switch (type){
+//						case 1:array.add(rs.getDouble("last_price"));
+//						case 2:array.add(rs.getDouble("highest_price"));
+//						case 3:array.add(rs.getDouble("lowest_price"));
+//					}
 				}
 			} else {
 				return null;
@@ -181,4 +207,6 @@ public class FutureDao {
 		}
 		return array;
 	}
+	
+	
 }

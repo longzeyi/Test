@@ -44,7 +44,7 @@ public class StatisticsUtil {
 //    	String strDate = sdf.format(date);
 //    	System.out.println("date:  "+strDate);
     	boolean bool = false;
-    	double [] prices = new double[10];
+    	double [] prices = new double[5];
     	double closePrice = 0;
     	double maPrice = 0d;
     	Iterator<Date> it = Global.dayMd.keySet().iterator();
