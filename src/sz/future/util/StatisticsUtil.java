@@ -1,5 +1,7 @@
 package sz.future.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -36,15 +38,16 @@ public class StatisticsUtil {
     
     /**
      * 判断指定日期的收盘价是高于MA10还是低于MA10
-     * @param date 指定日期
-     * @return 高于或等于MA10返回true,低于MA10返回false
+     * @param day 准备取哪一天的MA
+     * @param ma 多少天MA
+     * @return 高于或等于MA返回true,低于MA返回false
      */
-    public static boolean belowOrUnderMA(int day) {
+    public static boolean belowOrUnderMA(int day, int ma) {
 //    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //    	String strDate = sdf.format(date);
 //    	System.out.println("date:  "+strDate);
     	boolean bool = false;
-    	double [] prices = new double[5];
+    	double [] prices = new double[ma];
     	double closePrice = 0;
     	double maPrice = 0d;
     	Iterator<Date> it = Global.dayMd.keySet().iterator();
@@ -76,6 +79,83 @@ public class StatisticsUtil {
     		bool = true;
     	}
     	return bool;
+    }
+    
+    /**
+     * @param day 准备取哪一天的MA
+     * @param ma 多少天MA
+     * @return 获取这一天的MA
+     */
+    public static double getBeforMA(int day, int ma){
+    	double [] prices = new double[ma];
+    	double maPrice = 0d;
+    	Iterator<Date> it = Global.dayMd.keySet().iterator();
+    	int i = 0;
+    	int j = 0;
+    	boolean falg = false;
+    	//取ma天的收盘价
+    	while(it.hasNext()){
+    		Date da = it.next();
+    		if(da.getTime() < Global.tradingDay.getTime()){//交易当天的前1天
+    			j++;
+    			if(j==day){
+    				falg = true;
+    			}
+    			if (falg){
+    				if(i == prices.length){
+    	    			break;
+    	    		}
+    				prices[i] = Global.dayMd.get(da);
+    				i++;
+    			}
+    		}
+    	}
+    	maPrice = getMovingAverage(prices);
+    	return maPrice;
+    }
+    
+    /**
+     * 获取当前的MA
+     * @param ma 多少天MA
+     * @param currentPrice 当前最新价格
+     * @return 当前的MA
+     */
+    public static double getCurrentMA(int ma, double currentPrice){
+    	double [] prices = new double[ma];
+    	double maPrice = 0d;
+    	Iterator<Date> it = Global.dayMd.keySet().iterator();
+    	prices[0] = currentPrice;
+    	int i = 1;
+    	//取ma天的收盘价
+    	while(it.hasNext()){
+    		Date da = it.next();
+    		if(da.getTime() < Global.tradingDay.getTime()){//交易当天的前1天
+				if(i == prices.length){
+	    			break;
+	    		}
+				prices[i] = Global.dayMd.get(da);
+				i++;
+    		}
+    	}
+    	maPrice = getMovingAverage(prices);
+    	return maPrice;
+    }
+    
+    public static int daysBetween(Date smdate,Date bdate){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        try {
+			smdate=sdf.parse(sdf.format(smdate));
+			bdate=sdf.parse(sdf.format(bdate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}  
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(smdate);
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(bdate);
+        long time2 = cal.getTimeInMillis();
+        long between_days = (time2-time1)/(1000*3600*24);
+        return Integer.parseInt(String.valueOf(between_days));
     }
 }
 
