@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import sz.future.conn.DBConnectionManager;
 import sz.future.domain.MdDay;
 import sz.future.domain.MdTick;
+import sz.future.test.test1.Global;
 import sz.future.util.ImportData;
 
 
@@ -46,6 +47,23 @@ public class FutureDao {
 			String[] str = it.next();
 			pst = (PreparedStatement) conn.prepareStatement(sql);
 //			pstm.setDate(1, new Date().parse(str[0]));
+		}
+	}
+	
+	public void saveDayProfit(double profit) {
+		conn = DBConnectionManager.getConnection();
+		String sql = "INSERT INTO tb_day_profit (trading_date, profit, instrument_id) VALUES (?, ?, ?)";
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			pst.setDate(1, new java.sql.Date(Global.tradingDay.getTime()));
+			pst.setDouble(2, profit);
+			pst.setString(3, Global.test_instrument_id);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
 		}
 	}
 	

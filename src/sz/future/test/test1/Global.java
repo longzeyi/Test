@@ -6,8 +6,9 @@ import java.util.Map;
 
 public class Global {
 //	private static final String[] strs = { "AG", "AU", "CU", "FG", "J", "JM", "L", "M", "ME", "OI", "P", "RB", "RM", "RU", "SR", "TA", "V", "Y" };
-	public static final String test_instrument_id = "M1401";
-	public static final String[] strs = { "M" };
+	//M1401、P1401、RB1310、RM1309、TA1401、Y1401
+	public static final String test_instrument_id = "Y1401";
+//	public static final String[] strs = { "Y" };
 	public static final String[] months = { "01", "02", "03", "04", "05",
 			"06", "07", "08", "09", "10", "11", "12" };
 	public static final String[] days = { "01", "02", "03", "04", "05", "06",
@@ -45,9 +46,12 @@ public class Global {
 	public static Date openPositionDate ;
 	
 	public final static int period = 5;				//这段时间内的收盘价
-	public final static int interval = 20 ;			//间隙
-	public final static double floatSpace = 20d;	//忍受浮动空间
+	public final static int interval = 50 ;			//间隙
+	public final static double floatSpace = 10d;	//忍受浮动空间
+	public final static double retracement = 0.65d; //回撤比例
 	
+	public static int closePositionCount1 = 0;		//符合条件1平仓次数
+	public static int closePositionCount2 = 0;		//符合条件2平仓次数
 	public static int profitCount = 0;				//盈利次数
 	public static int lossCount = 0;				//亏损次数
 	public static int balanceCount = 0;				//平衡次数

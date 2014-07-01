@@ -64,6 +64,7 @@ public class Test1 {
 			// System.out.println(Global.priceArray[row]);
 		}
 		strategy();
+		//记录测试合约的交易时间范围
 		if(++Global.dayCount == 1){
 			Global.startDate = Global.tradingDay;
 		} else {
@@ -72,6 +73,7 @@ public class Test1 {
 	}
 	
 	private static void queryMd() {
+		String str = Global.test_instrument_id.replaceAll("\\d+", "");
 		//20130104/AG01_20130104.csv
 		String instrumentYear = "";
 		for (int i = 0; i < Global.months.length; i++) {
@@ -79,11 +81,11 @@ public class Test1 {
 				StringBuffer sb = new StringBuffer("e:/BaiduYunDownload/");
 				String dateDir = Global.year + Global.months[i] + Global.days[j];
 				sb.append(dateDir).append("/");
-				for (int k = 0; k < Global.strs.length; k++) {
+//				for (int k = 0; k < Global.strs.length; k++) {
 					Map<Integer, String> map = new TreeMap<Integer, String>();
 					for (int k2 = 0; k2 < Global.months.length; k2++) {
 						StringBuffer sb2 = new StringBuffer();
-						sb2.append(Global.strs[k]).append(Global.months[k2]).append("_")
+						sb2.append(str).append(Global.months[k2]).append("_")
 								.append(dateDir).append(".csv");
 						String path = sb.toString() + sb2.toString();
 						int total = CsvDataUtil.readCsvCount(path);
@@ -125,7 +127,7 @@ public class Test1 {
 						}
 					}
 					
-				}
+//				}
 			}
 		}
 
@@ -145,14 +147,9 @@ public class Test1 {
 		}
 		double lowestPrice = lowestPriceArray.get(0);//Global.period天之内最低收盘价
 		double highestPrice = highestPpriceArray.get(highestPpriceArray.size()-1);//Global.period天之内最高收盘价
-//		double befor2Ma5 = StatisticsUtil.getBeforMA(2, 5);//两天前的MA5
-//		double befor2Ma10 = StatisticsUtil.getBeforMA(2, 10);//两天前的MA10
 		
 		double befor1Ma5 = StatisticsUtil.getBeforMA(1, 5);//一天前的MA5
 		double befor1Ma10 = StatisticsUtil.getBeforMA(1, 10);//一天前的MA10
-		
-//		boolean flagMA1 = befor2Ma10 >= befor2Ma5?true:false;
-//		boolean flagMA2 = false;
 		
 		for (int i = 100; i < Global.lastPriceArray.length; i=i+Global.interval) {
 			//如果持仓为0
@@ -171,7 +168,7 @@ public class Test1 {
 				}
 
 			} else {
-				boolean closeFlag1 = false ;//浮亏超过限定值
+				boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
 				boolean closeFlag2 = false ;//前一日MA5小于或大于MA10
 				boolean closeFlag3 = false ;//当前利润小于最高利润百分比
 				//出场条件
@@ -180,20 +177,20 @@ public class Test1 {
 					if(Global.highestProfit < (Global.lastPriceArray[i] - Global.positionPrice)){
 						Global.highestProfit = Global.lastPriceArray[i] - Global.positionPrice;
 					}
-					//亏损超过最高盈利的50%
+					//回撤控制
 					if(StatisticsUtil.daysBetween(Global.openPositionDate, Global.tradingDay) > 4){
-						if((Global.lastPriceArray[i] - Global.positionPrice) < Global.highestProfit * 0.6){
+						if((Global.lastPriceArray[i] - Global.positionPrice) < Global.highestProfit * Global.retracement){
 							closeFlag3 = true;
 						}
 					}
 					if(befor1Ma5 < befor1Ma10){
 						closeFlag2 = true;
 					}
-					//浮动亏损超过50点
+					//浮动亏损超过Global.floatSpace
 					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > Global.floatSpace;
 					if(closeFlag1||(closeFlag2&&closeFlag3)){
-						if(closeFlag1)System.out.println("浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
-						if(closeFlag3)System.out.println("盈利跌破50%..............."+Global.lastPriceArray[i]);
+						if(closeFlag1)System.out.println(++Global.closePositionCount1 + " 浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
+						if(closeFlag2&&closeFlag3)System.out.println(++Global.closePositionCount2 + " 盈利回撤..............."+Global.lastPriceArray[i]);
 						//多头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
 						break;//平仓当天不会再开仓
@@ -203,9 +200,9 @@ public class Test1 {
 					if(Global.highestProfit < (Global.positionPrice - Global.lastPriceArray[i])){
 						Global.highestProfit = Global.positionPrice - Global.lastPriceArray[i];
 					}
-					//亏损超过最高盈利的50%
+					//回撤控制
 					if(StatisticsUtil.daysBetween(Global.openPositionDate, Global.tradingDay) > 4){
-						if((Global.positionPrice - Global.lastPriceArray[i]) < Global.highestProfit * 0.6){
+						if((Global.positionPrice - Global.lastPriceArray[i]) < Global.highestProfit * Global.retracement){
 							closeFlag3 = true;
 						}
 					}
@@ -218,8 +215,8 @@ public class Test1 {
 					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > Global.floatSpace;
 					
 					if(closeFlag1||(closeFlag2&&closeFlag3)){
-						if(closeFlag1)System.out.println("浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
-						if(closeFlag3)System.out.println("盈利跌破50%..............."+Global.lastPriceArray[i]);
+						if(closeFlag1)System.out.println(++Global.closePositionCount1 + " 浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
+						if(closeFlag2&&closeFlag3)System.out.println(++Global.closePositionCount2 + " 盈利回撤..............."+Global.lastPriceArray[i]);
 						//空头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
 						break;//平仓当天不会再开仓
@@ -228,9 +225,20 @@ public class Test1 {
 			}
 			
 		}
-//		print();
+		//记录每天盈利
+		trackProfit(Global.lastPriceArray[Global.lastPriceArray.length-1]);
 	}
 
+	private static void trackProfit(double lastPrice){
+		if(Global.positionPrice == 0){
+			dao.saveDayProfit(Global.point);//未持仓
+		} else if (Global.bs){
+			dao.saveDayProfit(Global.point + (lastPrice - Global.positionPrice));//多头
+		} else {
+			dao.saveDayProfit(Global.point + (Global.positionPrice - lastPrice));//空头
+		}
+	}
+	
 	/**
 	 * 交易
 	 * 
@@ -307,5 +315,7 @@ public class Test1 {
 		System.out.println("盈次数：" + Global.profitCount);
 		System.out.println("亏次数：" + Global.lossCount);
 		System.out.println("平次数：" + Global.balanceCount);
+		System.out.println("符合条件1平仓次数：" + Global.closePositionCount1);
+		System.out.println("符合条件2平仓次数：" + Global.closePositionCount2);
 	}
 }
