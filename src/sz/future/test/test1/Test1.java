@@ -156,12 +156,13 @@ public class Test1 {
 			if(Global.positionPrice == 0){
 				double currMA5 = StatisticsUtil.getCurrentMA(5, Global.lastPriceArray[i]);
 				double currMA10 = StatisticsUtil.getCurrentMA(10, Global.lastPriceArray[i]);
+//				double currMA20 = StatisticsUtil.getCurrentMA(20, Global.lastPriceArray[i]);
 				//进场条件
-				if((Global.lastPriceArray[i] > highestPrice) && (currMA5 > currMA10)) {
+				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10)) {
 					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
 					//买多开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
-				} else if ((Global.lastPriceArray[i] < lowestPrice) && (currMA10 > currMA5)) {
+				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5)) {
 					System.out.println("小于"+Global.period+"天最低价"+ lowestPrice);
 					//卖空开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);

@@ -46,9 +46,10 @@ public class Global {
 	public static Date openPositionDate ;
 	
 	public final static int period = 5;				//这段时间内的收盘价
-	public final static int interval = 50 ;			//间隙
-	public final static double floatSpace = 10d;	//忍受浮动空间
+	public final static int interval = 15 ;			//间隙
+	public final static double floatSpace = 16d;	//忍受浮动空间
 	public final static double retracement = 0.65d; //回撤比例
+	public final static double breakPoint = 3d;	//突破period天内的最低价或最高价的限度
 	
 	public static int closePositionCount1 = 0;		//符合条件1平仓次数
 	public static int closePositionCount2 = 0;		//符合条件2平仓次数
