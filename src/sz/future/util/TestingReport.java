@@ -36,6 +36,7 @@ public class TestingReport {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TestingReport tr = new TestingReport();
+		//生成各个合约的报告
 		Iterator<String> it = tr.getInstrumentId().iterator();
 		while(it.hasNext()){
 			String instrumentId = it.next();
@@ -43,6 +44,16 @@ public class TestingReport {
 			Map<Date, Double> profits = tr.getProfit(instrumentId);
 			tr.createReport(instrumentId, profits);
 		}
+		
+		//汇总报告数据预处理
+		Iterator<String> its = tr.getInstrumentId().iterator();
+		while(its.hasNext()){
+			tr.fillData(its.next());
+		}
+		
+		//生成汇总报告
+		tr.createTotalReport(tr.getTotalProfit());
+		
 	}
 
 	private List<String> getInstrumentId(){
@@ -117,63 +128,113 @@ public class TestingReport {
 		}
 	}
 	
-	public void fillData(){
-		List<Double> array = new ArrayList<Double>();
+	private void createTotalReport(Map<Date, Double> profits){
+		HSSFSheet sheet = workbook.createSheet("Total");
+		Set<Entry<Date, Double>>  set = profits.entrySet();
+		Iterator<Entry<Date, Double>> it = set.iterator();
+		HSSFRow row ;
+		HSSFCell cell;
+		int i = 0;
+		while(it.hasNext()){
+			Entry<Date, Double> entry = it.next();
+			row = sheet.createRow(i);
+			cell = row.createCell(0);
+			cell.setCellValue(entry.getKey().toLocaleString().replace(" 0:00:00", ""));
+			cell = row.createCell(1);
+			cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
+			cell.setCellValue(entry.getValue());
+			System.out.println(entry.getKey() + " : " + entry.getValue());
+			i++;
+		}
+		FileOutputStream fOut;
+		try {
+			fOut = new FileOutputStream(outputFile);
+			workbook.write(fOut);
+			fOut.flush();
+			fOut.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void fillData(String instrumentId){
+		List<Date> dateList = new ArrayList<Date>();
+//		List<Double> array = new ArrayList<Double>();
 		conn = DBConnectionManager.getConnection();
-		String query1 = "SELECT last_price FROM tb_day_profit WHERE instrument_id = ? and trading_day = ?";
-		String query2 = "";
-//		switch (type){
-//			case 1:query2 = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
-//			case 2:query2 = "SELECT highest_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
-//			case 3:query2 = "SELECT lowest_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
-//		}
-//		SELECT max(trading_date) FROM `tb_day_profit` where instrument_id='RB1310';
-//
-//		SELECT trading_date FROM `tb_day_profit` where trading_date>'2013-08-22' group by trading_date;
-//
-//		INSERT INTO tb_day_profit (trading_date, profit, instrument_id) VALUES (?, ?, ?);
-//		if(type == 1){
-//			query2 = "SELECT last_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
-//		} else if (type == 2) {
-//			query2 = "SELECT highest_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
-//		} else if (type == 3) {
-//			query2 = "SELECT lowest_price FROM tb_md_day_2013 WHERE instrument_id = ? and trading_day < ? ORDER BY trading_day desc limit ?";
-//		}
-//		try {
-//			pst = conn.prepareStatement(query1);
-//			pst.setString(1, instrumentId);
-//			pst.setDate(2, new java.sql.Date(tradingDay.getTime()));
-//			rs = pst.executeQuery();
-//			if(rs.next()){
-//				pst = conn.prepareStatement(query2);
-//				pst.setString(1, instrumentId);
-//				pst.setDate(2, new java.sql.Date(tradingDay.getTime()));
-//				pst.setInt(3, days);
-//				rs = pst.executeQuery();
-//				while (rs.next()) {
-//					if(type == 1){
-//						array.add(rs.getDouble("last_price"));
-//					} else if (type == 2) {
-//						array.add(rs.getDouble("highest_price"));
-//					} else if (type == 3) {
-//						array.add(rs.getDouble("lowest_price"));
-//					}
-////					switch (type){
-////						case 1:array.add(rs.getDouble("last_price"));
-////						case 2:array.add(rs.getDouble("highest_price"));
-////						case 3:array.add(rs.getDouble("lowest_price"));
-////					}
-//				}
-//			} else {
-//				return null;
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			DBConnectionManager.closeResultSet(rs);
-//			DBConnectionManager.closePreparedStatement(pst);
-//			DBConnectionManager.closeConnection(conn);
-//		}
-//		return array;
+		String query1 = "SELECT trading_date,profit FROM `tb_day_profit` where instrument_id =? order by trading_date desc limit 1;";
+		Date maxDate = null ;
+		Double finalProfit = null;
+		try {
+			pst = conn.prepareStatement(query1);
+			pst.setString(1, instrumentId);
+			rs = pst.executeQuery();
+			if(rs.next()){
+				maxDate = rs.getDate("trading_date");
+				finalProfit = rs.getDouble("profit");
+				System.out.println("maxDate: "+maxDate);
+				System.out.println("finalProfit: "+finalProfit);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		String query2 = "SELECT trading_date FROM `tb_day_profit` where trading_date>? group by trading_date";
+		try {
+			pst = conn.prepareStatement(query2);
+			pst.setDate(1, maxDate);
+			rs = pst.executeQuery();
+			while(rs.next()){
+				dateList.add(rs.getDate("trading_date"));
+			}
+			if(dateList.size()<1){
+				System.out.println("没有需要填充的数据...");
+				return;
+			}
+			System.out.println("dateList Size:" + dateList.size()) ;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		String query3 = "INSERT INTO tb_day_profit (trading_date, profit, instrument_id) VALUES (?, ?, ?)";
+		Iterator<Date> it = dateList.iterator();
+		
+		try {
+			conn.setAutoCommit(false);
+			pst = conn.prepareStatement(query3);
+			while(it.hasNext()){
+				pst.setDate(1, it.next());
+				pst.setDouble(2, finalProfit);
+				pst.setString(3, instrumentId);
+				pst.addBatch();
+			}
+			pst.executeBatch();
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+	}
+	
+	private Map<Date, Double> getTotalProfit(){
+		Map<Date, Double> map = new LinkedHashMap<Date, Double>();
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT trading_date,sum(profit) as profit FROM `tb_day_profit` group by trading_date";
+		try {
+			pst = conn.prepareStatement(query);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				map.put(rs.getDate("trading_date"), rs.getDouble("profit"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return map;
 	}
 }

@@ -33,14 +33,13 @@ public class Test1 {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		Global.dayMd = dao.loadDayData1(Global.test_instrument_id);
-//		Iterator<Date> it = Global.dayMd.keySet().iterator();
-//		while(it.hasNext()){
-//			System.out.println(it.next());
-//		}
-//		System.out.println("Global.dayMd SIZE : " + Global.dayMd.size());
-		queryMd();
-		print();
+		for (int i = 0; i < Global.test_instrument_id_array.length; i++) {
+			Global.init();
+			Global.test_instrument_id = Global.test_instrument_id_array[i];
+			Global.dayMd = dao.loadDayData1(Global.test_instrument_id);
+			queryMd();
+			print();
+		}
 	}
 
 	private static void testTrading(String path) {
