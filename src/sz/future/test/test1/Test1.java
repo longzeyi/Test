@@ -129,7 +129,15 @@ public class Test1 {
 //				}
 			}
 		}
-
+		if(Global.positionPrice != 0){
+			if(Global.bs){
+				//合约结束，多头平仓
+				trader(Global.endLastPrice,Global.endLastPrice,false,true);
+			} else {
+				//合约结束，空头平仓
+				trader(Global.endLastPrice,Global.endLastPrice,false,false);
+			}
+		}
 	}
 
 	private static void strategy() {
@@ -227,6 +235,8 @@ public class Test1 {
 		}
 		//记录每天盈利
 		trackProfit(Global.lastPriceArray[Global.lastPriceArray.length-1]);
+		//记录每天最后的价格
+		Global.endLastPrice = Global.lastPriceArray[Global.lastPriceArray.length-1];
 	}
 
 	private static void trackProfit(double lastPrice){
@@ -265,8 +275,10 @@ public class Test1 {
 				System.err.println("多头平仓： 第" + Global.transactionCount + "次交易： 多头持仓价：" + Global.positionPrice + "  多头平仓价：" + priceB1 + "  浮动盈亏：" + profit);
 				if (profit > 0) {
 					Global.profitCount++;
+					Global.positiveProfit = Global.positiveProfit + profit;
 				} else if (profit < 0) {
 					Global.lossCount++;
+					Global.negativeProfit = Global.negativeProfit + Math.abs(profit);
 				} else {
 					Global.balanceCount++;
 				}
@@ -287,8 +299,10 @@ public class Test1 {
 				System.err.println("空头平仓： 第" + Global.transactionCount + "次交易： 空头持仓价：" + Global.positionPrice + "  空头平仓价：" + priceS1 + "  浮动盈亏：" + profit);
 				if (profit > 0) {
 					Global.profitCount++;
+					Global.positiveProfit = Global.positiveProfit + profit;
 				} else if (profit < 0) {
 					Global.lossCount++;
+					Global.negativeProfit = Global.negativeProfit + Math.abs(profit);
 				} else {
 					Global.balanceCount++;
 				}
@@ -317,5 +331,7 @@ public class Test1 {
 		System.out.println("平次数：" + Global.balanceCount);
 		System.out.println("符合条件1平仓次数：" + Global.closePositionCount1);
 		System.out.println("符合条件2平仓次数：" + Global.closePositionCount2);
+		System.out.println("总盈利:" + Global.positiveProfit);
+		System.out.println("总亏损:" + Global.negativeProfit);
 	}
 }

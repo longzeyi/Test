@@ -45,6 +45,9 @@ public class Global {
 	public static boolean openOrClose = true ; 		//交易类型
 	public static boolean bs = true;				//交易方向
 	public static double highestProfit = 0;			//盈利最大值 
+	public static double positiveProfit = 0;		//总盈利
+	public static double negativeProfit = 0;		//总亏损
+	public static double endLastPrice = 0;			//记录最后价格
 	
 	public static int dayCount = 0;
 	public static Date startDate = null;
@@ -105,6 +108,9 @@ public class Global {
 		profitCount = 0;
 		lossCount = 0;
 		balanceCount = 0;
+		positiveProfit = 0;
+		negativeProfit = 0;
+		endLastPrice = 0;
 		dayMd.clear();
 	}
 }
