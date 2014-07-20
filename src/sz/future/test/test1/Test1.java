@@ -142,7 +142,6 @@ public class Test1 {
 
 	private static void strategy() {
 		System.err.println("-----------------------------------------------"+Global.tradingDay.toLocaleString()+"-----------------------------------------------");
-		//获取12天之内的收盘价
 		List<Double> highestPpriceArray = dao.getPriceArray(Global.period, Global.test_instrument_id, Global.tradingDay, 2);
 		List<Double> lowestPriceArray = dao.getPriceArray(Global.period, Global.test_instrument_id, Global.tradingDay, 3);
 		if(highestPpriceArray.size() >= Global.period){
