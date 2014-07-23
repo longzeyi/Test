@@ -173,7 +173,6 @@ public class Test1 {
 					//卖空开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
 				}
-
 			} else {
 				boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
 				boolean closeFlag2 = false ;//前一日MA5小于或大于MA10
