@@ -21,7 +21,7 @@ import com.mongodb.DBObject;
 public class ImportData {
 
 	private static final String[] strs = { "AG", "AU", "CU", "FG", "J", "JM",
-			"L", "M", "ME", "OI", "P", "RB", "RM", "RU", "SR", "TA", "V", "Y" };
+			"L", "M", "ME", "OI", "P", "RB", "RM", "RU", "SRY", "SRX", "TA", "V", "Y","C" };
 	private static final String[] months = { "01", "02", "03", "04", "05",
 			"06", "07", "08", "09", "10", "11", "12" };
 	private static final String[] days = { "01", "02", "03", "04", "05", "06",
