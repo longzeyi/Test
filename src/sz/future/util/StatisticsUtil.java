@@ -141,6 +141,27 @@ public class StatisticsUtil {
     	return maPrice;
     }
     
+    public static double getCurrentHCL(int ma, double currentPrice, int type){
+    	double [] prices = new double[ma];
+    	double maPrice = 0d;
+    	Iterator<Date> it = Global.dayMd.keySet().iterator();
+    	prices[0] = currentPrice;
+    	int i = 1;
+    	//取ma天的收盘价
+    	while(it.hasNext()){
+    		Date da = it.next();
+    		if(da.getTime() < Global.tradingDay.getTime()){//交易当天的前1天
+				if(i == prices.length){
+	    			break;
+	    		}
+				prices[i] = Global.dayMd.get(da);
+				i++;
+    		}
+    	}
+    	maPrice = getMovingAverage(prices);
+    	return maPrice;
+    }
+    
     public static int daysBetween(Date smdate,Date bdate){
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
         try {
