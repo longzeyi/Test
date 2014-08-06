@@ -55,7 +55,8 @@ public class FutureDao {
 		String sql = "INSERT INTO tb_day_profit (trading_date, profit, instrument_id) VALUES (?, ?, ?)";
 		try {
 			pst = (PreparedStatement) conn.prepareStatement(sql);
-			pst.setDate(1, new java.sql.Date(Global.tradingDay.getTime()));
+			pst.setDate(1, new java.sql.Date(sz.future.test.test2.Global.tradingDay.getTime()));
+//			pst.setDate(1, new java.sql.Date(sz.future.test.test1.Global.tradingDay.getTime()));
 			pst.setDouble(2, profit);
 			pst.setString(3, Global.test_instrument_id);
 			pst.executeUpdate();
@@ -144,6 +145,11 @@ public class FutureDao {
 		return list;
 	}
 	
+	/**
+	 * 最新价集合
+	 * @param instrumentId
+	 * @return
+	 */
 	public Map<Date, Double> loadDayData1(String instrumentId){
 		Map<Date, Double> map = new LinkedHashMap<Date, Double>();
 		conn = DBConnectionManager.getConnection();
@@ -165,6 +171,57 @@ public class FutureDao {
 		return map;
 	}
 	
+	/**
+	 * 最高价集合
+	 * @param instrumentId
+	 * @return
+	 */
+	public Map<Date, Double> loadDayData2(String instrumentId){
+		Map<Date, Double> map = new LinkedHashMap<Date, Double>();
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT trading_day,highest_price FROM tb_md_day_2013 WHERE instrument_id = ? ORDER BY trading_day desc";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				map.put(rs.getDate("trading_day"), rs.getDouble("highest_price"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return map;
+	}
+	
+	/**
+	 * 最低价集合
+	 * @param instrumentId
+	 * @return
+	 */
+	public Map<Date, Double> loadDayData3(String instrumentId){
+		Map<Date, Double> map = new LinkedHashMap<Date, Double>();
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT trading_day,lowest_price FROM tb_md_day_2013 WHERE instrument_id = ? ORDER BY trading_day desc";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				map.put(rs.getDate("trading_day"), rs.getDouble("lowest_price"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return map;
+	}
 	/**
 	 * @param days 获取几天前的价格
 	 * @param instrumentId 当前合约名

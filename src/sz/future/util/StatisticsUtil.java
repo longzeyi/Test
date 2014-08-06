@@ -141,20 +141,42 @@ public class StatisticsUtil {
     	return maPrice;
     }
     
+    /**
+     * @param ma 多少天MA
+     * @param currentPrice 当前最新价格
+     * @param type 1:Close 2:High 3:Low
+     * @return
+     */
     public static double getCurrentHCL(int ma, double currentPrice, int type){
     	double [] prices = new double[ma];
     	double maPrice = 0d;
-    	Iterator<Date> it = Global.dayMd.keySet().iterator();
-    	prices[0] = currentPrice;
+    	Iterator<Date> it = null;
+    	if(type == 1){
+    		it = sz.future.test.test2.Global.dayMdC.keySet().iterator();
+    		prices[0] = currentPrice;
+    	} else if(type == 2){
+    		it = sz.future.test.test2.Global.dayMdH.keySet().iterator();
+    		prices[0] = sz.future.test.test2.Global.dayHighestPrice;
+    	} else if (type == 3){
+    		it = sz.future.test.test2.Global.dayMdL.keySet().iterator();
+    		prices[0] = sz.future.test.test2.Global.dayLowestPrice;
+    	}
+    	
     	int i = 1;
     	//取ma天的收盘价
     	while(it.hasNext()){
     		Date da = it.next();
-    		if(da.getTime() < Global.tradingDay.getTime()){//交易当天的前1天
+    		if(da.getTime() < sz.future.test.test2.Global.tradingDay.getTime()){//交易当天的前1天
 				if(i == prices.length){
 	    			break;
 	    		}
-				prices[i] = Global.dayMd.get(da);
+				if(type == 1){
+					prices[i] = sz.future.test.test2.Global.dayMdC.get(da);
+				} else if(type == 2){
+					prices[i] = sz.future.test.test2.Global.dayMdH.get(da);
+				} else if (type == 3){
+					prices[i] = sz.future.test.test2.Global.dayMdL.get(da);
+				}
 				i++;
     		}
     	}

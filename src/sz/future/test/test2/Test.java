@@ -36,7 +36,9 @@ public class Test {
 		for (int i = 0; i < Global.test_instrument_id_array.length; i++) {
 			Global.init();
 			Global.test_instrument_id = Global.test_instrument_id_array[i];
-			Global.dayMd = dao.loadDayData1(Global.test_instrument_id);
+			Global.dayMdC = dao.loadDayData1(Global.test_instrument_id);
+			Global.dayMdH = dao.loadDayData2(Global.test_instrument_id);
+			Global.dayMdL = dao.loadDayData3(Global.test_instrument_id);
 			queryMd();
 			print();
 		}
@@ -158,17 +160,30 @@ public class Test {
 		double befor1Ma10 = StatisticsUtil.getBeforMA(1, 10);//一天前的MA10
 		
 		for (int i = 100; i < Global.lastPriceArray.length; i=i+Global.interval) {
+			//更新最低价和最高价
+			if(Global.dayLowestPrice == 0){
+				Global.dayLowestPrice = Global.lastPriceArray[i];
+			}else if(Global.dayLowestPrice > Global.lastPriceArray[i]){
+				Global.dayLowestPrice = Global.lastPriceArray[i];
+			}
+			if(Global.dayHighestPrice == 0){
+				Global.dayHighestPrice = Global.lastPriceArray[i];
+			}else if(Global.dayHighestPrice < Global.lastPriceArray[i]){
+				Global.dayHighestPrice = Global.lastPriceArray[i];
+			}
 			//如果持仓为0
 			if(Global.positionPrice == 0){
-				double currMA5 = StatisticsUtil.getCurrentMA(5, Global.lastPriceArray[i]);
-				double currMA10 = StatisticsUtil.getCurrentMA(10, Global.lastPriceArray[i]);
-//				double currMA20 = StatisticsUtil.getCurrentMA(20, Global.lastPriceArray[i]);
+//				double currMA5 = StatisticsUtil.getCurrentMA(5, Global.lastPriceArray[i]);
+//				double currMA10 = StatisticsUtil.getCurrentMA(10, Global.lastPriceArray[i]);
+				double currCloseMA10 = StatisticsUtil.getCurrentHCL(10, Global.lastPriceArray[i], 1);
+				double currHighestMA10 = StatisticsUtil.getCurrentHCL(10, Global.lastPriceArray[i], 2);
+				double currLowestMA10 = StatisticsUtil.getCurrentHCL(10, Global.lastPriceArray[i], 3);
 				//进场条件
-				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10)) {
+				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && Global.lastPriceArray[i] > currHighestMA10) {
 					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
 					//买多开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
-				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5)) {
+				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && Global.lastPriceArray[i] < currLowestMA10) {
 					System.out.println("小于"+Global.period+"天最低价"+ lowestPrice);
 					//卖空开仓
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);

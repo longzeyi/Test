@@ -9,8 +9,8 @@ public class Global {
 	//M1401、P1401、RB1310、RM1309、TA1401、Y1401
 	
 //	public static final String[] strs = { "Y" };
-//	public static final String[] test_instrument_id_array = {"M1401","P1401","RB1310","RM1309","TA1401","Y1401"};
-	public static final String[] test_instrument_id_array = {"C1309","SRX1401","SRY1309"};
+	public static final String[] test_instrument_id_array = {"M1401","P1401","RB1310","RM1309","TA1401","Y1401"};
+//	public static final String[] test_instrument_id_array = {"C1309","SRX1401","SRY1309"};
 	public static final String[] months = { "01", "02", "03", "04", "05",
 			"06", "07", "08", "09", "10", "11", "12" };
 	public static final String[] days = { "01", "02", "03", "04", "05", "06",
@@ -49,6 +49,8 @@ public class Global {
 	public static double positiveProfit = 0;		//总盈利
 	public static double negativeProfit = 0;		//总亏损
 	public static double endLastPrice = 0;			//记录最后价格
+	public static double dayLowestPrice = 0;			//记录一天最低价
+	public static double dayHighestPrice = 0;			//记录一天最高价
 	
 	public static int dayCount = 0;
 	public static Date startDate = null;
@@ -63,7 +65,9 @@ public class Global {
 	public static int lossCount = 0;				//亏损次数
 	public static int balanceCount = 0;				//平衡次数
 	
-	public static Map<Date, Double> dayMd = new LinkedHashMap<Date, Double>();//存储当前合约全部日行情
+	public static Map<Date, Double> dayMdC = new LinkedHashMap<Date, Double>();//存储当前合约全部日行情(最新价)
+	public static Map<Date, Double> dayMdH = new LinkedHashMap<Date, Double>();//存储当前合约全部日行情(最高价)
+	public static Map<Date, Double> dayMdL = new LinkedHashMap<Date, Double>();//存储当前合约全部日行情(最低价)
 	
 	public static void initArray(int size){
 		updateTimeArray = new String[size];
@@ -112,6 +116,8 @@ public class Global {
 		positiveProfit = 0;
 		negativeProfit = 0;
 		endLastPrice = 0;
-		dayMd.clear();
+		dayMdC.clear();
+		dayMdH.clear();
+		dayMdL.clear();
 	}
 }
