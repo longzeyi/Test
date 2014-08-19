@@ -114,6 +114,7 @@ public class StatisticsUtil {
     	return maPrice;
     }
     
+    
     /**
      * 获取当前的MA
      * @param ma 多少天MA
@@ -163,7 +164,6 @@ public class StatisticsUtil {
     	}
     	
     	int i = 1;
-    	//取ma天的收盘价
     	while(it.hasNext()){
     		Date da = it.next();
     		if(da.getTime() < sz.future.test.test2.Global.tradingDay.getTime()){//交易当天的前1天
@@ -178,6 +178,54 @@ public class StatisticsUtil {
 					prices[i] = sz.future.test.test2.Global.dayMdL.get(da);
 				}
 				i++;
+    		}
+    	}
+    	maPrice = getMovingAverage(prices);
+    	return maPrice;
+    }
+    
+    /**
+     * @param day 准备取前几天的MA
+     * @param ma 多少天MA
+     * @param type 1:Close 2:High 3:Low
+     * @return
+     */
+    public static double getBeforeHCL(int day, int ma, int type){
+    	double [] prices = new double[ma];
+    	double maPrice = 0d;
+    	Iterator<Date> it = null;
+    	if(type == 1){
+    		it = sz.future.test.test2.Global.dayMdC.keySet().iterator();
+    	} else if(type == 2){
+    		it = sz.future.test.test2.Global.dayMdH.keySet().iterator();
+    	} else if (type == 3){
+    		it = sz.future.test.test2.Global.dayMdL.keySet().iterator();
+    	}
+    	
+    	int i = 0;
+    	int j = 0;
+    	boolean falg = false;
+
+    	while(it.hasNext()){
+    		Date da = it.next();
+    		if(da.getTime() < sz.future.test.test2.Global.tradingDay.getTime()){//交易当天的前1天
+    			j++;
+    			if(j==day){
+    				falg = true;
+    			}
+    			if (falg){
+    				if(i == prices.length){
+    	    			break;
+    	    		}
+    				if(type == 1){
+    					prices[i] = sz.future.test.test2.Global.dayMdC.get(da);
+    				} else if(type == 2){
+    					prices[i] = sz.future.test.test2.Global.dayMdH.get(da);
+    				} else if (type == 3){
+    					prices[i] = sz.future.test.test2.Global.dayMdL.get(da);
+    				}
+    				i++;
+    			}
     		}
     	}
     	maPrice = getMovingAverage(prices);
