@@ -61,6 +61,7 @@ public class Global {
 	
 	public static int closePositionCount1 = 0;		//符合条件1平仓次数
 	public static int closePositionCount2 = 0;		//符合条件2平仓次数
+	public static int closePositionCount3 = 0;		//符合条件3平仓次数
 	public static int profitCount = 0;				//盈利次数
 	public static int lossCount = 0;				//亏损次数
 	public static int balanceCount = 0;				//平衡次数
