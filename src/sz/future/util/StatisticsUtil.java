@@ -138,6 +138,10 @@ public class StatisticsUtil {
 				i++;
     		}
     	}
+    	if(i < prices.length-1){
+    		System.out.println("交易数据不够！");
+    		return 0d;
+    	}
     	maPrice = getMovingAverage(prices);
     	return maPrice;
     }

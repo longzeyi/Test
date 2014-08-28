@@ -55,8 +55,8 @@ public class FutureDao {
 		String sql = "INSERT INTO tb_day_profit (trading_date, profit, instrument_id) VALUES (?, ?, ?)";
 		try {
 			pst = (PreparedStatement) conn.prepareStatement(sql);
-			pst.setDate(1, new java.sql.Date(sz.future.test.test2.Global.tradingDay.getTime()));
-//			pst.setDate(1, new java.sql.Date(sz.future.test.test1.Global.tradingDay.getTime()));
+//			pst.setDate(1, new java.sql.Date(sz.future.test.test2.Global.tradingDay.getTime()));
+			pst.setDate(1, new java.sql.Date(sz.future.test.test1.Global.tradingDay.getTime()));
 			pst.setDouble(2, profit);
 			pst.setString(3, Global.test_instrument_id);
 			pst.executeUpdate();
