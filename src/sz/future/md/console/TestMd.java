@@ -2,12 +2,14 @@ package sz.future.md.console;
 
 import org.hraink.futures.jctp.md.JCTPMdApi;
 
+import sz.future.trader.console.TestTrader;
+
 /**
  * @author Sean
  * 模拟环境交易时间:正常交易时间均可交易,每个交易日晚17：30到凌晨5：00也可进行交易，节假日正常情况下都可进行交易
  */
 public class TestMd {
-	/** 前置机地址 **/
+	/** 行情前置机地址 **/
 //	static String frontAddr = "tcp://asp-sim2-md1.financial-trading-platform.com:26213";
 //	static String frontAddr = "tcp://front112.ctp.gtjafutures.com:41213";
 	static String frontAddr = "tcp://front111.ctp.gtjafutures.com:41213";
@@ -17,9 +19,10 @@ public class TestMd {
 	static JCTPMdApi mdApi;
 	
 	public static void main(String[] args) throws InterruptedException {
-//		TestTrader tt = new TestTrader();
-//		tt.start();
-//		Thread.sleep(2000);
+		TestTrader tt = new TestTrader();
+		//启动交易线程
+		tt.start();
+		Thread.sleep(2000);
 		//创建行情API
 		mdApi = JCTPMdApi.createFtdcTraderApi();
 		//使用策略

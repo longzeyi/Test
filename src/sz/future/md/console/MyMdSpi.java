@@ -19,16 +19,13 @@ public class MyMdSpi extends JCTPMdSpi {
 	/**当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用*/
 	@Override
 	public void onFrontConnected() {
-		System.out.println("sdfsdf");
+		System.out.println("onFrontConnected被调用");
 		//登陆
-		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
-		userLoginField.setBrokerID("7090");
-		userLoginField.setUserID("81001426");
-		userLoginField.setPassword("");
-		
-		mdApi.reqUserLogin(userLoginField, 112);
-
-
+//		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
+//		userLoginField.setBrokerID("7090");
+//		userLoginField.setUserID("81001426");
+//		userLoginField.setPassword("");
+//		mdApi.reqUserLogin(userLoginField, 112);
 	}
 	
 	/**登录请求响应*/
@@ -41,7 +38,7 @@ public class MyMdSpi extends JCTPMdSpi {
 		int subResult = -1;
 //		String[] str = new String[]{"IF1312","bu1402"};
 //		subResult = mdApi.subscribeMarketData("IF1303");
-		subResult = mdApi.subscribeMarketData("m1409");
+		subResult = mdApi.subscribeMarketData("cu1410");
 //		subResult = mdApi.subscribeMarketData("a1405");
 		System.out.println(subResult == 0 ? "订阅成功" : "订阅失败");
 	}
@@ -84,8 +81,8 @@ public class MyMdSpi extends JCTPMdSpi {
 	public void onRspSubMarketData(CThostFtdcSpecificInstrumentField pSpecificInstrument, CThostFtdcRspInfoField pRspInfo, int nRequestID,
 			boolean bIsLast) {
 		
-		System.out.println("订阅回报:" + bIsLast);
-		System.out.println(pRspInfo.getErrorID());
+//		System.out.println("订阅回报:" + bIsLast);
+//		System.out.println(pRspInfo.getErrorID());
 //		System.out.println("InstrumentID:" + pSpecificInstrument.InstrumentID());
 	}
 	
