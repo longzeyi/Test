@@ -36,10 +36,10 @@ public class MyMdSpi extends JCTPMdSpi {
 		System.out.println(pRspUserLogin.getLoginTime());
 		//订阅
 		int subResult = -1;
-//		String[] str = new String[]{"IF1312","bu1402"};
+		String[] str = new String[]{"cu1410","ag1412","sr1501"};
 //		subResult = mdApi.subscribeMarketData("IF1303");
-		subResult = mdApi.subscribeMarketData("cu1410");
-//		subResult = mdApi.subscribeMarketData("a1405");
+//		subResult = mdApi.subscribeMarketData("cu1410");
+		subResult = mdApi.subscribeMarketData(str);
 		System.out.println(subResult == 0 ? "订阅成功" : "订阅失败");
 	}
 
