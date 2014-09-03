@@ -47,9 +47,18 @@ public class MyMdSpi extends JCTPMdSpi {
 	/**深度行情通知*/
 	@Override
 	public void onRtnDepthMarketData(CThostFtdcDepthMarketDataField pDepthMarketData) {
+		System.out.print(pDepthMarketData.getUpdateTime() + " ==== " + pDepthMarketData.getUpdateMillisec() + "   ");
 		double[] md = Super.mddata.get(pDepthMarketData.getInstrumentID());
 		md[0] = pDepthMarketData.getLastPrice();
-		System.out.print(pDepthMarketData.getUpdateTime() + " ==== " + pDepthMarketData.getUpdateMillisec() + "   ");
+		md[1] = pDepthMarketData.getHighestPrice();
+		md[2] = pDepthMarketData.getLowestPrice();
+		if(md[3] == 0d){
+			md[3] = pDepthMarketData.getOpenPrice();
+			md[4] = pDepthMarketData.getPreClosePrice();
+			md[5] = pDepthMarketData.getUpperLimitPrice();
+			md[6] = pDepthMarketData.getLowerLimitPrice();
+		}
+//		Super.mddata.remove(key)
 //		System.out.println(pDepthMarketData.getInstrumentID());
 		System.out.println("合约代码:"+pDepthMarketData.getInstrumentID());
 //    	System.out.println("申卖价1:"+pDepthMarketData.getAskPrice1());
