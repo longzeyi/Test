@@ -117,7 +117,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		System.out.println("成交回报: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume() + "订单引用：" + pTrade.getOrderRef());
 		if(M.count>1){
 			M.positionPrice = pTrade.getPrice();
-			M.currDirection = (pTrade.getDirection()=='0')?true:false;
+//			M.currDirection = (pTrade.getDirection()=='0')?true:false;
 		}
 //		M.currOrderRef = pTrade.getOrderRef();
 	}

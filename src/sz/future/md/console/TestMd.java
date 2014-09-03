@@ -11,11 +11,25 @@ import sz.future.trader.console.TestTrader;
 public class TestMd {
 	/** 行情前置机地址 **/
 //	static String frontAddr = "tcp://asp-sim2-md1.financial-trading-platform.com:26213";
-	static String frontAddr1 = "tcp://front112.ctp.gtjafutures.com:41213";
-	static String frontAddr2 = "tcp://front111.ctp.gtjafutures.com:41213";
-//	static String frontAddr = "tcp://mn101.ctp.gtja-futures.com:41213";
+//	static String frontAddr = "tcp://front112.ctp.gtjafutures.com:41213";
+//	static String frontAddr = "tcp://front111.ctp.gtjafutures.com:41213";
+	static String frontAddr = "tcp://mn101.ctp.gtja-futures.com:41213";
 //	static String frontAddr = "tcp://gtja-md3.financial-trading-platform.com:41213";
 //	static String frontAddr = "tcp://27.115.57.57:41213";
+	//美尔雅期货行情前置
+//	static String frontAddr = "tcp://sh-front11.168qh.com:41213";
+//	static String frontAddr = "tcp://sh-front12.168qh.com:41213";
+//	static String frontAddr = "tcp://sh-front13.168qh.com:41213";
+//	static String frontAddr = "tcp://sh-front14.168qh.com:41213";
+//	static String frontAddr = "tcp://sh-front19.168qh.com:41213";
+//	static String frontAddr = "tcp://218.104.106.85:41213";
+//	static String frontAddr = "tcp://218.104.106.82:41213";
+//	static String frontAddr = "tcp://sh-front11.mfc.com.cn:41213";
+//	static String frontAddr = "tcp://sh-front12.mfc.com.cn:41213";
+//	static String frontAddr = "tcp://sh-front13.mfc.com.cn:41213";
+//	static String frontAddr = "tcp://sh-front14.mfc.com.cn:41213";
+//	static String frontAddr = "tcp://sh-front19.mfc.com.cn:41213";
+	
 	/** 行情API **/
 	static JCTPMdApi mdApi;
 	
@@ -31,8 +45,7 @@ public class TestMd {
 		//注册spi
 		mdApi.registerSpi(mdSpi);
 		//注册前置机地址
-		mdApi.registerFront(frontAddr1);
-		mdApi.registerFront(frontAddr2);
+		mdApi.registerFront(frontAddr);
 		mdApi.Init();
 		mdApi.Join();
 //		TimeUnit.SECONDS.sleep(5);
