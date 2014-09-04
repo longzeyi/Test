@@ -1,13 +1,14 @@
-/**
- * 
- */
 package sz.future.trader.comm;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 全局变量类
+ * @author Sean
+ *
+ */
 public class Super {
-	public static final String[] instruments = new String[]{"a1501","m1501","pp1501","sr1501","jd1501","rb1501","pta1501","fg1501","rm1501","y1501"};
 	
 	public static int count = 0;
 	public static int requestID = 0;
@@ -21,10 +22,17 @@ public class Super {
 	public static double upperLimitPrice = 0d;//涨停价
 	public static double lowerLimitPrice = 0d;//跌停价
 	
-	public static Map<String, double[]> mddata = new HashMap<String, double[]>();
-	static {
-		for (int i = 0; i < instruments.length; i++) {
-			mddata.put(instruments[i], null);
+	//Tick容器
+	public static Map<String, double[]> TICK_DATA = new HashMap<String, double[]>();
+	
+	//策略信号
+//	public static int signal = -1;
+	public static Map<String, Integer> SIGNAL = new HashMap<String, Integer>();
+	
+	static{
+		for (int i = 0; i < ServerParams.instruments.length; i++) {
+			TICK_DATA.put(ServerParams.instruments[i], new double[ServerParams.instruments.length]);
+			SIGNAL.put(ServerParams.instruments[i], -1);
 		}
 	}
 //	public static boolean currDirection = true ;//当前交易方向

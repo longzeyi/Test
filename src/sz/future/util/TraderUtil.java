@@ -15,6 +15,7 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradeField;
 
 import sz.future.trader.comm.M;
+import sz.future.trader.comm.ServerParams;
 import sz.future.trader.console.TestTrader;
 
 public class TraderUtil {
@@ -32,9 +33,9 @@ public class TraderUtil {
 				//下单操作
 				CThostFtdcInputOrderField inputOrderField=new CThostFtdcInputOrderField();
 				//期货公司代码
-				inputOrderField.setBrokerID(M.brokerId);
+				inputOrderField.setBrokerID(ServerParams.BROKER_ID);
 				//投资者代码
-				inputOrderField.setInvestorID(M.userId);
+				inputOrderField.setInvestorID(ServerParams.USER_ID);
 				// 合约代码
 				inputOrderField.setInstrumentID(instrumentId);
 				///报单引用
@@ -78,12 +79,12 @@ public class TraderUtil {
 				return returnMsg;
 	}
 	
-	public static int orderAction(){
+	public static int orderAction(String instrumentId){
 		CThostFtdcInputOrderActionField actionField = new CThostFtdcInputOrderActionField();
 //		CThostFtdcOrderActionField actionField = new CThostFtdcOrderActionField();
-		actionField.setBrokerID(M.brokerId);
-		actionField.setInvestorID(M.userId);
-		actionField.setInstrumentID(M.instrumentId);
+		actionField.setBrokerID(ServerParams.BROKER_ID);
+		actionField.setInvestorID(ServerParams.USER_ID);
+		actionField.setInstrumentID(instrumentId);
 		actionField.setActionFlag('0');//0删除 3修改
 		return TestTrader.traderApi.reqOrderAction(actionField, ++M.requestID);
 	}
@@ -92,11 +93,11 @@ public class TraderUtil {
 	 * 查询持仓明细
 	 * @return
 	 */
-	public static int qryPosition(){
+	public static int qryPosition(String instrumentId){
 		CThostFtdcQryInvestorPositionDetailField positionField = new CThostFtdcQryInvestorPositionDetailField();
-		positionField.setBrokerID(M.brokerId);
-		positionField.setInstrumentID(M.instrumentId);
-		positionField.setInvestorID(M.userId);
+		positionField.setBrokerID(ServerParams.BROKER_ID);
+		positionField.setInstrumentID(instrumentId);
+		positionField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询持仓明细......");
 		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++M.requestID);
 	}
@@ -105,11 +106,11 @@ public class TraderUtil {
 	 * 查询报单
 	 * @return
 	 */
-	public static int qryOrder(){
+	public static int qryOrder(String instrumentId){
 		CThostFtdcQryOrderField orderField = new CThostFtdcQryOrderField();
-		orderField.setBrokerID(M.brokerId);
-		orderField.setInstrumentID(M.instrumentId);
-		orderField.setInvestorID(M.userId);
+		orderField.setBrokerID(ServerParams.BROKER_ID);
+		orderField.setInstrumentID(instrumentId);
+		orderField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询报单......");
 		return TestTrader.traderApi.reqQryOrder(orderField, ++M.requestID);
 	}
@@ -118,11 +119,11 @@ public class TraderUtil {
 	 * 查询成交单
 	 * @return
 	 */
-	public static int qryTrade(){
+	public static int qryTrade(String instrumentId){
 		CThostFtdcQryTradeField tradeField = new CThostFtdcQryTradeField();
-		tradeField.setBrokerID(M.brokerId);
-		tradeField.setInstrumentID(M.instrumentId);
-		tradeField.setInvestorID(M.userId);
+		tradeField.setBrokerID(ServerParams.BROKER_ID);
+		tradeField.setInstrumentID(instrumentId);
+		tradeField.setInvestorID(ServerParams.USER_ID);
 		tradeField.setTradeID(M.instrumentId+M.currOrderRef);
 		System.out.println("查询成交......");
 		return TestTrader.traderApi.reqQryTrade(tradeField, ++M.requestID);

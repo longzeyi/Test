@@ -18,10 +18,10 @@ public class TestTrader extends Thread{
 	public void run()  {
 		String dataPath = "c:/ctpdata/";
 //		traderApi = JCTPTraderApi.createFtdcTraderApi();
-		traderApi = JCTPTraderApi.createFtdcTraderApi(dataPath);
-		traderSpi = new MyTraderSpi(traderApi);
+		traderApi = JCTPTraderApi.createFtdcTraderApi(dataPath);//产生一个CThostFtdcTraderApi实例
+		traderSpi = new MyTraderSpi(traderApi);//产生一个事件处理的实例
 		//注册traderpi
-		traderApi.registerSpi(traderSpi);
+		traderApi.registerSpi(traderSpi);//注册一个事件处理的实例
 		//订阅公有流
 		traderApi.subscribePublicTopic(THOST_TE_RESUME_TYPE.THOST_TERT_RESTART);
 		//订阅私有流

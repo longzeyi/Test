@@ -8,7 +8,7 @@ import sz.future.trader.console.TestTrader;
  * @author Sean
  * 模拟环境交易时间:正常交易时间均可交易,每个交易日晚17：30到凌晨5：00也可进行交易，节假日正常情况下都可进行交易
  */
-public class TestMd {
+public class TestMd extends Thread{
 	/** 行情前置机地址 **/
 //	static String frontAddr = "tcp://asp-sim2-md1.financial-trading-platform.com:26213";
 //	static String frontAddr = "tcp://front112.ctp.gtjafutures.com:41213";
@@ -33,16 +33,12 @@ public class TestMd {
 	/** 行情API **/
 	static JCTPMdApi mdApi;
 	
-	public static void main(String[] args) throws InterruptedException {
-		TestTrader tt = new TestTrader();
-		//启动交易线程
-		tt.start();
-		Thread.sleep(2000);
+	public void run() {
 		//创建行情API
 		mdApi = JCTPMdApi.createFtdcTraderApi();
-		//使用策略
+		//产生一个事件处理的实例
 		MyMdSpi mdSpi = new MyMdSpi(mdApi);
-		//注册spi
+		//注册事件处理的实例
 		mdApi.registerSpi(mdSpi);
 		//注册前置机地址
 		mdApi.registerFront(frontAddr);
