@@ -16,12 +16,13 @@ public class TestMonitor extends Thread{
 	public void run() {
 		while(true){
 			tickData = Super.TICK_DATA;
-			System.out.println(ServerParams.instruments[0]);
+//			System.out.println(ServerParams.instruments[0]);
 			for (int i = 0; i < ServerParams.instruments.length; i++) {
-				System.out.println(ServerParams.instruments[i]);
+//				System.out.println(ServerParams.instruments[i]);
 				lastTick = tickData.get(ServerParams.instruments[i]);
 				if(lastTick != null)
 				System.err.println(ServerParams.instruments[i] + " : " + lastTick[0]);
+				
 //				TraderUtil.qryPosition(ServerParams.instruments[i]);
 				
 			}

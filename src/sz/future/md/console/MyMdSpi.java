@@ -52,7 +52,7 @@ public class MyMdSpi extends JCTPMdSpi {
 		boolean bool = false;
 		System.out.print(pDepthMarketData.getUpdateTime() + " ==== " + pDepthMarketData.getUpdateMillisec() + "   ");
 		double[] md = Super.TICK_DATA.get(pDepthMarketData.getInstrumentID());
-		if(md[0] != pDepthMarketData.getLastPrice() && pDepthMarketData.getLastPrice() > 10){
+		if(md[0] != pDepthMarketData.getLastPrice()){
 			bool = true;
 			md[0] = pDepthMarketData.getLastPrice();
 			if(md[1] != pDepthMarketData.getHighestPrice() && pDepthMarketData.getHighestPrice() > 10){
@@ -70,6 +70,7 @@ public class MyMdSpi extends JCTPMdSpi {
 			md[6] = pDepthMarketData.getLowerLimitPrice();
 		}
 		if(bool){
+			System.out.println(pDepthMarketData.getInstrumentID()+"*****"+md[0]);
 			Super.TICK_DATA.put(pDepthMarketData.getInstrumentID(), md);
 		}
 		System.out.println(pDepthMarketData.getInstrumentID() + " : " + pDepthMarketData.getLastPrice());

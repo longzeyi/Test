@@ -31,7 +31,7 @@ public class Super {
 	
 	static{
 		for (int i = 0; i < ServerParams.instruments.length; i++) {
-			TICK_DATA.put(ServerParams.instruments[i], new double[ServerParams.instruments.length]);
+			TICK_DATA.put(ServerParams.instruments[i], new double[7]);
 			SIGNAL.put(ServerParams.instruments[i], -1);
 		}
 	}

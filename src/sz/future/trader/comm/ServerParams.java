@@ -6,7 +6,7 @@ package sz.future.trader.comm;
  *
  */
 public final class ServerParams {
-	public static final String[] instruments = new String[]{"a1501","m1501","pp1501","sr1501","jd1501","rb1501","pta1501","fg1501","rm1501","y1501"};
+	public static final String[] instruments = new String[]{"m1501","y1501","rb1501"};//,"a1501","pp1501","sr1501","jd1501","pta1501","fg1501","rm1501"
 	
 	public static final String BROKER_ID = "1038";
 	public static final String USER_ID = "00000015";
