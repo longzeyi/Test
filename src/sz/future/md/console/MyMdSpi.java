@@ -52,25 +52,26 @@ public class MyMdSpi extends JCTPMdSpi {
 		boolean bool = false;
 		System.out.print(pDepthMarketData.getUpdateTime() + " ==== " + pDepthMarketData.getUpdateMillisec() + "   ");
 		double[] md = Super.TICK_DATA.get(pDepthMarketData.getInstrumentID());
-		if(md[0] != pDepthMarketData.getLastPrice()){
+		if(md[0] != pDepthMarketData.getLastPrice() && pDepthMarketData.getLastPrice() < 100000){
 			bool = true;
 			md[0] = pDepthMarketData.getLastPrice();
-			if(md[1] != pDepthMarketData.getHighestPrice() && pDepthMarketData.getHighestPrice() > 10){
+			if(md[1] != pDepthMarketData.getHighestPrice() && pDepthMarketData.getHighestPrice() < 100000){
 				md[1] = pDepthMarketData.getHighestPrice();
 			}
-			if(md[2] != pDepthMarketData.getLowestPrice() && pDepthMarketData.getLowestPrice() > 10){
+			if(md[2] != pDepthMarketData.getLowestPrice() && pDepthMarketData.getLowestPrice() < 100000){
 				md[2] = pDepthMarketData.getLowestPrice();
 			}
 		}
 		count++;//计数
 		if(count < 100){
+			System.out.println(count);
 			md[3] = pDepthMarketData.getOpenPrice();
 			md[4] = pDepthMarketData.getPreClosePrice();
 			md[5] = pDepthMarketData.getUpperLimitPrice();
 			md[6] = pDepthMarketData.getLowerLimitPrice();
 		}
 		if(bool){
-			System.out.println(pDepthMarketData.getInstrumentID()+"*****"+md[0]);
+//			System.out.println(pDepthMarketData.getInstrumentID()+"*****"+md[0]);
 			Super.TICK_DATA.put(pDepthMarketData.getInstrumentID(), md);
 		}
 		System.out.println(pDepthMarketData.getInstrumentID() + " : " + pDepthMarketData.getLastPrice());

@@ -15,9 +15,9 @@ public class Main {
 		TestTrader tt = new TestTrader();
 		TestMonitor tmo = new TestMonitor();
 		tm.start();
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 		tt.start();
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 		tmo.start();
 	}
 

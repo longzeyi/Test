@@ -17,14 +17,17 @@ public class TestMonitor extends Thread{
 		while(true){
 			tickData = Super.TICK_DATA;
 //			System.out.println(ServerParams.instruments[0]);
-			for (int i = 0; i < ServerParams.instruments.length; i++) {
-//				System.out.println(ServerParams.instruments[i]);
+			//i=1,因为多线程读取数组第一个元素出现乱码，所以从1开始遍历
+			for (int i = 1; i < ServerParams.instruments.length; i++) {
+//				System.out.println(ServerParams.instruments[0]);
 				lastTick = tickData.get(ServerParams.instruments[i]);
 				if(lastTick != null)
-				System.err.println(ServerParams.instruments[i] + " : " + lastTick[0]);
+				System.err.println(ServerParams.instruments[i] + " : " + lastTick[0] + ":" + lastTick[1] + " : " + lastTick[2] + ":" + lastTick[3] + " : " + lastTick[4] + ":" + lastTick[5] + " : " + lastTick[6]);
 				
 //				TraderUtil.qryPosition(ServerParams.instruments[i]);
-				
+//				TraderUtil.orderInsert(ServerParams.instruments[i], false, 5, "0", lastTick[5]);
+//				TraderUtil.qryOrder(ServerParams.instruments[i]);
+				TraderUtil.qryTradingAccount(ServerParams.instruments[i]);
 			}
 			try {
 				Thread.sleep(5000);

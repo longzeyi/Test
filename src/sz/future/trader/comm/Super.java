@@ -31,8 +31,10 @@ public class Super {
 	
 	static{
 		for (int i = 0; i < ServerParams.instruments.length; i++) {
-			TICK_DATA.put(ServerParams.instruments[i], new double[7]);
-			SIGNAL.put(ServerParams.instruments[i], -1);
+			if(!ServerParams.instruments[i].equals("")){
+				TICK_DATA.put(ServerParams.instruments[i], new double[7]);
+				SIGNAL.put(ServerParams.instruments[i], -1);
+			}
 		}
 	}
 //	public static boolean currDirection = true ;//当前交易方向

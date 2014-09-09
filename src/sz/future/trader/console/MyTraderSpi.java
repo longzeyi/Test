@@ -16,6 +16,7 @@ import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 
 import sz.future.trader.comm.M;
+import sz.future.trader.comm.ServerParams;
 
 /**
  * Custom TraderSpi
@@ -29,9 +30,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public static int nRequestID = 0;
 	
 	//国泰君安
-	public static final String brokerId = "1038";
-	public static final String userId = "00000015";
-	public static final String password = "123456"; 
+//	public static final String brokerId = "1038";
+//	public static final String userId = "00000015";
+//	public static final String password = "123456"; 
 	
 	public MyTraderSpi(JCTPTraderApi traderApi) {
 		this.traderApi = traderApi;
@@ -40,9 +41,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onFrontConnected() {
 		System.out.println("前置机连接");
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
-		userLoginField.setBrokerID(brokerId);
-		userLoginField.setUserID(userId);
-		userLoginField.setPassword(password);
+		userLoginField.setBrokerID(ServerParams.BROKER_ID);
+		userLoginField.setUserID(ServerParams.USER_ID);
+		userLoginField.setPassword(ServerParams.PWD);
 		traderApi.reqUserLogin(userLoginField, 112);
 //		CThostFtdcInputOrderField pInputOrder = new CThostFtdcInputOrderField();
 //		traderApi.reqOrderInsert(pInputOrder, ++nRequestID);
@@ -80,7 +81,18 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryTradingAccount(
 			CThostFtdcTradingAccountField pTradingAccount,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("No."+nRequestID + "可用资金："+pTradingAccount.getAvailable());
+		System.out.println("nRequestID: "+nRequestID);
+		System.out.println("bIsLast: "+bIsLast);
+		System.out.println("交易所保证金："+pTradingAccount.getExchangeMargin());
+		System.out.println("可用资金："+pTradingAccount.getAvailable());
+		System.out.println("入金金额："+pTradingAccount.getDeposit());
+		System.out.println("出金金额："+pTradingAccount.getWithdraw());
+		System.out.println("当前保证金总额："+pTradingAccount.getCurrMargin());
+		System.out.println("手续费："+pTradingAccount.getCommission());
+		System.out.println("平仓盈亏："+pTradingAccount.getCloseProfit());
+		System.out.println("持仓盈亏："+pTradingAccount.getPositionProfit());
+		System.out.println("可取资金："+pTradingAccount.getWithdrawQuota());
+		System.out.println("资金使用率："+pTradingAccount.getCurrMargin()/(pTradingAccount.getAvailable()+pTradingAccount.getCurrMargin()));
 	}
 	/* 
 	 * 报单回报。当客户端进行报单录入、报单操作及其它原因（如部分成交）导致报单状态发生变化时，交易托管系统会主动通知客户端，该方法会被调用。
@@ -123,9 +135,15 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	}
 	
 	@Override
+	public void onRspQryOrder(CThostFtdcOrderField pOrder,
+			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+		System.out.println("查询报单: " + pOrder.getOrderStatus() + " " + pOrder.getTraderID() + " " + pOrder.getTradingDay());
+//		super.onRspQryOrder(pOrder, pRspInfo, nRequestID, bIsLast);
+	}
+	@Override
 	public void onRspQryTrade(CThostFtdcTradeField pTrade,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		super.onRspQryTrade(pTrade, pRspInfo, nRequestID, bIsLast);
+//		super.onRspQryTrade(pTrade, pRspInfo, nRequestID, bIsLast);
 		System.out.println("No."+nRequestID + "成交通知: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume() + "订单引用：" + pTrade.getOrderRef());
 	}
 	/* 
@@ -135,6 +153,8 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryInvestorPositionDetail(
 			CThostFtdcInvestorPositionDetailField pInvestorPositionDetail,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+		System.out.println("pRspInfo.getErrorMsg(): "+pRspInfo.getErrorMsg());
+		
 		System.out.println("No."+nRequestID + "请求查询投资者持仓明细响应"+pInvestorPositionDetail.getDirection()+"+"+pInvestorPositionDetail.getOpenDate()+"+"+pInvestorPositionDetail.getOpenPrice()+"+"+pInvestorPositionDetail.getTradingDay());
 	}
 	

@@ -13,6 +13,7 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradeField;
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradingAccountField;
 
 import sz.future.trader.comm.M;
 import sz.future.trader.comm.ServerParams;
@@ -113,6 +114,14 @@ public class TraderUtil {
 		orderField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询报单......");
 		return TestTrader.traderApi.reqQryOrder(orderField, ++M.requestID);
+	}
+	
+	public static int qryTradingAccount(String instrumentId){
+		CThostFtdcQryTradingAccountField accountField = new CThostFtdcQryTradingAccountField();
+		accountField.setBrokerID(ServerParams.BROKER_ID);
+		accountField.setInvestorID(ServerParams.USER_ID);
+		System.out.println("查询资金......");
+		return TestTrader.traderApi.reqQryTradingAccount(accountField, ++M.requestID);
 	}
 	
 	/**
