@@ -26,8 +26,8 @@ public class TestMonitor extends Thread{
 				
 //				TraderUtil.qryPosition(ServerParams.instruments[i]);
 //				TraderUtil.orderInsert(ServerParams.instruments[i], false, 5, "0", lastTick[5]);
-//				TraderUtil.qryOrder(ServerParams.instruments[i]);
-				TraderUtil.qryTradingAccount(ServerParams.instruments[i]);
+				TraderUtil.qryOrder(ServerParams.instruments[i]);
+//				TraderUtil.qryTradingAccount(ServerParams.instruments[i]);
 			}
 			try {
 				Thread.sleep(5000);

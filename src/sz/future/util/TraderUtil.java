@@ -116,6 +116,11 @@ public class TraderUtil {
 		return TestTrader.traderApi.reqQryOrder(orderField, ++M.requestID);
 	}
 	
+	/**
+	 * 查询资金明细
+	 * @param instrumentId
+	 * @return
+	 */
 	public static int qryTradingAccount(String instrumentId){
 		CThostFtdcQryTradingAccountField accountField = new CThostFtdcQryTradingAccountField();
 		accountField.setBrokerID(ServerParams.BROKER_ID);

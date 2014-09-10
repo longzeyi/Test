@@ -83,15 +83,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		System.out.println("nRequestID: "+nRequestID);
 		System.out.println("bIsLast: "+bIsLast);
-		System.out.println("交易所保证金："+pTradingAccount.getExchangeMargin());
 		System.out.println("可用资金："+pTradingAccount.getAvailable());
-		System.out.println("入金金额："+pTradingAccount.getDeposit());
-		System.out.println("出金金额："+pTradingAccount.getWithdraw());
 		System.out.println("当前保证金总额："+pTradingAccount.getCurrMargin());
-		System.out.println("手续费："+pTradingAccount.getCommission());
-		System.out.println("平仓盈亏："+pTradingAccount.getCloseProfit());
-		System.out.println("持仓盈亏："+pTradingAccount.getPositionProfit());
-		System.out.println("可取资金："+pTradingAccount.getWithdrawQuota());
+//		System.out.println("可取资金："+pTradingAccount.getWithdrawQuota());
 		System.out.println("资金使用率："+pTradingAccount.getCurrMargin()/(pTradingAccount.getAvailable()+pTradingAccount.getCurrMargin()));
 	}
 	/* 
@@ -153,7 +147,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryInvestorPositionDetail(
 			CThostFtdcInvestorPositionDetailField pInvestorPositionDetail,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("pRspInfo.getErrorMsg(): "+pRspInfo.getErrorMsg());
+		System.out.println(nRequestID);
+		System.out.println(bIsLast);
+//		System.out.println("pRspInfo.getErrorMsg(): "+pRspInfo.getErrorMsg());
 		
 		System.out.println("No."+nRequestID + "请求查询投资者持仓明细响应"+pInvestorPositionDetail.getDirection()+"+"+pInvestorPositionDetail.getOpenDate()+"+"+pInvestorPositionDetail.getOpenPrice()+"+"+pInvestorPositionDetail.getTradingDay());
 	}
