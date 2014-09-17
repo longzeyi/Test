@@ -6,6 +6,10 @@ import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 
 import sz.future.trader.comm.ServerParams;
 
+/**
+ * @author Sean
+ * 交易线程
+ */
 public class TestTrader extends Thread{
 	/** 前置机地址 **/
 //	static String frontAddr = "tcp://gtja-front8.financial-trading-platform.com:41205";

@@ -121,7 +121,7 @@ public class TraderUtil {
 	 * @param instrumentId
 	 * @return
 	 */
-	public static int qryTradingAccount(String instrumentId){
+	public static int qryTradingAccount(){
 		CThostFtdcQryTradingAccountField accountField = new CThostFtdcQryTradingAccountField();
 		accountField.setBrokerID(ServerParams.BROKER_ID);
 		accountField.setInvestorID(ServerParams.USER_ID);

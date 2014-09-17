@@ -6,6 +6,10 @@ import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
 import sz.future.util.TraderUtil;
 
+/**
+ * @author Sean
+ * 行情监测线程
+ */
 public class TestMonitor extends Thread{
 
 	private Map<String, double[]> tickData;
@@ -26,8 +30,8 @@ public class TestMonitor extends Thread{
 				
 //				TraderUtil.qryPosition(ServerParams.instruments[i]);
 //				TraderUtil.orderInsert(ServerParams.instruments[i], false, 5, "0", lastTick[5]);
-				TraderUtil.qryOrder(ServerParams.instruments[i]);
-//				TraderUtil.qryTradingAccount(ServerParams.instruments[i]);
+//				TraderUtil.qryOrder(ServerParams.instruments[i]);
+				TraderUtil.qryTradingAccount();
 			}
 			try {
 				Thread.sleep(5000);
