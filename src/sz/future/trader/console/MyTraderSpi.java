@@ -132,6 +132,10 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryOrder(CThostFtdcOrderField pOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		System.out.println("查询报单: " + pOrder.getOrderStatus() + " " + pOrder.getTraderID() + " " + pOrder.getTradingDay());
+		System.out.println("报单引用: " + pOrder.getOrderRef());
+		System.out.println("业务单元: " + pOrder.getBusinessUnit());
+		System.out.println("请求编号: " + pOrder.getRequestID());
+		
 //		super.onRspQryOrder(pOrder, pRspInfo, nRequestID, bIsLast);
 	}
 	@Override

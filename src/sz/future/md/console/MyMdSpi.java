@@ -50,7 +50,7 @@ public class MyMdSpi extends JCTPMdSpi {
 	@Override
 	public void onRtnDepthMarketData(CThostFtdcDepthMarketDataField pDepthMarketData) {
 		boolean bool = false;
-		System.out.print(pDepthMarketData.getUpdateTime() + " ==== " + pDepthMarketData.getUpdateMillisec() + "   ");
+//		System.out.print(pDepthMarketData.getUpdateTime() + " ==== " + pDepthMarketData.getUpdateMillisec() + "   ");
 		double[] md = Super.TICK_DATA.get(pDepthMarketData.getInstrumentID());
 		if(md[0] != pDepthMarketData.getLastPrice() && pDepthMarketData.getLastPrice() < 100000){
 			bool = true;
@@ -64,7 +64,7 @@ public class MyMdSpi extends JCTPMdSpi {
 		}
 		count++;//计数
 		if(count < 100){
-			System.out.println(count);
+//			System.out.println(count);
 			md[3] = pDepthMarketData.getOpenPrice();
 			md[4] = pDepthMarketData.getPreClosePrice();
 			md[5] = pDepthMarketData.getUpperLimitPrice();
