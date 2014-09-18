@@ -27,7 +27,7 @@ import sz.future.trader.comm.ServerParams;
 public class MyTraderSpi extends JCTPTraderSpi {
 
 	JCTPTraderApi traderApi;
-	public static int nRequestID = 0;
+//	public static int nRequestID = 0;
 	
 	//国泰君安
 //	public static final String brokerId = "1038";
@@ -71,7 +71,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		
 		//确认结算单
 		CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
-		System.out.println("No."+nRequestID + "确认结算单: "+traderApi.reqSettlementInfoConfirm(confirmField, ++nRequestID));;
+		System.out.println("No."+nRequestID + "确认结算单: "+traderApi.reqSettlementInfoConfirm(confirmField, nRequestID));;
 	}
 	
 	/* 
@@ -93,7 +93,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	 */
 	@Override
 	public void onRtnOrder(CThostFtdcOrderField pOrder) {
-		System.out.println("报单通知: "+pOrder.getStatusMsg() + "价格：" + pOrder.getLimitPrice() + "手数：" + pOrder.getVolumeTotalOriginal());
+		System.out.println("报单回报通知: "+pOrder.getStatusMsg() + "价格：" + pOrder.getLimitPrice() + "手数：" + pOrder.getVolumeTotalOriginal());
 	}
 	
 	/* 
@@ -120,21 +120,39 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	 */
 	@Override
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
-		System.out.println("成交回报: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume() + "订单引用：" + pTrade.getOrderRef());
-		if(M.count>1){
-			M.positionPrice = pTrade.getPrice();
+		System.out.println("成交回报通知");
+		System.out.println("合约代码: "+pTrade.getInstrumentID());
+		System.out.println("报单引用: "+pTrade.getOrderRef());
+		System.out.println("成交编号: "+pTrade.getTradeID());
+		System.out.println("报单编号: "+pTrade.getOrderSysID());
+		System.out.println("结算编号: "+pTrade.getSettlementID());
+		System.out.println("报单编号: "+pTrade.getOrderSysID());
+		System.out.println("序号: "+pTrade.getSequenceNo());
+//		if(M.count>1){
+//			M.positionPrice = pTrade.getPrice();
 //			M.currDirection = (pTrade.getDirection()=='0')?true:false;
-		}
+//		}
 //		M.currOrderRef = pTrade.getOrderRef();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.hraink.futures.jctp.trader.JCTPTraderSpi#onRspQryOrder(org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcOrderField, org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField, int, boolean)
+	 * 查询报单响应
+	 */
 	@Override
 	public void onRspQryOrder(CThostFtdcOrderField pOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("查询报单: " + pOrder.getOrderStatus() + " " + pOrder.getTraderID() + " " + pOrder.getTradingDay());
+		
+		System.out.println("合约代码: " + pOrder.getInstrumentID());
+		System.out.println("交易所交易员代码: " + pOrder.getTraderID());
+		System.out.println("交易日: " + pOrder.getTradingDay());
+		System.out.println("报单状态: " + pOrder.getOrderStatus());
+		System.out.println("报单编号: " + pOrder.getOrderSysID());
 		System.out.println("报单引用: " + pOrder.getOrderRef());
 		System.out.println("业务单元: " + pOrder.getBusinessUnit());
 		System.out.println("请求编号: " + pOrder.getRequestID());
+		System.out.println("会话编号: " + pOrder.getSessionID());
+		System.out.println("状态信息: " + pOrder.getStatusMsg());
 		
 //		super.onRspQryOrder(pOrder, pRspInfo, nRequestID, bIsLast);
 	}
@@ -183,7 +201,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	@Override
 	public void onErrRtnOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo) {
-		System.out.println("No."+nRequestID +"报单录入错误回调： 方向："+pInputOrder.getDirection()+ "价格：" +pInputOrder.getLimitPrice()+ "手数：" +pInputOrder.getVolumeTotalOriginal()+ "返回信息：" +pRspInfo.getErrorMsg());
+		System.out.println("报单录入错误回调： 方向："+pInputOrder.getDirection()+ "价格：" +pInputOrder.getLimitPrice()+ "手数：" +pInputOrder.getVolumeTotalOriginal()+ "返回信息：" +pRspInfo.getErrorMsg());
 	}
 	
 }
