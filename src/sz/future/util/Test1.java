@@ -2,16 +2,15 @@ package sz.future.util;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import sz.future.conn.DBConnectionManager;
 
 public class Test1 {
 	
-	public static void main(String[] args) {
-		String [] strs = {"11","22"};
-		System.out.println(strs.length);
+	public static void main(String[] args) throws InterruptedException {
+		String []str = new String[10];
+		System.out.println(str.length);
 	}
 	
 	private static void getData(){
