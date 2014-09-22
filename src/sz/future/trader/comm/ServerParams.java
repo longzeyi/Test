@@ -25,6 +25,7 @@ public final class ServerParams {
 	
 //	public static final String FRONT_ADDR_MD = "tcp://mn101.ctp.gtja-futures.com:41213";//国泰君安行情模拟
 	public static final String FRONT_ADDR_MD = "tcp://27.17.62.149:40213";//美尔雅行情模拟
+//	public static final String FRONT_ADDR_MD = "tcp://sh-front11.168qh.com:41213";//美尔雅行情
 	
 	public final static int period = 5;				//这段时间内的收盘价
 	public final static int interval = 20 ;			//间隙

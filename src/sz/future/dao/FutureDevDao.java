@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcDepthMarketDataField;
 
 import sz.future.conn.DBConnectionManager;
+import sz.future.domain.MdDay;
 
 public class FutureDevDao {
 	protected static final Log log = LogFactory.getLog(FutureDevDao.class);
@@ -33,33 +35,38 @@ public class FutureDevDao {
 	}
 
 	public void saveMdDayHistory(
-			Map<String, CThostFtdcDepthMarketDataField> dayData){
+			Map<String, MdDay> dayData){
+//		Calendar calendar = Calendar.getInstance();
 		conn = DBConnectionManager.getConnection();
 		String sql = "INSERT INTO tb_md_day_history (instrument_id, trading_day, last_price, highest_price, lowest_price, open_price, close_price, volume, open_interest, create_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			pst = (PreparedStatement) conn.prepareStatement(sql);
 			conn.setAutoCommit(false);
 			Iterator<String> it = dayData.keySet().iterator();
+//			while(it.hasNext()){
+//				System.out.println("----"+it.next());
+//			}
 			while(it.hasNext()){
-				CThostFtdcDepthMarketDataField data = dayData.get(it.next());
+				MdDay data = dayData.get(it.next());
 				pst.setString(1, data.getInstrumentID());
-				pst.setDate(2, new java.sql.Date(sfDate1.parse(data.getTradingDay()).getTime()));
-				pst.setDouble(3, data.getLastPrice());
-				pst.setDouble(4, data.getHighestPrice());
-				pst.setDouble(5, data.getLowestPrice());
-				pst.setDouble(6, data.getOpenPrice());
-				pst.setDouble(7, data.getClosePrice());
+				System.out.println("InstrumentID: " + data.getInstrumentID());
+				pst.setDate(2, new java.sql.Date(data.getTradingDay().getTime()));
+				System.out.println("tradedate: "+data.getTradingDay());
+				//data.getLastPrice()
+				pst.setDouble(3, 0);
+				pst.setDouble(4, data.getHighest_price());
+				pst.setDouble(5, data.getLowest_price());
+				pst.setDouble(6, data.getOpen_price());
+				pst.setDouble(7, 0);
 				pst.setInt(8, data.getVolume());
-				pst.setDouble(9, data.getOpenInterest());
+				pst.setDouble(9, data.getOpen_interest());
 //				pst.setDate(10, sfDate2.format(new java.sql.Date()));
-				pst.setTimestamp(5, (Timestamp) new Timestamp(new Date().getTime()));
+				pst.setTimestamp(10, (Timestamp) new Timestamp(new Date().getTime()));
 				pst.addBatch();
 			}
 			pst.executeBatch(); 
 			conn.commit();
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ParseException e) {
 			e.printStackTrace();
 		} finally {
 			DBConnectionManager.closePreparedStatement(pst);

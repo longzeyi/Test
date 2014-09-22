@@ -1,7 +1,11 @@
 package sz.future.md.spi;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcDepthMarketDataField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcReqUserLoginField;
@@ -13,15 +17,18 @@ import org.hraink.futures.jctp.md.JCTPMdApi;
 import org.hraink.futures.jctp.md.JCTPMdSpi;
 
 import sz.future.dao.FutureDevDao;
-import sz.future.trader.comm.ServerParams;
+import sz.future.domain.MdDay;
 
 public class MyMdSpi extends JCTPMdSpi {
 	private JCTPMdApi mdApi;
-	private Map<String,CThostFtdcDepthMarketDataField> dayData = new HashMap<String,CThostFtdcDepthMarketDataField>();
-	private FutureDevDao dao = new FutureDevDao();
+	public static String[] instruments = new String[]{"rb1501","TA501","m1501","FG501","a1501","i1501"};
+	public static Map<String,MdDay> dayData = new HashMap<String,MdDay>();
+	public static FutureDevDao dao = new FutureDevDao();
 	
 	public MyMdSpi(JCTPMdApi mdApi) {
 		this.mdApi = mdApi;
+		SaveMd  smd = new SaveMd();
+		smd.start();
 	}
 	
 	/**当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用*/
@@ -46,23 +53,33 @@ public class MyMdSpi extends JCTPMdSpi {
 		int subResult = -1;
 //		String[] str = new String[]{"IF1401","bu1402"};
 //		subResult = mdApi.subscribeMarketData("IF1303");
-		subResult = mdApi.subscribeMarketData(ServerParams.instruments);
+		subResult = mdApi.subscribeMarketData(instruments);
 //		subResult = mdApi.subscribeMarketData("a1405");
 		System.out.println(subResult == 0 ? "订阅成功" : "订阅失败");
 	}
 
+	private SimpleDateFormat sfDate = new SimpleDateFormat("yyyyMMdd");
 	/**深度行情通知*/
 	@Override
 	public void onRtnDepthMarketData(CThostFtdcDepthMarketDataField pDepthMarketData) {
-		System.out.println("dayData.size(): "+dayData.size());
-		System.out.println("ServerParams.instruments.length: "+(ServerParams.instruments.length-1));
-		if(dayData.size() == ServerParams.instruments.length-1){
-			dao.saveMdDayHistory(dayData);
-			System.exit(0);
-		} else {
-			System.out.println("ggggggggggggggggggggggggggggg");
-			dayData.put(pDepthMarketData.getInstrumentID(), pDepthMarketData);
+		MdDay md = new MdDay();
+		md.setClose_price(pDepthMarketData.getClosePrice());
+		md.setHighest_price(pDepthMarketData.getHighestPrice());
+		md.setInstrumentID(pDepthMarketData.getInstrumentID());
+		md.setLastPrice(pDepthMarketData.getLastPrice());
+		md.setLowest_price(pDepthMarketData.getLowestPrice());
+		md.setOpen_interest(pDepthMarketData.getOpenInterest());
+		md.setOpen_price(pDepthMarketData.getOpenPrice());
+		try {
+			md.setTradingDay(sfDate.parse(pDepthMarketData.getTradingDay()));
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
+		md.setVolume(pDepthMarketData.getVolume());
+		
+		System.out.println("dayData.size(): "+this.dayData.size());
+		System.out.println("instruments.length: "+(instruments.length));
+		this.dayData.put(md.getInstrumentID(), md);
 //		System.out.print(pDepthMarketData.getUpdateTime() + " " + pDepthMarketData.getUpdateMillisec() + "   ");
 //		System.out.println(pDepthMarketData.getInstrumentID());
 //		TestMd.list.add(pDepthMarketData.getUpdateTime());
@@ -137,4 +154,25 @@ public class MyMdSpi extends JCTPMdSpi {
 		// TODO Auto-generated method stub
 	}
 
+}
+
+class SaveMd extends Thread {
+	public void run(){
+		while(true){
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			if(MyMdSpi.dayData.size() == MyMdSpi.instruments.length){
+				Iterator<Entry<String, MdDay>> it = MyMdSpi.dayData.entrySet().iterator();
+				while(it.hasNext()){
+					Entry<String, MdDay> en = it.next();
+					System.out.println(en.getKey() +":"+((MdDay)en.getValue()).getInstrumentID());
+				}
+				MyMdSpi.dao.saveMdDayHistory(MyMdSpi.dayData);
+				System.exit(0);
+			}
+		}
+	}
 }

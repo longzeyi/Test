@@ -2,7 +2,6 @@ package sz.future.md.spi;
 
 import org.hraink.futures.jctp.md.JCTPMdApi;
 
-import sz.future.md.spi.MyMdSpi;
 import sz.future.trader.comm.ServerParams;
 
 public class TestMd {
@@ -13,7 +12,7 @@ public class TestMd {
 	 */
 	static JCTPMdApi mdApi;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		//创建行情API
 		mdApi = JCTPMdApi.createFtdcTraderApi();
 		//产生一个事件处理的实例
@@ -29,3 +28,4 @@ public class TestMd {
 	}
 
 }
+
