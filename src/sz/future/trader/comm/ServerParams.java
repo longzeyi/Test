@@ -6,7 +6,7 @@ package sz.future.trader.comm;
  *
  */
 public final class ServerParams {
-	public static final String[] instruments = new String[] {"","sr1501","rb1501","m1501","a1501"};//,"pp1501","sr1501","jd1501","pta1501","fg1501","rm1501"
+	public static final String[] instruments = new String[] {"","rb1501","TA501","m1501","FG501","a1501","i1501"};//,"pp1501","sr1501","jd1501","pta1501","fg1501","rm1501"
 	
 //	public static final String FRONT_ADDR_TR = "tcp://mn104.ctp.gtja-futures.com:41205";//国泰君安交易CTP模拟
 //	public static final String BROKER_ID = "1038";

@@ -66,7 +66,7 @@ public class MyMdSpi extends JCTPMdSpi {
 		md.setClose_price(pDepthMarketData.getClosePrice());
 		md.setHighest_price(pDepthMarketData.getHighestPrice());
 		md.setInstrumentID(pDepthMarketData.getInstrumentID());
-		md.setLastPrice(pDepthMarketData.getLastPrice());
+//		md.setLastPrice(pDepthMarketData.getLastPrice());
 		md.setLowest_price(pDepthMarketData.getLowestPrice());
 		md.setOpen_interest(pDepthMarketData.getOpenInterest());
 		md.setOpen_price(pDepthMarketData.getOpenPrice());
@@ -88,15 +88,15 @@ public class MyMdSpi extends JCTPMdSpi {
 //    	System.out.println("申卖量1:"+pDepthMarketData.getAskVolume1());
 //    	System.out.println("申买价1:"+pDepthMarketData.getBidPrice1());
 //    	System.out.println("申买量1:"+pDepthMarketData.getBidVolume1());
-//    	System.out.println("今收盘:"+pDepthMarketData.getClosePrice());
 //    	System.out.println("当日均价:"+pDepthMarketData.getAveragePrice());
 //    	System.out.println("今虚实度:"+pDepthMarketData.getCurrDelta());
-//    	System.out.println("最高价:"+pDepthMarketData.getHighestPrice());
-//    	System.out.println("最低价:"+pDepthMarketData.getLowestPrice());
-    	System.out.println("最新价:"+pDepthMarketData.getLastPrice());
+    	System.out.println("最高价:"+pDepthMarketData.getHighestPrice());
+    	System.out.println("最低价:"+pDepthMarketData.getLowestPrice());
+//    	System.out.println("最新价:"+pDepthMarketData.getLastPrice());
 //    	System.out.println("跌停板价:"+pDepthMarketData.getLowerLimitPrice());
 //    	System.out.println("持仓量:"+pDepthMarketData.getOpenInterest());
-//    	System.out.println("今开盘:"+pDepthMarketData.getOpenPrice());
+    	System.out.println("今开盘:"+pDepthMarketData.getOpenPrice());
+    	System.out.println("今收盘:"+pDepthMarketData.getClosePrice());
 //    	System.out.println("昨收盘:"+pDepthMarketData.getPreClosePrice());
 //    	System.out.println("昨虚实度:"+pDepthMarketData.getPreDelta());
 //    	System.out.println("昨持仓量:"+pDepthMarketData.getPreOpenInterest());
@@ -109,7 +109,7 @@ public class MyMdSpi extends JCTPMdSpi {
 //    	System.out.println("涨停板价:"+pDepthMarketData.getUpperLimitPrice());
 //    	System.out.println("成交量:"+pDepthMarketData.getVolume());
 //    	System.out.println("LIST SIZE: " + TestMd.list.size());
-//    	System.err.println("--------------------------------------------------------------------------");
+    	System.err.println("--------------------------------------------------------------------------");
 	}
 
 	/**订阅行情应答*/

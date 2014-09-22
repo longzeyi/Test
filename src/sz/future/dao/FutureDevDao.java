@@ -36,9 +36,8 @@ public class FutureDevDao {
 
 	public void saveMdDayHistory(
 			Map<String, MdDay> dayData){
-//		Calendar calendar = Calendar.getInstance();
 		conn = DBConnectionManager.getConnection();
-		String sql = "INSERT INTO tb_md_day_history (instrument_id, trading_day, last_price, highest_price, lowest_price, open_price, close_price, volume, open_interest, create_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO tb_md_day_history (instrument_id, trading_day, highest_price, lowest_price, open_price, close_price, volume, open_interest, create_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			pst = (PreparedStatement) conn.prepareStatement(sql);
 			conn.setAutoCommit(false);
@@ -52,19 +51,17 @@ public class FutureDevDao {
 				System.out.println("InstrumentID: " + data.getInstrumentID());
 				pst.setDate(2, new java.sql.Date(data.getTradingDay().getTime()));
 				System.out.println("tradedate: "+data.getTradingDay());
-				//data.getLastPrice()
-				pst.setDouble(3, 0);
-				pst.setDouble(4, data.getHighest_price());
-				pst.setDouble(5, data.getLowest_price());
-				pst.setDouble(6, data.getOpen_price());
-				pst.setDouble(7, 0);
-				pst.setInt(8, data.getVolume());
-				pst.setDouble(9, data.getOpen_interest());
+				pst.setDouble(3, data.getHighest_price());
+				pst.setDouble(4, data.getLowest_price());
+				pst.setDouble(5, data.getOpen_price());
+				pst.setDouble(6, data.getClose_price());
+				pst.setInt(7, data.getVolume());
+				pst.setDouble(8, data.getOpen_interest());
 //				pst.setDate(10, sfDate2.format(new java.sql.Date()));
-				pst.setTimestamp(10, (Timestamp) new Timestamp(new Date().getTime()));
+				pst.setTimestamp(9, (Timestamp) new Timestamp(new Date().getTime()));
 				pst.addBatch();
 			}
-			pst.executeBatch(); 
+			pst.executeBatch();
 			conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();

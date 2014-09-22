@@ -10,7 +10,7 @@ public class MdDay {
 	 */
 	private String instrumentID = "";
 	private Date tradingDay;
-	private double lastPrice;
+//	private double lastPrice;
 	private double highest_price;
 	private double lowest_price;
 	private double open_price;
@@ -37,13 +37,13 @@ public class MdDay {
 		this.tradingDay = tradingDay;
 	}
 
-	public double getLastPrice() {
-		return lastPrice;
-	}
-
-	public void setLastPrice(double lastPrice) {
-		this.lastPrice = lastPrice;
-	}
+//	public double getLastPrice() {
+//		return lastPrice;
+//	}
+//
+//	public void setLastPrice(double lastPrice) {
+//		this.lastPrice = lastPrice;
+//	}
 
 	public double getHighest_price() {
 		return highest_price;
