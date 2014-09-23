@@ -21,7 +21,7 @@ import sz.future.domain.MdDay;
 
 public class MyMdSpi extends JCTPMdSpi {
 	private JCTPMdApi mdApi;
-	public static String[] instruments = new String[]{"rb1501","TA501","m1501","FG501","a1501","i1501"};
+	public static String[] instruments = new String[]{"rb1501","TA501","m1501","RM501","SR501","i1501"};
 	public static Map<String,MdDay> dayData = new HashMap<String,MdDay>();
 	public static FutureDevDao dao = new FutureDevDao();
 	

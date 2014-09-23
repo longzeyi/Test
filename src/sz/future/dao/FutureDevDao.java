@@ -5,16 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcDepthMarketDataField;
 
 import sz.future.conn.DBConnectionManager;
 import sz.future.domain.MdDay;
@@ -25,8 +22,8 @@ public class FutureDevDao {
 	private ResultSet rs;
 	private PreparedStatement pst;
 	
-	private SimpleDateFormat sfDate1 = new SimpleDateFormat("yyyy-MM-dd");
-	private SimpleDateFormat sfDate2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//	private SimpleDateFormat sfDate1 = new SimpleDateFormat("yyyy-MM-dd");
+//	private SimpleDateFormat sfDate2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 	public FutureDevDao() {
 		conn = null;
@@ -37,7 +34,7 @@ public class FutureDevDao {
 	public void saveMdDayHistory(
 			Map<String, MdDay> dayData){
 		conn = DBConnectionManager.getConnection();
-		String sql = "INSERT INTO tb_md_day_history (instrument_id, trading_day, highest_price, lowest_price, open_price, close_price, volume, open_interest, create_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO tb_md_day_history (instrument_id, trading_day, highest_price, lowest_price, open_price, close_price, volume, open_interest, create_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			pst = (PreparedStatement) conn.prepareStatement(sql);
 			conn.setAutoCommit(false);
