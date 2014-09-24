@@ -3,7 +3,6 @@ package sz.future.md.console;
 import org.hraink.futures.jctp.md.JCTPMdApi;
 
 import sz.future.trader.comm.ServerParams;
-import sz.future.trader.console.TestTrader;
 
 /**
  * @author Sean

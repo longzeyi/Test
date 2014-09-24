@@ -6,8 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -16,6 +19,10 @@ import org.apache.commons.logging.LogFactory;
 import sz.future.conn.DBConnectionManager;
 import sz.future.domain.MdDay;
 
+/**
+ * @author Sean
+ *
+ */
 public class FutureDevDao {
 	protected static final Log log = LogFactory.getLog(FutureDevDao.class);
 	private Connection conn;
@@ -66,5 +73,77 @@ public class FutureDevDao {
 			DBConnectionManager.closePreparedStatement(pst);
 			DBConnectionManager.closeConnection(conn);
 		}
+	}
+	
+	
+	/**
+	 * 获取一段时间内的最高价或者最低价
+	 * @param days 近多少天内
+	 * @param instrumentId 合约代码
+	 * @param type 1：最高价，2：最低价
+	 * @return 最高价 or 最低价
+	 */
+	public double getLimitPrice(int days, String instrumentId, int type){
+		double price = 0d;
+		List<Double> list = new ArrayList<Double>();
+		conn = DBConnectionManager.getConnection();
+		String query1 = "";
+		if (type == 1) {
+			query1 = "SELECT highest_price FROM tb_md_day_history WHERE instrument_id = ? order by trading_day desc limit ? ";
+		} else if (type == 2) {
+			query1 = "SELECT lowest_price FROM tb_md_day_history WHERE instrument_id = ? order by trading_day desc limit ? ";
+		}
+		try {
+			pst = conn.prepareStatement(query1);
+			pst.setString(1, instrumentId);
+			pst.setInt(2, days);
+			rs = pst.executeQuery();
+			while (rs.next()){
+				list.add(rs.getDouble(1));
+			}
+			Collections.sort(list);
+			if(type == 1){
+				price = list.get(list.size()-1);//max
+			} else if (type == 2){
+				price = list.get(0);//min
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return price;
+	}
+	
+	
+	public double getPreMA(int days, String instrumentId){
+		double price = 0d;
+		List<Double> list = new ArrayList<Double>();
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT highest_price FROM tb_md_day_history WHERE instrument_id = ? order by trading_day desc limit ? ";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			pst.setInt(2, days);
+			rs = pst.executeQuery();
+			while (rs.next()){
+				list.add(rs.getDouble(1));
+			}
+			Collections.sort(list);
+			price = list.get(list.size()-1);//max
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return price;
+	}
+	public static void main(String[] args) {
+		FutureDevDao dao = new FutureDevDao();
+		System.out.println(dao.getLimitPrice(3, "m1501", 1));
 	}
 }
