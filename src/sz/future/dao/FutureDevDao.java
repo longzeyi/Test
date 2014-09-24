@@ -118,25 +118,21 @@ public class FutureDevDao {
 	}
 	
 	
-	/**
-	 * 昨天的MA
-	 * @param days
-	 * @param instrumentId
-	 * @return
-	 */
-	public double getMA(int days, String instrumentId){
+	public double getPreMA(int days, String instrumentId){
 		double price = 0d;
+		List<Double> list = new ArrayList<Double>();
 		conn = DBConnectionManager.getConnection();
-		String query = "SELECT close_price FROM tb_md_day_history WHERE instrument_id = ?  and trading_day <  cast(now() as date) order by trading_day desc limit ?;";
+		String query = "SELECT highest_price FROM tb_md_day_history WHERE instrument_id = ? order by trading_day desc limit ? ";
 		try {
 			pst = conn.prepareStatement(query);
 			pst.setString(1, instrumentId);
 			pst.setInt(2, days);
 			rs = pst.executeQuery();
 			while (rs.next()){
-				price = price + rs.getDouble(1);
+				list.add(rs.getDouble(1));
 			}
-			price = price/days ;
+			Collections.sort(list);
+			price = list.get(list.size()-1);//max
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -148,6 +144,6 @@ public class FutureDevDao {
 	}
 	public static void main(String[] args) {
 		FutureDevDao dao = new FutureDevDao();
-		System.out.println(dao.getMA(8, "m1501"));
+		System.out.println(dao.getLimitPrice(3, "m1501", 1));
 	}
 }
