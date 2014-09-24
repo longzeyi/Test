@@ -1,10 +1,12 @@
 package sz.future.md.spi;
 
+import java.util.TimerTask;
+
 import org.hraink.futures.jctp.md.JCTPMdApi;
 
 import sz.future.trader.comm.ServerParams;
 
-public class TestMd {
+public class TestMd extends TimerTask{
 
 	/**
 	 * 抓取日行情
@@ -12,7 +14,7 @@ public class TestMd {
 	 */
 	static JCTPMdApi mdApi;
 	
-	public static void main(String[] args) throws Exception {
+	public void run(){
 		//创建行情API
 		mdApi = JCTPMdApi.createFtdcTraderApi();
 		//产生一个事件处理的实例
