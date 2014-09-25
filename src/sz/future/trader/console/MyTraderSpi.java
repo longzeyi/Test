@@ -172,7 +172,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		System.out.println(nRequestID);
 		System.out.println(bIsLast);
 //		System.out.println("pRspInfo.getErrorMsg(): "+pRspInfo.getErrorMsg());
-		
 		System.out.println("No."+nRequestID + "请求查询投资者持仓明细响应"+pInvestorPositionDetail.getDirection()+"+"+pInvestorPositionDetail.getOpenDate()+"+"+pInvestorPositionDetail.getOpenPrice()+"+"+pInvestorPositionDetail.getTradingDay());
 	}
 	

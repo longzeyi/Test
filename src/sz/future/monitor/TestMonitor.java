@@ -2,7 +2,6 @@ package sz.future.monitor;
 
 import java.util.Map;
 
-import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
 import sz.future.util.TraderUtil;
 
@@ -11,24 +10,34 @@ import sz.future.util.TraderUtil;
  * 行情监测线程
  */
 public class TestMonitor extends Thread{
-
+	public static final String[] instruments = new String[] {"rb1501","TA501","m1501","FG501","a1501","i1501"};//,"pp1501","sr1501","jd1501","pta1501","fg1501","rm1501"
 	private Map<String, double[]> tickData;
 	private double[] lastTick;
 	/**
 	 * @param args
 	 */
 	public void run() {
-		String[] instruments = ServerParams.instruments.clone();
+//		String[] instruments = ServerParams.instruments.clone();
 		//查询资金使用率
 		TraderUtil.qryTradingAccount();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		//查询持仓明细
+		TraderUtil.qryPosition("m1501");
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		TraderUtil.qryPosition("IF1411");
 		
 		while(true){
 			tickData = Super.TICK_DATA;
 //			System.out.println(ServerParams.instruments[0]);
-			//i=1,因为多线程读取数组第一个元素出现乱码，所以从1开始遍历
-			for (int i = 1; i < instruments.length; i++) {
+			for (int i = 0; i < instruments.length; i++) {
 				System.out.println("instrumentId: "+instruments[i]);
 				lastTick = tickData.get(instruments[i]);
 				if(lastTick != null)
