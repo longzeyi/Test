@@ -1,5 +1,6 @@
 package sz.future.md.spi;
 
+import java.util.Date;
 import java.util.TimerTask;
 
 import org.hraink.futures.jctp.md.JCTPMdApi;
@@ -15,6 +16,7 @@ public class TestMd extends TimerTask{
 	static JCTPMdApi mdApi;
 	
 	public void run(){
+		System.err.println(new Date().toLocaleString() + ": 开始执行!");
 		//创建行情API
 		mdApi = JCTPMdApi.createFtdcTraderApi();
 		//产生一个事件处理的实例
@@ -27,6 +29,7 @@ public class TestMd extends TimerTask{
 		mdApi.Join();
 //		TimeUnit.SECONDS.sleep(5);
 		mdApi.Release();
+		System.err.println(new Date().toLocaleString() + ": 执行结束!");
 	}
 
 }

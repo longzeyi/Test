@@ -3,6 +3,8 @@ package sz.future.trader.comm;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionDetailField;
+
 /**
  * 全局变量类
  * @author Sean
@@ -24,6 +26,9 @@ public class Super {
 	
 	//Tick容器
 	public static Map<String, double[]> TICK_DATA = new HashMap<String, double[]>();
+	
+	//持仓明细
+	public static Map<String, CThostFtdcInvestorPositionDetailField> INVESTOR_POSITION_DETAIL = new HashMap<String, CThostFtdcInvestorPositionDetailField>();
 	
 	//策略信号
 //	public static int signal = -1;

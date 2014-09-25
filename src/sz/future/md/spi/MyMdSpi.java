@@ -3,9 +3,7 @@ package sz.future.md.spi;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcDepthMarketDataField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcReqUserLoginField;
@@ -34,7 +32,7 @@ public class MyMdSpi extends JCTPMdSpi {
 	/**当客户端与交易后台建立起通信连接时（还未登录前），该方法被调用*/
 	@Override
 	public void onFrontConnected() {
-		System.out.println("sdfsdf");
+//		System.out.println("sdfsdf");
 		//登陆
 		CThostFtdcReqUserLoginField userLoginField = new CThostFtdcReqUserLoginField();
 //		userLoginField.setBrokerID("005202");
@@ -77,8 +75,8 @@ public class MyMdSpi extends JCTPMdSpi {
 		}
 		md.setVolume(pDepthMarketData.getVolume());
 		
-		System.out.println("dayData.size(): "+this.dayData.size());
-		System.out.println("instruments.length: "+(instruments.length));
+//		System.out.println("dayData.size(): "+this.dayData.size());
+//		System.out.println("instruments.length: "+(instruments.length));
 		this.dayData.put(md.getInstrumentID(), md);
 //		System.out.print(pDepthMarketData.getUpdateTime() + " " + pDepthMarketData.getUpdateMillisec() + "   ");
 //		System.out.println(pDepthMarketData.getInstrumentID());
@@ -109,7 +107,7 @@ public class MyMdSpi extends JCTPMdSpi {
 //    	System.out.println("涨停板价:"+pDepthMarketData.getUpperLimitPrice());
 //    	System.out.println("成交量:"+pDepthMarketData.getVolume());
 //    	System.out.println("LIST SIZE: " + TestMd.list.size());
-    	System.err.println("--------------------------------------------------------------------------");
+//    	System.err.println("--------------------------------------------------------------------------");
 	}
 
 	/**订阅行情应答*/
@@ -165,11 +163,11 @@ class SaveMd extends Thread {
 				e.printStackTrace();
 			}
 			if(MyMdSpi.dayData.size() == MyMdSpi.instruments.length){
-				Iterator<Entry<String, MdDay>> it = MyMdSpi.dayData.entrySet().iterator();
-				while(it.hasNext()){
-					Entry<String, MdDay> en = it.next();
-					System.out.println(en.getKey() +":"+((MdDay)en.getValue()).getInstrumentID());
-				}
+//				Iterator<Entry<String, MdDay>> it = MyMdSpi.dayData.entrySet().iterator();
+//				while(it.hasNext()){
+//					Entry<String, MdDay> en = it.next();
+//					System.out.println(en.getKey() +":"+((MdDay)en.getValue()).getInstrumentID());
+//				}
 				MyMdSpi.dao.saveMdDayHistory(MyMdSpi.dayData);
 				System.exit(0);
 			}

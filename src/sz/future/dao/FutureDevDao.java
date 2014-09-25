@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -52,9 +51,7 @@ public class FutureDevDao {
 			while(it.hasNext()){
 				MdDay data = dayData.get(it.next());
 				pst.setString(1, data.getInstrumentID());
-				System.out.println("InstrumentID: " + data.getInstrumentID());
 				pst.setDate(2, new java.sql.Date(data.getTradingDay().getTime()));
-				System.out.println("tradedate: "+data.getTradingDay());
 				pst.setDouble(3, data.getHighest_price());
 				pst.setDouble(4, data.getLowest_price());
 				pst.setDouble(5, data.getOpen_price());
@@ -64,9 +61,12 @@ public class FutureDevDao {
 //				pst.setDate(10, sfDate2.format(new java.sql.Date()));
 				pst.setTimestamp(9, (Timestamp) new Timestamp(new Date().getTime()));
 				pst.addBatch();
+				System.out.println("TradingDate: "+data.getTradingDay().toLocaleString());
+				System.out.println("InstrumentID: " + data.getInstrumentID());
 			}
 			pst.executeBatch();
 			conn.commit();
+			System.err.println("保存完成！");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
