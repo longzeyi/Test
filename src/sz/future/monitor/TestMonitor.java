@@ -26,13 +26,20 @@ public class TestMonitor extends Thread{
 			e1.printStackTrace();
 		}
 		//查询持仓明细
-		TraderUtil.qryPosition("m1501");
+//		TraderUtil.qryPosition("m1501");
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
 		TraderUtil.qryPosition("IF1411");
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		//查询组合持仓明细
+		TraderUtil.qryInvestorPositionCombine();
 		
 		while(true){
 			tickData = Super.TICK_DATA;

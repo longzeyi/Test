@@ -10,6 +10,7 @@ import static org.hraink.futures.ctp.thostftdcuserapidatatype.ThostFtdcUserApiDa
 
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderActionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionCombineDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradeField;
@@ -141,5 +142,17 @@ public class TraderUtil {
 		tradeField.setTradeID(M.instrumentId+M.currOrderRef);
 		System.out.println("查询成交......");
 		return TestTrader.traderApi.reqQryTrade(tradeField, ++M.requestID);
+	}
+	
+	/**
+	 * 查询组合持仓
+	 * @return
+	 */
+	public static int qryInvestorPositionCombine(){
+		CThostFtdcQryInvestorPositionCombineDetailField combineField = new CThostFtdcQryInvestorPositionCombineDetailField();
+		combineField.setBrokerID(ServerParams.BROKER_ID);
+		combineField.setInvestorID(ServerParams.USER_ID);
+		System.out.println("查询组合持仓......");
+		return TestTrader.traderApi.reqQryInvestorPositionCombineDetail(combineField, ++M.requestID);
 	}
 }

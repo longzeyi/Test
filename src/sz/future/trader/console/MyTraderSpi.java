@@ -3,6 +3,7 @@ package sz.future.trader.console;
 
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderActionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionCombineDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcOrderField;
@@ -135,6 +136,19 @@ public class MyTraderSpi extends JCTPTraderSpi {
 //		M.currOrderRef = pTrade.getOrderRef();
 	}
 	
+	
+	/* (non-Javadoc)
+	 * @see org.hraink.futures.jctp.trader.JCTPTraderSpi#onRspQryInvestorPositionCombineDetail(org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionCombineDetailField, org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField, int, boolean)
+	 * 查询组合持仓响应
+	 */
+	@Override
+	public void onRspQryInvestorPositionCombineDetail(
+			CThostFtdcInvestorPositionCombineDetailField pInvestorPositionCombineDetail,
+			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+		System.out.println("组合持仓合约："+pInvestorPositionCombineDetail.getCombInstrumentID());
+//		super.onRspQryInvestorPositionCombineDetail(pInvestorPositionCombineDetail,
+//				pRspInfo, nRequestID, bIsLast);
+	}
 	/* (non-Javadoc)
 	 * @see org.hraink.futures.jctp.trader.JCTPTraderSpi#onRspQryOrder(org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcOrderField, org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField, int, boolean)
 	 * 查询报单响应
