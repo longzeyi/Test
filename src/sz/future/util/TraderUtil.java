@@ -12,6 +12,7 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderActionF
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionCombineDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionDetailField;
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradeField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradingAccountField;
@@ -96,13 +97,27 @@ public class TraderUtil {
 	 * 查询持仓明细
 	 * @return
 	 */
-	public static int qryPosition(String instrumentId){
+	public static int qryPositionDetail(String instrumentId){
 		CThostFtdcQryInvestorPositionDetailField positionField = new CThostFtdcQryInvestorPositionDetailField();
 		positionField.setBrokerID(ServerParams.BROKER_ID);
-//		positionField.setInstrumentID(instrumentId);
+		positionField.setInstrumentID("");
 		positionField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询持仓明细......" + instrumentId);
 		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
+	}
+	
+	/**
+	 * 查询持仓
+	 * @param instrumentId
+	 * @return
+	 */
+	public static int qryPosition(String instrumentId){
+		CThostFtdcQryInvestorPositionField positionField = new CThostFtdcQryInvestorPositionField();
+		positionField.setBrokerID(ServerParams.BROKER_ID);
+//		positionField.setInstrumentID("");
+		positionField.setInvestorID(ServerParams.USER_ID);
+		System.out.println("查询持仓......" + instrumentId);
+		return TestTrader.traderApi.reqQryInvestorPosition(positionField, ++Super.requestID);
 	}
 	
 	/**

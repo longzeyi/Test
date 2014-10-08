@@ -204,7 +204,22 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryInvestorPosition(
 			CThostFtdcInvestorPositionField pInvestorPosition,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("No."+nRequestID + "持仓查询回调");
+		System.out.println("No."+nRequestID + "持仓查询回调" + pInvestorPosition.getInstrumentID() +":"+ bIsLast);
+		if(pInvestorPosition != null){
+			if(bIsLast){
+				System.out.println(pInvestorPosition.getPosition());
+				System.out.println(pInvestorPosition.getYdPosition());
+				System.out.println(pInvestorPosition.getLongFrozenAmount());
+				System.out.println(pInvestorPosition.getShortFrozenAmount());
+				System.out.println(pInvestorPosition.getOpenVolume());
+				System.out.println(pInvestorPosition.getOpenAmount());
+				System.out.println(pInvestorPosition.getPositionCost());
+				
+				System.out.println("No."+nRequestID + "持仓查询回调" + pInvestorPosition.getInstrumentID());
+			} else {
+				System.err.println("查询投资者持仓明细响应错误： " + pRspInfo.getErrorID() + "--" +pRspInfo.getErrorMsg());
+			}
+		}
 	}
 
 	@Override
