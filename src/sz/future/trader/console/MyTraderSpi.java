@@ -16,8 +16,8 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcTradingAccountFie
 import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 
-import sz.future.trader.comm.M;
 import sz.future.trader.comm.ServerParams;
+import sz.future.trader.comm.Super;
 
 /**
  * Custom TraderSpi
@@ -185,8 +185,16 @@ public class MyTraderSpi extends JCTPTraderSpi {
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		System.out.println(nRequestID);
 		System.out.println(bIsLast);
-//		System.out.println("pRspInfo.getErrorMsg(): "+pRspInfo.getErrorMsg());
-		System.out.println("No."+nRequestID + "请求查询投资者持仓明细响应"+pInvestorPositionDetail.getDirection()+"+"+pInvestorPositionDetail.getOpenDate()+"+"+pInvestorPositionDetail.getOpenPrice()+"+"+pInvestorPositionDetail.getTradingDay());
+		if(pInvestorPositionDetail != null){
+			if(bIsLast){
+				System.out.println("No."+nRequestID + "请求查询投资者持仓明细响应"+pInvestorPositionDetail.getDirection()+"+"+pInvestorPositionDetail.getOpenDate()+"+"+pInvestorPositionDetail.getOpenPrice()+"+"+pInvestorPositionDetail.getTradingDay());
+				Super.INVESTOR_POSITION_DETAIL.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail);
+			} else {
+				System.err.println("查询投资者持仓明细响应错误： " + pRspInfo.getErrorID() + "--" +pRspInfo.getErrorMsg());
+			}
+		} else {
+			System.out.println("没有持仓该合约");
+		}
 	}
 	
 	/* 

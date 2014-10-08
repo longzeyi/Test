@@ -18,6 +18,7 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradingAccount
 
 import sz.future.trader.comm.M;
 import sz.future.trader.comm.ServerParams;
+import sz.future.trader.comm.Super;
 import sz.future.trader.console.TestTrader;
 
 public class TraderUtil {
@@ -77,7 +78,7 @@ public class TraderUtil {
 				// 自动挂起标志
 				inputOrderField.setIsAutoSuspend(0);
 				
-				int returnMsg = TestTrader.traderApi.reqOrderInsert(inputOrderField, ++M.requestID);
+				int returnMsg = TestTrader.traderApi.reqOrderInsert(inputOrderField, ++Super.requestID);
 				return returnMsg;
 	}
 	
@@ -88,7 +89,7 @@ public class TraderUtil {
 		actionField.setInvestorID(ServerParams.USER_ID);
 		actionField.setInstrumentID(instrumentId);
 		actionField.setActionFlag('0');//0删除 3修改
-		return TestTrader.traderApi.reqOrderAction(actionField, ++M.requestID);
+		return TestTrader.traderApi.reqOrderAction(actionField, ++Super.requestID);
 	}
 	
 	/**
@@ -98,10 +99,10 @@ public class TraderUtil {
 	public static int qryPosition(String instrumentId){
 		CThostFtdcQryInvestorPositionDetailField positionField = new CThostFtdcQryInvestorPositionDetailField();
 		positionField.setBrokerID(ServerParams.BROKER_ID);
-		positionField.setInstrumentID(instrumentId);
+//		positionField.setInstrumentID(instrumentId);
 		positionField.setInvestorID(ServerParams.USER_ID);
-		System.out.println("查询持仓明细......");
-		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++M.requestID);
+		System.out.println("查询持仓明细......" + instrumentId);
+		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
 	}
 	
 	/**
@@ -114,7 +115,7 @@ public class TraderUtil {
 		orderField.setInstrumentID(instrumentId);
 		orderField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询报单......");
-		return TestTrader.traderApi.reqQryOrder(orderField, ++M.requestID);
+		return TestTrader.traderApi.reqQryOrder(orderField, ++Super.requestID);
 	}
 	
 	/**
@@ -127,7 +128,7 @@ public class TraderUtil {
 		accountField.setBrokerID(ServerParams.BROKER_ID);
 		accountField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询资金......");
-		return TestTrader.traderApi.reqQryTradingAccount(accountField, ++M.requestID);
+		return TestTrader.traderApi.reqQryTradingAccount(accountField, ++Super.requestID);
 	}
 	
 	/**
@@ -141,18 +142,19 @@ public class TraderUtil {
 		tradeField.setInvestorID(ServerParams.USER_ID);
 		tradeField.setTradeID(M.instrumentId+M.currOrderRef);
 		System.out.println("查询成交......");
-		return TestTrader.traderApi.reqQryTrade(tradeField, ++M.requestID);
+		return TestTrader.traderApi.reqQryTrade(tradeField, ++Super.requestID);
 	}
 	
 	/**
 	 * 查询组合持仓
 	 * @return
 	 */
-	public static int qryInvestorPositionCombine(){
+	public static int qryInvestorPositionCombine(String combInstrumentID){
 		CThostFtdcQryInvestorPositionCombineDetailField combineField = new CThostFtdcQryInvestorPositionCombineDetailField();
 		combineField.setBrokerID(ServerParams.BROKER_ID);
 		combineField.setInvestorID(ServerParams.USER_ID);
+		combineField.setCombInstrumentID(combInstrumentID);
 		System.out.println("查询组合持仓......");
-		return TestTrader.traderApi.reqQryInvestorPositionCombineDetail(combineField, ++M.requestID);
+		return TestTrader.traderApi.reqQryInvestorPositionCombineDetail(combineField, ++Super.requestID);
 	}
 }

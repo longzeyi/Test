@@ -24,7 +24,7 @@ public class TestMd extends TimerTask{
 		//注册事件处理的实例
 		mdApi.registerSpi(mdSpi);
 		//注册前置机地址
-		mdApi.registerFront(ServerParams.FRONT_ADDR_MD);
+		mdApi.registerFront("tcp://sh-front11.168qh.com:41213");
 		mdApi.Init();
 		mdApi.Join();
 //		TimeUnit.SECONDS.sleep(5);

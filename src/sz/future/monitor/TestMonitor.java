@@ -2,6 +2,7 @@ package sz.future.monitor;
 
 import java.util.Map;
 
+import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
 import sz.future.util.TraderUtil;
 
@@ -10,9 +11,17 @@ import sz.future.util.TraderUtil;
  * 行情监测线程
  */
 public class TestMonitor extends Thread{
-	public static final String[] instruments = new String[] {"rb1501","TA501","m1501","FG501","a1501","i1501"};//,"pp1501","sr1501","jd1501","pta1501","fg1501","rm1501"
+	private String[] instruments ;//,"pp1501","sr1501","jd1501","pta1501","fg1501","rm1501"
 	private Map<String, double[]> tickData;
 	private double[] lastTick;
+	
+	public TestMonitor(){
+		//克隆合约数组
+		instruments = new String[ServerParams.instruments.length];
+		for (int i = 0; i < ServerParams.instruments.length; i++) {
+			instruments[i] = ServerParams.instruments[i];
+		}
+	}
 	/**
 	 * @param args
 	 */
@@ -25,27 +34,14 @@ public class TestMonitor extends Thread{
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}
-		//查询持仓明细
-//		TraderUtil.qryPosition("m1501");
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		TraderUtil.qryPosition("IF1411");
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-		//查询组合持仓明细
-		TraderUtil.qryInvestorPositionCombine();
+		TraderUtil.qryPosition(instruments[0]);
+//		requestAllInstrumentsInvestorPosition();
 		
 		while(true){
 			tickData = Super.TICK_DATA;
 //			System.out.println(ServerParams.instruments[0]);
 			for (int i = 0; i < instruments.length; i++) {
-				System.out.println("instrumentId: "+instruments[i]);
+//				System.out.println("instrumentId: "+instruments[i]);
 				lastTick = tickData.get(instruments[i]);
 				if(lastTick != null)
 				System.err.println(instruments[i] + " : " + lastTick[0] + ":" + lastTick[1] + " : " + lastTick[2] + ":" + lastTick[3] + " : " + lastTick[4] + ":" + lastTick[5] + " : " + lastTick[6]);
@@ -63,4 +59,14 @@ public class TestMonitor extends Thread{
 		}
 	}
 
+	private void requestAllInstrumentsInvestorPosition(){
+		for (int i = 0; i < instruments.length; i++) {
+			TraderUtil.qryPosition(instruments[i]);
+			try {
+				this.sleep(500);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
 }
