@@ -78,7 +78,7 @@ public class TraderUtil {
 				inputOrderField.setForceCloseReason(THOST_FTDC_FCC_NotForceClose);
 				// 自动挂起标志
 				inputOrderField.setIsAutoSuspend(0);
-				
+				sleepThread();
 				int returnMsg = TestTrader.traderApi.reqOrderInsert(inputOrderField, ++Super.requestID);
 				return returnMsg;
 	}
@@ -90,6 +90,7 @@ public class TraderUtil {
 		actionField.setInvestorID(ServerParams.USER_ID);
 		actionField.setInstrumentID(instrumentId);
 		actionField.setActionFlag('0');//0删除 3修改
+		sleepThread();
 		return TestTrader.traderApi.reqOrderAction(actionField, ++Super.requestID);
 	}
 	
@@ -103,6 +104,7 @@ public class TraderUtil {
 		positionField.setInstrumentID("");
 		positionField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询持仓明细......" + instrumentId);
+		sleepThread();
 		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
 	}
 	
@@ -111,12 +113,14 @@ public class TraderUtil {
 	 * @param instrumentId
 	 * @return
 	 */
-	public static int qryPosition(String instrumentId){
+	public static int qryPosition(){
 		CThostFtdcQryInvestorPositionField positionField = new CThostFtdcQryInvestorPositionField();
 		positionField.setBrokerID(ServerParams.BROKER_ID);
 //		positionField.setInstrumentID("");
 		positionField.setInvestorID(ServerParams.USER_ID);
-		System.out.println("查询持仓......" + instrumentId);
+		System.out.println("查询全部持仓......");
+		Super.INVESTOR_POSITION.clear();//清理历史持仓情况
+		sleepThread();
 		return TestTrader.traderApi.reqQryInvestorPosition(positionField, ++Super.requestID);
 	}
 	
@@ -130,6 +134,7 @@ public class TraderUtil {
 		orderField.setInstrumentID(instrumentId);
 		orderField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询报单......");
+		sleepThread();
 		return TestTrader.traderApi.reqQryOrder(orderField, ++Super.requestID);
 	}
 	
@@ -143,6 +148,7 @@ public class TraderUtil {
 		accountField.setBrokerID(ServerParams.BROKER_ID);
 		accountField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询资金......");
+		sleepThread();
 		return TestTrader.traderApi.reqQryTradingAccount(accountField, ++Super.requestID);
 	}
 	
@@ -157,19 +163,29 @@ public class TraderUtil {
 		tradeField.setInvestorID(ServerParams.USER_ID);
 		tradeField.setTradeID(M.instrumentId+M.currOrderRef);
 		System.out.println("查询成交......");
+		sleepThread();
 		return TestTrader.traderApi.reqQryTrade(tradeField, ++Super.requestID);
 	}
 	
-	/**
-	 * 查询组合持仓
-	 * @return
-	 */
-	public static int qryInvestorPositionCombine(String combInstrumentID){
-		CThostFtdcQryInvestorPositionCombineDetailField combineField = new CThostFtdcQryInvestorPositionCombineDetailField();
-		combineField.setBrokerID(ServerParams.BROKER_ID);
-		combineField.setInvestorID(ServerParams.USER_ID);
-		combineField.setCombInstrumentID(combInstrumentID);
-		System.out.println("查询组合持仓......");
-		return TestTrader.traderApi.reqQryInvestorPositionCombineDetail(combineField, ++Super.requestID);
+//	/**
+//	 * 查询组合持仓
+//	 * @return
+//	 */
+//	public static int qryInvestorPositionCombine(String combInstrumentID){
+//		CThostFtdcQryInvestorPositionCombineDetailField combineField = new CThostFtdcQryInvestorPositionCombineDetailField();
+//		combineField.setBrokerID(ServerParams.BROKER_ID);
+//		combineField.setInvestorID(ServerParams.USER_ID);
+//		combineField.setCombInstrumentID(combInstrumentID);
+//		System.out.println("查询组合持仓......");
+//		sleepThread();
+//		return TestTrader.traderApi.reqQryInvestorPositionCombineDetail(combineField, ++Super.requestID);
+//	}
+	
+	private static void sleepThread(){
+		try {
+			Thread.sleep(1200);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

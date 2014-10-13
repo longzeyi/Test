@@ -74,7 +74,7 @@ public class MyMdSpi extends JCTPMdSpi {
 //			System.out.println(pDepthMarketData.getInstrumentID()+"*****"+md[0]);
 			Super.TICK_DATA.put(pDepthMarketData.getInstrumentID(), md);
 		}
-		System.out.println(pDepthMarketData.getInstrumentID() + " : " + pDepthMarketData.getLastPrice());
+//		System.out.println(pDepthMarketData.getInstrumentID() + " : " + pDepthMarketData.getLastPrice());
 		
 //		System.out.println(pDepthMarketData.getInstrumentID());
 //		System.out.println("最新价:"+pDepthMarketData.getLastPrice());

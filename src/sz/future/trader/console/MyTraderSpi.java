@@ -16,6 +16,7 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcTradingAccountFie
 import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 
+import sz.future.domain.InverstorPosition;
 import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
 
@@ -72,7 +73,11 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		
 		//确认结算单
 		CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
-		System.out.println("No."+nRequestID + "确认结算单: "+traderApi.reqSettlementInfoConfirm(confirmField, nRequestID));;
+		if(traderApi.reqSettlementInfoConfirm(confirmField, nRequestID) == 0){
+			System.out.println("确认结算单成功！");
+		} else {
+			System.out.println("确认结算单异常！");
+		}
 	}
 	
 	/* 
@@ -127,7 +132,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		System.out.println("成交编号: "+pTrade.getTradeID());
 		System.out.println("报单编号: "+pTrade.getOrderSysID());
 		System.out.println("结算编号: "+pTrade.getSettlementID());
-		System.out.println("报单编号: "+pTrade.getOrderSysID());
 		System.out.println("序号: "+pTrade.getSequenceNo());
 //		if(M.count>1){
 //			M.positionPrice = pTrade.getPrice();
@@ -188,7 +192,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		if(pInvestorPositionDetail != null){
 			if(bIsLast){
 				System.out.println("No."+nRequestID + "请求查询投资者持仓明细响应"+pInvestorPositionDetail.getDirection()+"+"+pInvestorPositionDetail.getOpenDate()+"+"+pInvestorPositionDetail.getOpenPrice()+"+"+pInvestorPositionDetail.getTradingDay());
-				Super.INVESTOR_POSITION_DETAIL.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail);
+//				Super.INVESTOR_POSITION_DETAIL.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail);
 			} else {
 				System.err.println("查询投资者持仓明细响应错误： " + pRspInfo.getErrorID() + "--" +pRspInfo.getErrorMsg());
 			}
@@ -204,20 +208,30 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryInvestorPosition(
 			CThostFtdcInvestorPositionField pInvestorPosition,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("No."+nRequestID + "持仓查询回调" + pInvestorPosition.getInstrumentID() +":"+ bIsLast);
-		if(pInvestorPosition != null){
-			if(bIsLast){
-				System.out.println(pInvestorPosition.getPosition());
-				System.out.println(pInvestorPosition.getYdPosition());
-				System.out.println(pInvestorPosition.getLongFrozenAmount());
-				System.out.println(pInvestorPosition.getShortFrozenAmount());
-				System.out.println(pInvestorPosition.getOpenVolume());
-				System.out.println(pInvestorPosition.getOpenAmount());
-				System.out.println(pInvestorPosition.getPositionCost());
+		//如果今仓和昨仓总和不为0，表示持仓该合约
+		if((pInvestorPosition.getPosition() + pInvestorPosition.getYdPosition()) > 0){
+			if(pInvestorPosition != null){
+				InverstorPosition ip = new InverstorPosition();
+				ip.setInstrumentID(pInvestorPosition.getInstrumentID());
+				ip.setTradingDay(pInvestorPosition.getTradingDay());
+				ip.setPosiDirectionType(pInvestorPosition.getPosiDirection());
+				ip.setPositionDateType(pInvestorPosition.getPositionDate());
+				ip.setPosition(pInvestorPosition.getPosition());
+				ip.setYdposition(pInvestorPosition.getYdPosition());
+				ip.setUseMargin(pInvestorPosition.getUseMargin());
+				ip.setPositionProfit(pInvestorPosition.getPositionProfit());
+				ip.setMarginRateByMoney(pInvestorPosition.getMarginRateByMoney());
+				Super.INVESTOR_POSITION.put(pInvestorPosition.getInstrumentID(), ip);
 				
-				System.out.println("No."+nRequestID + "持仓查询回调" + pInvestorPosition.getInstrumentID());
-			} else {
-				System.err.println("查询投资者持仓明细响应错误： " + pRspInfo.getErrorID() + "--" +pRspInfo.getErrorMsg());
+				System.out.println("No."+nRequestID + "持仓查询回调" + pInvestorPosition.getInstrumentID() +":"+ bIsLast);
+//				System.out.println("持仓多空方向: "+pInvestorPosition.getPosiDirection());
+//				System.out.println("今日持仓: "+pInvestorPosition.getPosition());
+//				System.out.println("上日持仓: "+pInvestorPosition.getYdPosition());
+//				System.out.println("占用的保证金: "+pInvestorPosition.getUseMargin());
+//				System.out.println("持仓盈亏: "+pInvestorPosition.getPositionProfit());
+//				System.out.println("保证金率: "+pInvestorPosition.getMarginRateByMoney());
+//				System.out.println("持仓日期: "+pInvestorPosition.getPositionDate());
+				System.out.println("交易日: "+pInvestorPosition.getTradingDay());
 			}
 		}
 	}
