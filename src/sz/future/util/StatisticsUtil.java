@@ -139,7 +139,7 @@ public class StatisticsUtil {
     		}
     	}
     	if(i < prices.length-1){
-    		System.out.println("交易数据不够！");
+//    		System.out.println("交易数据不够！");
     		return 0d;
     	}
     	maPrice = getMovingAverage(prices);
