@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import sz.future.dao.FutureDao;
+import sz.future.test.test1.Global;
 import sz.future.util.CsvDataUtil;
 import sz.future.util.StatisticsUtil;
 
@@ -163,17 +164,24 @@ public class Test1 {
 				double currMA5 = StatisticsUtil.getCurrentMA(5, Global.lastPriceArray[i]);
 				double currMA10 = StatisticsUtil.getCurrentMA(10, Global.lastPriceArray[i]);
 				double currMA60 = StatisticsUtil.getCurrentMA(60, Global.lastPriceArray[i]);
+				
+				double b = Global.lastPriceArray[i-30];
+				double c = Global.lastPriceArray[i-20];
+				double d = Global.lastPriceArray[i-10];
+				
 				if(currMA60 == 0){
 					break;
 				}
 				//进场条件
-				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10) && Global.lastPriceArray[i] > currMA60) {
+				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10) && Global.lastPriceArray[i] > currMA60  ) {
 					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
 					//买多开仓
+					if((b < c) && (c < d) && (d < Global.lastPriceArray[i]) && ((Global.lastPriceArray[i] - b) > 2) )
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
 				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5) && Global.lastPriceArray[i] < currMA60) {
 					System.out.println("小于"+Global.period+"天最低价"+ lowestPrice);
 					//卖空开仓
+					if((b > c) && (c > d) && (d > Global.lastPriceArray[i]) && ((b - Global.lastPriceArray[i]) > 2))
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
 				}
 			} else {

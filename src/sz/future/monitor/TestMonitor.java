@@ -32,8 +32,16 @@ public class TestMonitor extends Thread{
 	public void run() {
 //		String[] instruments = ServerParams.instruments.clone();
 		//查询资金使用率
-		TraderUtil.qryTradingAccount();
-		TraderUtil.qryPosition();
+		if(TraderUtil.qryTradingAccount()==0){
+			System.out.println("查询资金成功");
+		} else {
+			System.err.println("查询资金失败");
+		}
+		if(TraderUtil.qryPosition()==0){
+			System.out.println("查询持仓成功");
+		} else {
+			System.err.println("查询持仓失败");
+		}
 //		requestAllInstrumentsInvestorPosition();
 		
 		while(true){
@@ -41,6 +49,14 @@ public class TestMonitor extends Thread{
 //			System.out.println(ServerParams.instruments[0]);
 			for (int i = 0; i < instruments.length; i++) {
 //				System.out.println("instrumentId: "+instruments[i]);
+				if(Super.INVESTOR_POSITION.get(instruments[i]) == null){
+					//没有持仓
+					
+				} else {
+					//有持仓
+					
+				}
+				//获取当前合约的最新行情
 				lastTick = tickData.get(instruments[i]);
 				if(lastTick != null)
 				System.err.println(instruments[i] + " : " + lastTick[0] + ":" + lastTick[1] + " : " + lastTick[2] + ":" + lastTick[3] + " : " + lastTick[4] + ":" + lastTick[5] + " : " + lastTick[6]);
