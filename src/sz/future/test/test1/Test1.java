@@ -158,30 +158,30 @@ public class Test1 {
 		double befor1Ma5 = StatisticsUtil.getBeforMA(1, 5);//一天前的MA5
 		double befor1Ma10 = StatisticsUtil.getBeforMA(1, 10);//一天前的MA10
 		
-		for (int i = 100; i < Global.lastPriceArray.length; i=i+Global.interval) {
+		for (int i = 190; i < Global.lastPriceArray.length; i=i+Global.interval) {
 			//如果持仓为0
 			if(Global.positionPrice == 0){
 				double currMA5 = StatisticsUtil.getCurrentMA(5, Global.lastPriceArray[i]);
 				double currMA10 = StatisticsUtil.getCurrentMA(10, Global.lastPriceArray[i]);
-				double currMA60 = StatisticsUtil.getCurrentMA(60, Global.lastPriceArray[i]);
+//				double currMA60 = StatisticsUtil.getCurrentMA(60, Global.lastPriceArray[i]);
 				
-				double b = Global.lastPriceArray[i-30];
-				double c = Global.lastPriceArray[i-20];
-				double d = Global.lastPriceArray[i-10];
+				double b = Global.lastPriceArray[i-180];
+				double c = Global.lastPriceArray[i-120];
+				double d = Global.lastPriceArray[i-60];
 				
-				if(currMA60 == 0){
-					break;
-				}
+//				if(currMA60 == 0){
+//					break;
+//				}
 				//进场条件
-				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10) && Global.lastPriceArray[i] > currMA60  ) {
+				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10)) {
 					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
 					//买多开仓
-					if((b < c) && (c < d) && (d < Global.lastPriceArray[i]) && ((Global.lastPriceArray[i] - b) > 2) )
+					if((b < c) && (c < d) && (d < Global.lastPriceArray[i]))
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
-				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5) && Global.lastPriceArray[i] < currMA60) {
+				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5)) {
 					System.out.println("小于"+Global.period+"天最低价"+ lowestPrice);
 					//卖空开仓
-					if((b > c) && (c > d) && (d > Global.lastPriceArray[i]) && ((b - Global.lastPriceArray[i]) > 2))
+					if((b > c) && (c > d) && (d > Global.lastPriceArray[i]))
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
 				}
 			} else {
