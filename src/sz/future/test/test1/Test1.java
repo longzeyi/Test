@@ -165,21 +165,21 @@ public class Test1 {
 				double currMA10 = StatisticsUtil.getCurrentMA(10, Global.lastPriceArray[i]);
 //				double currMA60 = StatisticsUtil.getCurrentMA(60, Global.lastPriceArray[i]);
 				
-				double b = Global.lastPriceArray[i-180];
-				double c = Global.lastPriceArray[i-120];
-				double d = Global.lastPriceArray[i-60];
+				double b = Global.lastPriceArray[i-150];
+				double c = Global.lastPriceArray[i-100];
+				double d = Global.lastPriceArray[i-50];
 				
 //				if(currMA60 == 0){
 //					break;
 //				}
 				//进场条件
 				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10)) {
-					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
+//					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
 					//买多开仓
 					if((b < c) && (c < d) && (d < Global.lastPriceArray[i]))
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
 				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5)) {
-					System.out.println("小于"+Global.period+"天最低价"+ lowestPrice);
+//					System.out.println("小于"+Global.period+"天最低价"+ lowestPrice);
 					//卖空开仓
 					if((b > c) && (c > d) && (d > Global.lastPriceArray[i]))
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
