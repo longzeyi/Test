@@ -26,14 +26,24 @@ public class Super {
 	public static double upperLimitPrice = 0d;//涨停价
 	public static double lowerLimitPrice = 0d;//跌停价
 	
-	//Tick容器
+	/**
+	 * 资金使用率
+	 */
+	public static double fundsUsage = -1d;
+	
+	/**
+	 * Tick容器
+	 */
 	public static Map<String, double[]> TICK_DATA = new HashMap<String, double[]>();
 	
-	//持仓明细
+	/**
+	 * 持仓明细
+	 */
 	public static Map<String, InverstorPosition> INVESTOR_POSITION = new HashMap<String, InverstorPosition>();
 	
-	//策略信号
-//	public static int signal = -1;
+	/**
+	 * 策略信号
+	 */
 	public static Map<String, Integer> SIGNAL = new HashMap<String, Integer>();
 	
 	static{

@@ -25,35 +25,51 @@ public class TestMonitor extends Thread{
 		for (int i = 0; i < ServerParams.instruments.length; i++) {
 			instruments[i] = ServerParams.instruments[i];
 		}
+		while(true){
+			if(init()){
+				break;
+			} else {
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	private boolean init(){
+		boolean bool = false;
+		if(TraderUtil.qryTradingAccount()==0){
+			bool = true;
+			System.out.println("查询资金成功");
+		} else {
+			bool =false;
+			System.err.println("查询资金失败");
+		}
+		if(TraderUtil.qryPosition()==0){
+			bool = true;
+			System.out.println("查询持仓成功");
+		} else {
+			bool = false;
+			System.err.println("查询持仓失败");
+		}
+		return bool;
 	}
 	/**
 	 * @param args
 	 */
 	public void run() {
-//		String[] instruments = ServerParams.instruments.clone();
-		//查询资金使用率
-		if(TraderUtil.qryTradingAccount()==0){
-			System.out.println("查询资金成功");
-		} else {
-			System.err.println("查询资金失败");
-		}
-		if(TraderUtil.qryPosition()==0){
-			System.out.println("查询持仓成功");
-		} else {
-			System.err.println("查询持仓失败");
-		}
-//		requestAllInstrumentsInvestorPosition();
-		
 		while(true){
 			tickData = Super.TICK_DATA;
 //			System.out.println(ServerParams.instruments[0]);
 			for (int i = 0; i < instruments.length; i++) {
 //				System.out.println("instrumentId: "+instruments[i]);
 				if(Super.INVESTOR_POSITION.get(instruments[i]) == null){
-					//没有持仓
+					//没有持仓该合约
 					
 				} else {
-					//有持仓
+					//有持仓该合约
 					
 				}
 				//获取当前合约的最新行情
@@ -91,9 +107,4 @@ public class TestMonitor extends Thread{
 		}
 	}
 
-//	private void requestAllInstrumentsInvestorPosition(){
-//		for (int i = 0; i < instruments.length; i++) {
-//			TraderUtil.qryPosition(instruments[i]);
-//		}
-//	}
 }

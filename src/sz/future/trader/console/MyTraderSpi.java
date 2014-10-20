@@ -87,12 +87,14 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryTradingAccount(
 			CThostFtdcTradingAccountField pTradingAccount,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+		double fundsUsage = pTradingAccount.getCurrMargin()/(pTradingAccount.getAvailable()+pTradingAccount.getCurrMargin());
 		System.out.println("nRequestID: "+nRequestID);
 		System.out.println("bIsLast: "+bIsLast);
 		System.out.println("可用资金："+pTradingAccount.getAvailable());
 		System.out.println("当前保证金总额："+pTradingAccount.getCurrMargin());
 //		System.out.println("可取资金："+pTradingAccount.getWithdrawQuota());
-		System.out.println("资金使用率："+pTradingAccount.getCurrMargin()/(pTradingAccount.getAvailable()+pTradingAccount.getCurrMargin()));
+		System.out.println("资金使用率：" + fundsUsage);
+		Super.fundsUsage = fundsUsage;
 	}
 	/* 
 	 * 报单回报。当客户端进行报单录入、报单操作及其它原因（如部分成交）导致报单状态发生变化时，交易托管系统会主动通知客户端，该方法会被调用。
