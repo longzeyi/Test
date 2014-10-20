@@ -173,12 +173,12 @@ public class Test1 {
 //					break;
 //				}
 				//进场条件
-				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10)) {
+				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10) && (Global.lastPriceArray[i] > Global.lastPriceArray[1])) {
 //					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
 					//买多开仓
 					if((b < c) && (c < d) && (d < Global.lastPriceArray[i]))
 					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
-				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5)) {
+				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5) && (Global.lastPriceArray[i] < Global.lastPriceArray[1])) {
 //					System.out.println("小于"+Global.period+"天最低价"+ lowestPrice);
 					//卖空开仓
 					if((b > c) && (c > d) && (d > Global.lastPriceArray[i]))
