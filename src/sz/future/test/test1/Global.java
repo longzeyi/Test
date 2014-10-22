@@ -21,7 +21,7 @@ public class Global {
 	
 	public final static int period = 5;				//这段时间内的收盘价
 	public final static int interval = 20 ;			//间隙
-	public final static double floatSpace = 16d;	//忍受浮动空间
+	public final static double floatSpace = 0.003d;	//忍受浮动空间
 	public final static double retracement = 0.65d; //回撤比例
 	public final static double breakPoint = 3d;	//突破period天内的最低价或最高价的限度
 	
@@ -59,11 +59,14 @@ public class Global {
 	
 	public static int closePositionCount1 = 0;		//符合条件1平仓次数
 	public static int closePositionCount2 = 0;		//符合条件2平仓次数
+	public static int closePositionCount3 = 0;		//符合条件3平仓次数
 	public static int profitCount = 0;				//盈利次数
 	public static int lossCount = 0;				//亏损次数
 	public static int balanceCount = 0;				//平衡次数
 	
 	public static Map<Date, Double> dayMd = new LinkedHashMap<Date, Double>();//存储当前合约全部日行情
+	public static Map<Date, Double> highestMd = new LinkedHashMap<Date, Double>();
+	public static Map<Date, Double> lowestMd = new LinkedHashMap<Date, Double>();
 	
 	public static void initArray(int size){
 		updateTimeArray = new String[size];
