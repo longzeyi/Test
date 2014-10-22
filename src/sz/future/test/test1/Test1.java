@@ -229,7 +229,9 @@ public class Test1 {
 							closeFlag3 = true;
 						}
 					} else {
-//						closeFlag4 = Global.lastPriceArray[i] < perLowestPrice;
+//						if((Global.lastPriceArray[i] - Global.positionPrice) < -0.001*Global.lastPriceArray[i]){
+//							closeFlag3 = true;
+//						}
 					}
 					if(befor1Ma5 < befor1Ma10){
 						closeFlag2 = true;
@@ -255,7 +257,9 @@ public class Test1 {
 							closeFlag3 = true;
 						}
 					} else {
-//						closeFlag4 = Global.lastPriceArray[i] > perHighestPrice;
+//						if((Global.positionPrice - Global.lastPriceArray[i]) < -0.001*Global.lastPriceArray[i]){
+//							closeFlag3 = true;
+//						}
 					}
 					
 					if(befor1Ma5 > befor1Ma10){
