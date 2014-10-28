@@ -29,6 +29,7 @@ public class Test1 {
 	
 	private static Matcher mt = null;
 	private static FutureDao dao = new FutureDao();
+	
 //	private static List<MdDay> dayList = new ArrayList<MdDay>();
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -150,7 +151,6 @@ public class Test1 {
 		System.err.println("-----------------------------------------------"+Global.tradingDay.toLocaleString()+"-----------------------------------------------");
 		List<Double> highestPpriceArray = dao.getPriceArray(Global.period, Global.test_instrument_id, Global.tradingDay, 2);
 		List<Double> lowestPriceArray = dao.getPriceArray(Global.period, Global.test_instrument_id, Global.tradingDay, 3);
-		
 //		Set<Date> set = Global.highestMd.keySet();
 //		Object[] array = set.toArray();
 //		Date date = null;
@@ -182,6 +182,9 @@ public class Test1 {
 		double befor1Ma10 = StatisticsUtil.getBeforMA(1, 10);//一天前的MA10
 		
 		for (int i = 100; i < Global.lastPriceArray.length; i=i+Global.interval) {
+			if(Global.endLastPrice<=0){
+				break;
+			}
 			double currMA5 = StatisticsUtil.getCurrentMA(5, Global.lastPriceArray[i]);
 			double currMA10 = StatisticsUtil.getCurrentMA(10, Global.lastPriceArray[i]);
 //			double currMA30 = StatisticsUtil.getCurrentMA(30, Global.lastPriceArray[i]);
@@ -242,6 +245,7 @@ public class Test1 {
 						if(closeFlag1)System.out.println(++Global.closePositionCount1 + " 浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
 						if(closeFlag2&&closeFlag3)System.out.println(++Global.closePositionCount2 + " 盈利回撤..............."+Global.lastPriceArray[i]);
 //						if(closeFlag4)System.out.println(++Global.closePositionCount3 + " flag4..............."+Global.lastPriceArray[i]);
+						System.out.println("最高盈利："+Global.highestProfit);
 						//多头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
 						break;//平仓当天不会再开仓
@@ -273,6 +277,7 @@ public class Test1 {
 						if(closeFlag1)System.out.println(++Global.closePositionCount1 + " 浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
 						if(closeFlag2&&closeFlag3)System.out.println(++Global.closePositionCount2 + " 盈利回撤..............."+Global.lastPriceArray[i]);
 //						if(closeFlag4)System.out.println(++Global.closePositionCount3 + " flag4..............."+Global.lastPriceArray[i]);
+						System.out.println("最高盈利："+Global.highestProfit);
 						//空头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
 						break;//平仓当天不会再开仓
