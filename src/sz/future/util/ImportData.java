@@ -72,7 +72,7 @@ public class ImportData {
 								.append(dateDir).append(".csv");
 						String path = sb.toString() + sb2.toString();
 						int count = CsvDataUtil.readCsvCount(path);
-						if (count > 2000) {
+						if (count > 4000) {
 							map.put(CsvDataUtil.readCsvCount(path), path);
 						}
 					}

@@ -94,7 +94,7 @@ public class Test1 {
 								.append(dateDir).append(".csv");
 						String path = sb.toString() + sb2.toString();
 						int total = CsvDataUtil.readCsvCount(path);
-						if (total > 2000) {
+						if (total > 4000) {
 							map.put(total, path);
 						}
 					}
