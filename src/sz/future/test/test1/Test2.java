@@ -207,18 +207,18 @@ public class Test2 {
 //				}
 				
 				//进场条件
-				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10) && (Global.lastPriceArray[i] > highestPriceOfDay) && i>125) {
+				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10) && i>125) {
 //					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
 					try {
-						if(sdf2.parse("10:30:00").before(sdf2.parse(Global.updateTimeArray[i]))){
+						if(sdf2.parse("09:30:00").before(sdf2.parse(Global.updateTimeArray[i]))){
 							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
 						}
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
-				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5) && (Global.lastPriceArray[i] < lowestPriceOfDay) && i>125) {
+				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5) && i>125) {
 					try {
-						if(sdf2.parse("10:30:00").before(sdf2.parse(Global.updateTimeArray[i]))){
+						if(sdf2.parse("09:30:00").before(sdf2.parse(Global.updateTimeArray[i]))){
 							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
 						}
 					} catch (ParseException e) {
