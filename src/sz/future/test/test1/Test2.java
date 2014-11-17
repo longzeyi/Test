@@ -193,7 +193,7 @@ public class Test2 {
 			
 			double currMA5 = StatisticsUtil.getCurrentMA(5, Global.lastPriceArray[i]);
 			double currMA10 = StatisticsUtil.getCurrentMA(10, Global.lastPriceArray[i]);
-//			double currMA30 = StatisticsUtil.getCurrentMA(30, Global.lastPriceArray[i]);
+			double currMA20 = StatisticsUtil.getCurrentMA(20, Global.lastPriceArray[i]);
 //				double currMA60 = StatisticsUtil.getCurrentMA(60, Global.lastPriceArray[i]);
 			//如果持仓为0
 			if(Global.positionPrice == 0){
@@ -207,24 +207,20 @@ public class Test2 {
 //				}
 				
 				//进场条件
-				if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10) && i>125) {
-//					System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
-					try {
-						if(sdf2.parse("09:30:00").before(sdf2.parse(Global.updateTimeArray[i]))){
-							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
+				try {
+					//9:30后才进入交易
+					if(sdf2.parse("09:30:00").before(sdf2.parse(Global.updateTimeArray[i]))){
+						if((Global.lastPriceArray[i] - highestPrice) > Global.breakPoint && (currMA5 > currMA10) && i>125) {
+//							System.out.println("大于"+Global.period+"天最高价"+ highestPrice);
+							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);//多开
+						} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5) && i>125) {
+							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);//空开
 						}
-					} catch (ParseException e) {
-						e.printStackTrace();
 					}
-				} else if ((lowestPrice - Global.lastPriceArray[i]) > Global.breakPoint && (currMA10 > currMA5) && i>125) {
-					try {
-						if(sdf2.parse("09:30:00").before(sdf2.parse(Global.updateTimeArray[i]))){
-							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
-						}
-					} catch (ParseException e) {
-						e.printStackTrace();
-					}
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
+				//更新当天最高价和最低价
 				if(highestPriceOfDay < Global.lastPriceArray[i]){
 					highestPriceOfDay = Global.lastPriceArray[i];
 				} else if(lowestPriceOfDay > Global.lastPriceArray[i]){

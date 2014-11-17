@@ -10,7 +10,7 @@ public class Global {
 	
 //	public static final String[] strs = { "Y" };
 	public static final String[] test_instrument_id_array = {"M1401","P1401","RB1310","RM1309","TA1401","Y1401"};
-//	public static final String[] test_instrument_id_array = {"C1309","SRX1401","SRY1309"};
+//	public static final String[] test_instrument_id_array = {"M1401","RB1310","RM1309","TA1401"};
 	public static final String[] months = { "01", "02", "03", "04", "05",
 			"06", "07", "08", "09", "10", "11", "12" };
 	public static final String[] days = { "01", "02", "03", "04", "05", "06",
