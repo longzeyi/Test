@@ -252,7 +252,7 @@ public class Test2 {
 //							closeFlag3 = true;
 //						}
 					}
-					if(befor1Ma5 < befor1Ma10){
+					if(befor1Ma5 < befor1Ma10 && Global.lastPriceArray[i] < currMA20){
 						closeFlag2 = true;
 					}
 					//浮动亏损超过Global.floatSpace
@@ -287,7 +287,7 @@ public class Test2 {
 //						}
 					}
 					
-					if(befor1Ma5 > befor1Ma10){
+					if(befor1Ma5 > befor1Ma10 && Global.lastPriceArray[i] > currMA20){
 						closeFlag2 = true;
 					}
 					
