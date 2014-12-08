@@ -1,13 +1,13 @@
 package sz.future.monitor;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionField;
-
-import sz.future.domain.InverstorPosition;
+import sz.future.dao.FutureDevDao;
+import sz.future.test.test1.Global;
 import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
+import sz.future.util.StatisticsUtil;
 import sz.future.util.TraderUtil;
 
 /**
@@ -18,6 +18,7 @@ public class TestMonitor extends Thread{
 	private String[] instruments ;//,"pp1501","sr1501","jd1501","pta1501","fg1501","rm1501"
 	private Map<String, double[]> tickData;
 	private double[] lastTick;
+	private FutureDevDao dao = new FutureDevDao();
 	
 	public TestMonitor(){
 		//克隆合约数组
@@ -64,6 +65,10 @@ public class TestMonitor extends Thread{
 			tickData = Super.TICK_DATA;
 //			System.out.println(ServerParams.instruments[0]);
 			for (int i = 0; i < instruments.length; i++) {
+				Double highestPpriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 1);
+				Double lowestPriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 2);
+				double befor1Ma5 = dao.getPreMA(5, instruments[i]);//前一天的MA5
+				double befor1Ma10 = dao.getPreMA(10, instruments[i]);//前一天的MA10
 //				System.out.println("instrumentId: "+instruments[i]);
 				if(Super.INVESTOR_POSITION.get(instruments[i]) == null){
 					//没有持仓该合约

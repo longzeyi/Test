@@ -146,6 +146,30 @@ public class FutureDevDao {
 		}
 		return price;
 	}
+	
+	public double getPreMA(int days, String instrumentId){
+		double price = 0d;
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT close_price FROM tb_md_day_history WHERE instrument_id = ? order by create_date desc limit ?";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			pst.setInt(2, days);
+			rs = pst.executeQuery();
+			while (rs.next()){
+				price = price + rs.getDouble(1);
+			}
+			price = price/days ;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return price;
+	}
+	
 	public static void main(String[] args) {
 		FutureDevDao dao = new FutureDevDao();
 		System.out.println(dao.getMA(8, "m1501"));
