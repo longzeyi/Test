@@ -25,6 +25,8 @@ public class TestMonitor extends Thread{
 		instruments = new String[ServerParams.instruments.length];
 		for (int i = 0; i < ServerParams.instruments.length; i++) {
 			instruments[i] = ServerParams.instruments[i];
+			//装载历史收盘价（一段时间内）
+			Super.HISTORY_CLOSE_PRICE.put(instruments[i], dao.getHistoryClosePrice(Super.historyDateRange, instruments[i]));
 		}
 		while(true){
 			if(init()){
@@ -67,20 +69,32 @@ public class TestMonitor extends Thread{
 			for (int i = 0; i < instruments.length; i++) {
 				Double highestPpriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 1);
 				Double lowestPriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 2);
-				double befor1Ma5 = dao.getPreMA(5, instruments[i]);//前一天的MA5
-				double befor1Ma10 = dao.getPreMA(10, instruments[i]);//前一天的MA10
+				double preMa5 = dao.getPreMA(5, instruments[i]);//前一天的MA5
+				double preMa10 = dao.getPreMA(10, instruments[i]);//前一天的MA10
+				double [] historyClosePrices = Super.HISTORY_CLOSE_PRICE.get(instruments[i]);
+				if(historyClosePrices.length < Super.historyDateRange){
+					System.err.println(instruments[i]+"合约的历史数据不完整....");
+				}
+				lastTick = tickData.get(instruments[i]);//获取当前合约的最新行情
+				if(lastTick == null){
+					continue;
+				}
+				//写几个统计各种ma的方法
 //				System.out.println("instrumentId: "+instruments[i]);
 				if(Super.INVESTOR_POSITION.get(instruments[i]) == null){
 					//没有持仓该合约
-					
+					if((lastTick[0] - highestPpriceOfPeriod) > Global.breakPoint && (currMA5 > currMA10)) {
+							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
+					} else if ((lowestPriceOfPeriod - lastTick[0]) > Global.breakPoint && (currMA10 > currMA5)) {
+							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
+					}
 				} else {
 					//有持仓该合约
 					
 				}
-				//获取当前合约的最新行情
-				lastTick = tickData.get(instruments[i]);
-				if(lastTick != null)
-				System.err.println(instruments[i] + " : " + lastTick[0] + ":" + lastTick[1] + " : " + lastTick[2] + ":" + lastTick[3] + " : " + lastTick[4] + ":" + lastTick[5] + " : " + lastTick[6]);
+//				lastTick = tickData.get(instruments[i]);
+//				if(lastTick != null)
+//				System.err.println(instruments[i] + " : " + lastTick[0] + ":" + lastTick[1] + " : " + lastTick[2] + ":" + lastTick[3] + " : " + lastTick[4] + ":" + lastTick[5] + " : " + lastTick[6]);
 				
 //				TraderUtil.qryPosition(instruments[i]);
 //				TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[5]);

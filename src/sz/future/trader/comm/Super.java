@@ -17,6 +17,7 @@ public class Super {
 	public static int count = 0;
 	public static int requestID = 0;
 	public static int currOrderRef = 0;//当前成交报单引用
+	public static int historyDateRange = 20;//初始化时每个合约取多少天内的历史收盘价
 	
 	public static double lastPrice = 0d;
 	public static double highestPriceDay = 0d;//当日最高价
@@ -40,6 +41,11 @@ public class Super {
 	 * 持仓明细
 	 */
 	public static Map<String, InverstorPosition> INVESTOR_POSITION = new HashMap<String, InverstorPosition>();
+	
+	/**
+	 * 历史收盘价（日期降序排列）
+	 */
+	public static Map<String, double[]> HISTORY_CLOSE_PRICE = new HashMap<String, double[]>();
 	
 	/**
 	 * 策略信号
