@@ -67,29 +67,36 @@ public class TestMonitor extends Thread{
 			tickData = Super.TICK_DATA;
 //			System.out.println(ServerParams.instruments[0]);
 			for (int i = 0; i < instruments.length; i++) {
-				Double highestPpriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 1);
-				Double lowestPriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 2);
-				double preMa5 = dao.getPreMA(5, instruments[i]);//前一天的MA5
-				double preMa10 = dao.getPreMA(10, instruments[i]);//前一天的MA10
-				double [] historyClosePrices = Super.HISTORY_CLOSE_PRICE.get(instruments[i]);
-				if(historyClosePrices.length < Super.historyDateRange){
-					System.err.println(instruments[i]+"合约的历史数据不完整....");
-				}
 				lastTick = tickData.get(instruments[i]);//获取当前合约的最新行情
 				if(lastTick == null){
 					continue;
 				}
-				//写几个统计各种ma的方法
+				Double highestPpriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 1);
+				Double lowestPriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 2);
+				double preMA5 = StatisticsUtil.getClosePriceTotal(Super.HISTORY_CLOSE_PRICE.get(instruments[i]), 5)/5;//前一天的MA5
+				double preMA10 = StatisticsUtil.getClosePriceTotal(Super.HISTORY_CLOSE_PRICE.get(instruments[i]), 10)/10;//前一天的MA10
+				double currMA5 = StatisticsUtil.getClosePriceTotal(Super.HISTORY_CLOSE_PRICE.get(instruments[i]), 4)/5 + lastTick[0]/5;//当前的的MA5
+				double currMA10 = StatisticsUtil.getClosePriceTotal(Super.HISTORY_CLOSE_PRICE.get(instruments[i]), 9)/10 + lastTick[0]/10;//当前的的MA10
+				double [] historyClosePrices = Super.HISTORY_CLOSE_PRICE.get(instruments[i]);
+				if(historyClosePrices.length < Super.historyDateRange){
+					System.err.println(instruments[i]+"合约的历史数据不完整....");
+				}
+				
 //				System.out.println("instrumentId: "+instruments[i]);
 				if(Super.INVESTOR_POSITION.get(instruments[i]) == null){
 					//没有持仓该合约
 					if((lastTick[0] - highestPpriceOfPeriod) > Global.breakPoint && (currMA5 > currMA10)) {
-							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
+							//买多
+							TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
 					} else if ((lowestPriceOfPeriod - lastTick[0]) > Global.breakPoint && (currMA10 > currMA5)) {
-							trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
+							//卖空
+							TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[5]);
 					}
 				} else {
 					//有持仓该合约
+					boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
+					boolean closeFlag2 = false ;//前一日MA5小于或大于MA10
+					boolean closeFlag3 = false ;//当前利润小于最高利润百分比
 					
 				}
 //				lastTick = tickData.get(instruments[i]);

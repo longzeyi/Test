@@ -23,7 +23,20 @@ public class StatisticsUtil {
     	 return ma;
      }
      
-     
+    /**
+     * 获取前几天收盘价的总和
+     * @param closePriceArray
+     * @param param
+     * @return
+     */
+    public static double getClosePriceTotal(double[] closePriceArray, int param){
+   	 double ma = 0d;
+   	 for (int i = 0; i < param; i++) {
+   		 ma += closePriceArray[i];
+		 }
+   	 return ma;
+    }
+    
      /**
      * @param date 需要修改的日期
      * @param count 增加或减少多少天，为1表示加1天，为-1表示减1天
