@@ -207,80 +207,30 @@ public class Test3 {
 				//进场条件
 				if((Global.lastPriceArray[i]  > beforMa10) && (Global.lastPriceArray[i] > beforMa20) && (Global.lastPriceArray[i] > beforMa50)) {
 					//买多开仓
-//					if(Global.lastPriceArray[2] < Global.lastPriceArray[i]){
-//						System.out.println("perHighestPrice: "+perHighestPrice);
-						trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
-//					}
+					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
 				} else if ((Global.lastPriceArray[i]  < beforMa10) && (Global.lastPriceArray[i] < beforMa20) && (Global.lastPriceArray[i] < beforMa50)) {
 					//卖空开仓
-//					if(Global.lastPriceArray[2] > Global.lastPriceArray[i]){
-//						System.out.println("perLowestPrice: "+perLowestPrice);
-						trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
-//					}
+					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
 				}
 			} else {
-				boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
-				boolean closeFlag2 = false ;//前一日MA5小于或大于MA10
-				boolean closeFlag3 = false ;//当前利润小于最高利润百分比
-//				boolean closeFlag4 = false ;
+				boolean closeFlag1 = false ;
 				//出场条件
 				if(Global.bs){//持有多头头寸
-					//更新为最大盈利值
-					if(Global.highestProfit < (Global.lastPriceArray[i] - Global.positionPrice)){
-						Global.highestProfit = Global.lastPriceArray[i] - Global.positionPrice;
+					if((Global.lastPriceArray[i] < beforMa4) &&  (Global.lastPriceArray[i] < beforMa9) && (Global.lastPriceArray[i] < beforMa18)){
+						closeFlag1 = true;
 					}
-					//回撤控制
-					if(StatisticsUtil.daysBetween(Global.openPositionDate, Global.tradingDay) > 4){
-						if((Global.lastPriceArray[i] - Global.positionPrice) < Global.highestProfit * Global.retracement){
-							closeFlag3 = true;
-						}
-					} else {
-//						if((Global.lastPriceArray[i] - Global.positionPrice) < -0.001*Global.lastPriceArray[i]){
-//							closeFlag3 = true;
-//						}
-					}
-//					if((Global.lastPriceArray[i] < beforMa4) &&  (Global.lastPriceArray[i] < beforMa9) && (Global.lastPriceArray[i] < beforMa18)){
-//						closeFlag2 = true;
-//					}
-					//浮动亏损超过Global.floatSpace
-					closeFlag1 = (Global.positionPrice - Global.lastPriceArray[i]) > Global.floatSpace*Global.lastPriceArray[i];
-					if(closeFlag2){
-						if(closeFlag1)System.out.println(++Global.closePositionCount1 + " 浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
-						if(closeFlag2&&closeFlag3)System.out.println(++Global.closePositionCount2 + " 盈利回撤..............."+Global.lastPriceArray[i]);
-//						if(closeFlag4)System.out.println(++Global.closePositionCount3 + " flag4..............."+Global.lastPriceArray[i]);
-						System.out.println("最高盈利："+Global.highestProfit);
+					if(closeFlag1){
+						++Global.closePositionCount1;
 						//多头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,true);
 						break;//平仓当天不会再开仓
 					}
 				} else {//持有空头头寸
-					//更新为最大盈利值
-					if(Global.highestProfit < (Global.positionPrice - Global.lastPriceArray[i])){
-						Global.highestProfit = Global.positionPrice - Global.lastPriceArray[i];
+					if((Global.lastPriceArray[i] > beforMa4) &&  (Global.lastPriceArray[i] > beforMa9) && (Global.lastPriceArray[i] > beforMa18)){
+						closeFlag1 = true;
 					}
-					//回撤控制
-					if(StatisticsUtil.daysBetween(Global.openPositionDate, Global.tradingDay) > 4){
-						if((Global.positionPrice - Global.lastPriceArray[i]) < Global.highestProfit * Global.retracement){
-							closeFlag3 = true;
-						}
-					} else {
-//						if((Global.positionPrice - Global.lastPriceArray[i]) < -0.001*Global.lastPriceArray[i]){
-//							closeFlag3 = true;
-//						}
-					}
-					
-//					if((Global.lastPriceArray[i] > beforMa4) &&  (Global.lastPriceArray[i] > beforMa9) && (Global.lastPriceArray[i] > beforMa18)){
-//						closeFlag2 = true;
-//					}
-					
-					//浮动盈亏超过50点
-					closeFlag1 = (Global.lastPriceArray[i] - Global.positionPrice) > Global.floatSpace*Global.lastPriceArray[i];
-					
-					if(closeFlag2){
-						if(closeFlag1)System.out.println(++Global.closePositionCount1 + " 浮亏超过"+Global.floatSpace+"..............."+Global.lastPriceArray[i]);
-						if(closeFlag2&&closeFlag3)System.out.println(++Global.closePositionCount2 + " 盈利回撤..............."+Global.lastPriceArray[i]);
-//						if(closeFlag4)System.out.println(++Global.closePositionCount3 + " flag4..............."+Global.lastPriceArray[i]);
-						System.out.println("最高盈利："+Global.highestProfit);
+					if(closeFlag1){
+						++Global.closePositionCount2;
 						//空头平仓
 						trader(Global.priceB1Array[i],Global.priceS1Array[i],false,false);
 						break;//平仓当天不会再开仓
