@@ -1,9 +1,9 @@
 package sz.future.monitor;
 
-import java.util.List;
 import java.util.Map;
 
 import sz.future.dao.FutureDevDao;
+import sz.future.domain.InverstorPosition;
 import sz.future.test.test1.Global;
 import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
@@ -97,7 +97,13 @@ public class TestMonitor extends Thread{
 					boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
 					boolean closeFlag2 = false ;//前一日MA5小于或大于MA10
 					boolean closeFlag3 = false ;//当前利润小于最高利润百分比
-					
+					InverstorPosition inverstorPostion = Super.INVESTOR_POSITION.get(instruments[i]);
+					char c = inverstorPostion.getPosiDirectionType();
+					if(c=='2'){//多仓
+						
+					} else if(c=='3'){//空仓
+						
+					}
 				}
 //				lastTick = tickData.get(instruments[i]);
 //				if(lastTick != null)

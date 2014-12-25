@@ -2,20 +2,16 @@ package sz.future.test.test1;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import sz.future.dao.FutureDao;
-import sz.future.test.test1.Global;
 import sz.future.util.CsvDataUtil;
 import sz.future.util.StatisticsUtil;
 
@@ -34,6 +30,7 @@ public class Test3 {
 	
 	private static Matcher mt = null;
 	private static FutureDao dao = new FutureDao();
+	private static int flag = 0;
 	
 //	private static List<MdDay> dayList = new ArrayList<MdDay>();
 	
@@ -44,6 +41,7 @@ public class Test3 {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		for (int i = 0; i < Global.test_instrument_id_array.length; i++) {
+			flag = 0;
 			Global.init();
 			Global.test_instrument_id = Global.test_instrument_id_array[i];
 			Global.dayMd = dao.loadDayData1(Global.test_instrument_id);
@@ -205,19 +203,33 @@ public class Test3 {
 //					break;
 //				}
 				//进场条件
-				if((Global.lastPriceArray[i]  > beforMa10) && (Global.lastPriceArray[i] > beforMa20) && (Global.lastPriceArray[i] > beforMa50)) {
-					//买多开仓
-					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
-				} else if ((Global.lastPriceArray[i]  < beforMa10) && (Global.lastPriceArray[i] < beforMa20) && (Global.lastPriceArray[i] < beforMa50)) {
-					//卖空开仓
-					trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
+				if(flag == 0){
+					if((Global.lastPriceArray[i]  > beforMa10) && (Global.lastPriceArray[i] > beforMa20) && (Global.lastPriceArray[i] > beforMa50)) {
+						//买多开仓
+						trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
+					} else if ((Global.lastPriceArray[i]  < beforMa10) && (Global.lastPriceArray[i] < beforMa20) && (Global.lastPriceArray[i] < beforMa50)) {
+						//卖空开仓
+						trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
+					}
+				} else if (flag==1){
+					if((Global.lastPriceArray[i] > beforMa4) &&  (Global.lastPriceArray[i] > beforMa9) && (Global.lastPriceArray[i] > beforMa18)){
+						//买多开仓
+						trader(Global.priceB1Array[i],Global.priceS1Array[i],true,true);
+					}
+				} else if(flag ==2){
+					if((Global.lastPriceArray[i] < beforMa4) &&  (Global.lastPriceArray[i] < beforMa9) && (Global.lastPriceArray[i] < beforMa18)){
+						//卖空开仓
+						trader(Global.priceB1Array[i],Global.priceS1Array[i],true,false);
+					}
 				}
+				
 			} else {
 				boolean closeFlag1 = false ;
 				//出场条件
 				if(Global.bs){//持有多头头寸
 					if((Global.lastPriceArray[i] < beforMa4) &&  (Global.lastPriceArray[i] < beforMa9) && (Global.lastPriceArray[i] < beforMa18)){
 						closeFlag1 = true;
+						flag = 1;
 					}
 					if(closeFlag1){
 						++Global.closePositionCount1;
@@ -228,6 +240,7 @@ public class Test3 {
 				} else {//持有空头头寸
 					if((Global.lastPriceArray[i] > beforMa4) &&  (Global.lastPriceArray[i] > beforMa9) && (Global.lastPriceArray[i] > beforMa18)){
 						closeFlag1 = true;
+						flag = 2;
 					}
 					if(closeFlag1){
 						++Global.closePositionCount2;
