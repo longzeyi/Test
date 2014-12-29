@@ -105,12 +105,13 @@ public class TestMonitor extends Thread{
 					boolean closeFlag3 = false ;//当前利润小于最高利润百分比
 					InverstorPosition inverstorPostion = Super.INVESTOR_POSITION.get(instruments[i]);
 					char c = inverstorPostion.getPosiDirectionType();
-					System.out.println(c+"    -----------------------------------------------------------------------------------------------");
 					if(c=='2'){//多仓 
 						System.out.println(inverstorPostion.getCloseProfitByDate() + " : " + inverstorPostion.getCloseProfitByTrade());
+						System.out.println("SettlementID: "+inverstorPostion.getSettlementID());
 						System.out.println("多仓 " + instruments[i]);
 					} else if(c=='3'){//空仓
 						System.out.println(inverstorPostion.getCloseProfitByDate() + " : " + inverstorPostion.getCloseProfitByTrade());
+						System.out.println("SettlementID: "+inverstorPostion.getSettlementID());
 						System.out.println("空仓" + instruments[i]);
 					}
 				}

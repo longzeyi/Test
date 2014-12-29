@@ -28,6 +28,14 @@ public class InverstorPosition {
 	//逐日盯市平仓盈亏
 	private double CloseProfitByDate;
 	
+	private int settlementID;
+	
+	public int getSettlementID() {
+		return settlementID;
+	}
+	public void setSettlementID(int settlementID) {
+		this.settlementID = settlementID;
+	}
 	public String getInstrumentID() {
 		return instrumentID;
 	}

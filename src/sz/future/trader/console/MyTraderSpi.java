@@ -223,6 +223,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				ip.setUseMargin(pInvestorPosition.getUseMargin());
 				ip.setPositionProfit(pInvestorPosition.getPositionProfit());
 				ip.setMarginRateByMoney(pInvestorPosition.getMarginRateByMoney());
+				ip.setCloseProfitByDate(pInvestorPosition.getCloseProfitByDate());
+				ip.setCloseProfitByTrade(pInvestorPosition.getCloseProfitByTrade());
+				ip.setSettlementID(pInvestorPosition.getSettlementID());
 				Super.INVESTOR_POSITION.put(pInvestorPosition.getInstrumentID(), ip);
 				
 				System.out.println("No."+nRequestID + "持仓查询回调" + pInvestorPosition.getInstrumentID() +":"+ bIsLast);
