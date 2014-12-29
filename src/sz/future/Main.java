@@ -12,12 +12,12 @@ public class Main {
 	 */
 	public static void main(String[] args) throws Exception {
 		TestMd tm = new TestMd();//行情采集线程
-		TestTrader tt = new TestTrader();//交易线程
-		TestMonitor tmo = new TestMonitor();//行情监测线程
 		tm.start();
 		Thread.sleep(3000);
+		TestTrader tt = new TestTrader();//交易线程
 		tt.start();
 		Thread.sleep(3000);
+		TestMonitor tmo = new TestMonitor();//行情监测线程
 		tmo.start();
 	}
 

@@ -5,10 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +85,7 @@ public class FutureDevDao {
 	 */
 	public double getLimitPrice(int days, String instrumentId, int type){
 		double price = 0d;
-		List<Double> list = new ArrayList<Double>();
+		LinkedList<Double> list = new LinkedList<Double>();
 		conn = DBConnectionManager.getConnection();
 		String query1 = "";
 		if (type == 1) {
@@ -101,11 +101,14 @@ public class FutureDevDao {
 			while (rs.next()){
 				list.add(rs.getDouble(1));
 			}
+			if(list.size()<1){
+				System.err.println("没有取到合约"+instrumentId+"的历史记录");
+			}
 			Collections.sort(list);
 			if(type == 1){
-				price = list.get(list.size()-1);//max
+				price = list.getLast();//max
 			} else if (type == 2){
-				price = list.get(0);//min
+				price = list.getFirst();//min
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

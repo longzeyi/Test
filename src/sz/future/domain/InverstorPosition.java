@@ -23,6 +23,10 @@ public class InverstorPosition {
 	private double positionProfit;
 	//保证金率
 	private double marginRateByMoney;
+	//逐笔对冲平仓盈亏
+	private double CloseProfitByTrade;
+	//逐日盯市平仓盈亏
+	private double CloseProfitByDate;
 	
 	public String getInstrumentID() {
 		return instrumentID;
@@ -77,6 +81,24 @@ public class InverstorPosition {
 	}
 	public void setMarginRateByMoney(double marginRateByMoney) {
 		this.marginRateByMoney = marginRateByMoney;
+	}
+	public double getCloseProfitByTrade() {
+		return CloseProfitByTrade;
+	}
+	public void setCloseProfitByTrade(double closeProfitByTrade) {
+		CloseProfitByTrade = closeProfitByTrade;
+	}
+	public double getCloseProfitByDate() {
+		return CloseProfitByDate;
+	}
+	public void setCloseProfitByDate(double closeProfitByDate) {
+		CloseProfitByDate = closeProfitByDate;
+	}
+	public int getYdPosition() {
+		return ydPosition;
+	}
+	public void setYdPosition(int ydPosition) {
+		this.ydPosition = ydPosition;
 	}
 	
 }

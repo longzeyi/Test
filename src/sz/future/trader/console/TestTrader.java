@@ -23,6 +23,7 @@ public class TestTrader extends Thread{
 	public static JCTPTraderSpi traderSpi;
 
 	public void run()  {
+		System.err.println("------------正在启动交易线程-------------");
 		String dataPath = "c:/ctpdata/";
 //		traderApi = JCTPTraderApi.createFtdcTraderApi();
 		traderApi = JCTPTraderApi.createFtdcTraderApi(dataPath);//产生一个CThostFtdcTraderApi实例
@@ -37,6 +38,7 @@ public class TestTrader extends Thread{
 		traderApi.registerFront(ServerParams.FRONT_ADDR_TR);
 		//初始化API与CTP前置服务器连接
 		traderApi.init();
+		System.err.println("------------交易线程已启动-------------");
 		traderApi.join();
 //		TimeUnit.SECONDS.sleep(2);
 		//回收api和JCTP

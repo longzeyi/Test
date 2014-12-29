@@ -22,9 +22,10 @@ public class TestMonitor extends Thread{
 	
 	public TestMonitor(){
 		//克隆合约数组
-		instruments = new String[ServerParams.instruments.length];
-		for (int i = 0; i < ServerParams.instruments.length; i++) {
-			instruments[i] = ServerParams.instruments[i];
+		instruments = new String[ServerParams.instruments2.length];
+		for (int i = 0; i < ServerParams.instruments2.length; i++) {
+			System.out.println("ServerParams.instruments2[i]: "+ServerParams.instruments2[i]);
+			instruments[i] = ServerParams.instruments2[i];
 			//装载历史收盘价（一段时间内）
 			Super.HISTORY_CLOSE_PRICE.put(instruments[i], dao.getHistoryClosePrice(Super.historyDateRange, instruments[i]));
 		}
@@ -63,12 +64,15 @@ public class TestMonitor extends Thread{
 	 * @param args
 	 */
 	public void run() {
+		System.err.println("------------启动行情监测线程-------------");
 		while(true){
 			tickData = Super.TICK_DATA;
 //			System.out.println(ServerParams.instruments[0]);
 			for (int i = 0; i < instruments.length; i++) {
+				System.out.println("监测"+instruments[i]);
 				lastTick = tickData.get(instruments[i]);//获取当前合约的最新行情
 				if(lastTick == null){
+					System.err.println("lastTick is null");
 					continue;
 				}
 				Double highestPpriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 1);
@@ -88,9 +92,11 @@ public class TestMonitor extends Thread{
 					if((lastTick[0] - highestPpriceOfPeriod) > Global.breakPoint && (currMA5 > currMA10)) {
 							//买多
 							TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
+							System.out.println(instruments[i] + "： 买多1手");
 					} else if ((lowestPriceOfPeriod - lastTick[0]) > Global.breakPoint && (currMA10 > currMA5)) {
 							//卖空
 							TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[5]);
+							System.out.println(instruments[i] + "： 卖空1手");
 					}
 				} else {
 					//有持仓该合约
@@ -99,10 +105,13 @@ public class TestMonitor extends Thread{
 					boolean closeFlag3 = false ;//当前利润小于最高利润百分比
 					InverstorPosition inverstorPostion = Super.INVESTOR_POSITION.get(instruments[i]);
 					char c = inverstorPostion.getPosiDirectionType();
+					System.out.println(c+"    -----------------------------------------------------------------------------------------------");
 					if(c=='2'){//多仓 
-						
+						System.out.println(inverstorPostion.getCloseProfitByDate() + " : " + inverstorPostion.getCloseProfitByTrade());
+						System.out.println("多仓 " + instruments[i]);
 					} else if(c=='3'){//空仓
-						
+						System.out.println(inverstorPostion.getCloseProfitByDate() + " : " + inverstorPostion.getCloseProfitByTrade());
+						System.out.println("空仓" + instruments[i]);
 					}
 				}
 //				lastTick = tickData.get(instruments[i]);

@@ -13,6 +13,7 @@ public class TestMd extends Thread{
 	static JCTPMdApi mdApi;
 	
 	public void run() {
+		System.err.println("------------正在启动行情采集线程-------------");
 		//创建行情API
 		mdApi = JCTPMdApi.createFtdcTraderApi();
 		//产生一个事件处理的实例
@@ -22,6 +23,7 @@ public class TestMd extends Thread{
 		//注册前置机地址
 		mdApi.registerFront(ServerParams.FRONT_ADDR_MD);
 		mdApi.Init();
+		System.err.println("------------行情采集线程已启动------------");
 		mdApi.Join();
 //		TimeUnit.SECONDS.sleep(5);
 		mdApi.Release();
