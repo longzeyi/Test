@@ -3,9 +3,8 @@ package sz.future.trader.comm;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionField;
-
 import sz.future.domain.InverstorPosition;
+import sz.future.domain.InverstorPositionDetail;
 
 /**
  * 全局变量类
@@ -38,9 +37,14 @@ public class Super {
 	public static Map<String, double[]> TICK_DATA = new HashMap<String, double[]>();
 	
 	/**
-	 * 持仓明细
+	 * 持仓
 	 */
 	public static Map<String, InverstorPosition> INVESTOR_POSITION = new HashMap<String, InverstorPosition>();
+	
+	/**
+	 * 持仓明细
+	 */
+	public static Map<String, InverstorPositionDetail> INVESTOR_POSITION_DETAIL = new HashMap<String, InverstorPositionDetail>();
 	
 	/**
 	 * 历史收盘价（日期降序排列）
