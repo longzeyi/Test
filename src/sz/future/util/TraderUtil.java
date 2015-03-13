@@ -104,7 +104,7 @@ public class TraderUtil {
 		positionField.setInstrumentID(instrumentId);
 		positionField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询持仓明细......" + instrumentId);
-		Super.INVESTOR_POSITION_DETAIL.clear();//清理历史持仓情况
+//		Super.INVESTOR_POSITION_DETAIL.clear();//清理历史持仓情况
 		sleepThread();
 		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
 	}

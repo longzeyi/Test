@@ -47,6 +47,11 @@ public class Super {
 	public static Map<String, InverstorPositionDetail> INVESTOR_POSITION_DETAIL = new HashMap<String, InverstorPositionDetail>();
 	
 	/**
+	 * 持仓开仓价
+	 */
+	public static Map<String, Double> INVESTOR_POSITION_OPEN_PRICE = new HashMap<String, Double>();
+	
+	/**
 	 * 历史收盘价（日期降序排列）
 	 */
 	public static Map<String, double[]> HISTORY_CLOSE_PRICE = new HashMap<String, double[]>();
