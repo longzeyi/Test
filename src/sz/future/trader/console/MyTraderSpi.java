@@ -96,13 +96,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		System.out.println("资金使用率：" + fundsUsage);
 		Super.fundsUsage = fundsUsage;
 	}
-	/* 
-	 * 报单回报。当客户端进行报单录入、报单操作及其它原因（如部分成交）导致报单状态发生变化时，交易托管系统会主动通知客户端，该方法会被调用。
-	 */
-	@Override
-	public void onRtnOrder(CThostFtdcOrderField pOrder) {
-		System.out.println("报单回报通知: "+pOrder.getStatusMsg() + "价格：" + pOrder.getLimitPrice() + "手数：" + pOrder.getVolumeTotalOriginal());
-	}
+	
 	
 	/* 
 	 * 报单录入应答。当客户端发出过报单录入指令后，交易托管系统返回响应时，该方法会被调用。
@@ -110,7 +104,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	@Override
 	public void onRspOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("No."+nRequestID + "报单录入请求响应: "+pRspInfo.getErrorMsg() + "价格：" + pInputOrder.getLimitPrice() + "手数：" + pInputOrder.getVolumeTotalOriginal());
+		System.out.println("No."+nRequestID + " $$报单录入: "+pInputOrder.getInstrumentID()+" "+pRspInfo.getErrorMsg() + " 价格：" + pInputOrder.getLimitPrice() + " 手数：" + pInputOrder.getVolumeTotalOriginal());
 	}
 	
 	/* 
@@ -120,41 +114,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspOrderAction(
 			CThostFtdcInputOrderActionField pInputOrderAction,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("No."+nRequestID + "报单操作请求响应: "+pRspInfo.getErrorMsg());
+		System.out.println("No."+nRequestID + "$$报单操作请求响应: "+pRspInfo.getErrorMsg());
 	}
 	
-	/* 
-	 * 成交回报。当发生成交时交易托管系统会通知客户端，该方法会被调用
-	 */
-	@Override
-	public void onRtnTrade(CThostFtdcTradeField pTrade) {
-		System.out.println("成交回报通知");
-		System.out.println("合约代码: "+pTrade.getInstrumentID());
-		System.out.println("报单引用: "+pTrade.getOrderRef());
-		System.out.println("成交编号: "+pTrade.getTradeID());
-		System.out.println("报单编号: "+pTrade.getOrderSysID());
-		System.out.println("结算编号: "+pTrade.getSettlementID());
-		System.out.println("序号: "+pTrade.getSequenceNo());
-//		if(M.count>1){
-//			M.positionPrice = pTrade.getPrice();
-//			M.currDirection = (pTrade.getDirection()=='0')?true:false;
-//		}
-//		M.currOrderRef = pTrade.getOrderRef();
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.hraink.futures.jctp.trader.JCTPTraderSpi#onRspQryInvestorPositionCombineDetail(org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionCombineDetailField, org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField, int, boolean)
-	 * 查询组合持仓响应
-	 */
-	@Override
-	public void onRspQryInvestorPositionCombineDetail(
-			CThostFtdcInvestorPositionCombineDetailField pInvestorPositionCombineDetail,
-			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("组合持仓合约："+pInvestorPositionCombineDetail.getCombInstrumentID());
-//		super.onRspQryInvestorPositionCombineDetail(pInvestorPositionCombineDetail,
-//				pRspInfo, nRequestID, bIsLast);
-	}
 	/* (non-Javadoc)
 	 * @see org.hraink.futures.jctp.trader.JCTPTraderSpi#onRspQryOrder(org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcOrderField, org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcRspInfoField, int, boolean)
 	 * 查询报单响应
@@ -162,25 +124,14 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	@Override
 	public void onRspQryOrder(CThostFtdcOrderField pOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		
-		System.out.println("合约代码: " + pOrder.getInstrumentID());
-		System.out.println("交易所交易员代码: " + pOrder.getTraderID());
-		System.out.println("交易日: " + pOrder.getTradingDay());
-		System.out.println("报单状态: " + pOrder.getOrderStatus());
-		System.out.println("报单编号: " + pOrder.getOrderSysID());
-		System.out.println("报单引用: " + pOrder.getOrderRef());
-		System.out.println("业务单元: " + pOrder.getBusinessUnit());
-		System.out.println("请求编号: " + pOrder.getRequestID());
-		System.out.println("会话编号: " + pOrder.getSessionID());
-		System.out.println("状态信息: " + pOrder.getStatusMsg());
-		
+//		System.out.println("合约代码: " + pOrder.getInstrumentID());
 //		super.onRspQryOrder(pOrder, pRspInfo, nRequestID, bIsLast);
 	}
 	@Override
 	public void onRspQryTrade(CThostFtdcTradeField pTrade,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 //		super.onRspQryTrade(pTrade, pRspInfo, nRequestID, bIsLast);
-		System.out.println("No."+nRequestID + "成交通知: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume() + "订单引用：" + pTrade.getOrderRef());
+		System.out.println("$$No."+nRequestID + "成交通知: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume() + "订单引用：" + pTrade.getOrderRef());
 	}
 	/* 
 	 * 请求查询投资者持仓明细响应。当客户端发出请求请求查询投资者持仓明细指令后，交易托管系统返回响应时，该方法会被调用
@@ -191,11 +142,11 @@ public class MyTraderSpi extends JCTPTraderSpi {
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		if(pInvestorPositionDetail != null){
 				Super.INVESTOR_POSITION_OPEN_PRICE.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail.getOpenPrice());
-//				System.out.println("No."+nRequestID + "开仓价: "+pInvestorPositionDetail.getInstrumentID()+" "+pInvestorPositionDetail.getOpenPrice());
+				System.out.println("$$No."+nRequestID + "持仓合约开仓价: "+pInvestorPositionDetail.getInstrumentID()+" "+pInvestorPositionDetail.getOpenPrice());
 //				Super.INVESTOR_POSITION_DETAIL.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail);
 //				System.err.println("查询投资者持仓明细响应错误： " + pRspInfo.getErrorID() + "--" +pRspInfo.getErrorMsg());
 		} else {
-			System.out.println("没有持仓该合约");
+			System.out.println("$$没有持仓该合约");
 		}
 	}
 	
@@ -224,11 +175,11 @@ public class MyTraderSpi extends JCTPTraderSpi {
 					ip.setCloseProfitByTrade(pInvestorPosition.getCloseProfitByTrade());
 					ip.setSettlementID(pInvestorPosition.getSettlementID());
 					Super.INVESTOR_POSITION.put(pInvestorPosition.getInstrumentID(), ip);
-//					System.out.println("No."+nRequestID + "持仓查询回调" + pInvestorPosition.getInstrumentID() +":"+ bIsLast);
+					System.out.println("$$No."+nRequestID + "持仓合约：" + pInvestorPosition.getInstrumentID() );
 //					System.out.println("交易日: "+pInvestorPosition.getTradingDay());
 			}
 		} else {
-			System.out.println("没有持仓合约");
+			System.out.println("$$没有持仓合约");
 		}
 	}
 
@@ -236,18 +187,35 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspSettlementInfoConfirm(
 			CThostFtdcSettlementInfoConfirmField pSettlementInfoConfirm,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		System.out.println("No."+nRequestID + "结算单确认回调");
+		System.out.println("$$No."+nRequestID + "结算单确认回调");
 	}
 	
 	@Override
 	public void onRspError(CThostFtdcRspInfoField pRspInfo, int nRequestID,
 			boolean bIsLast) {
-		System.out.println("No."+nRequestID + "错误回调信息"+pRspInfo.getErrorMsg());
+		System.out.println("$$No."+nRequestID + "错误回调信息"+pRspInfo.getErrorMsg());
 	}
+	
+	/* 
+	 * 报单回报。当客户端进行报单录入、报单操作及其它原因（如部分成交）导致报单状态发生变化时，交易托管系统会主动通知客户端，该方法会被调用。
+	 */
+	@Override
+	public void onRtnOrder(CThostFtdcOrderField pOrder) {
+		System.out.println("$$报单回报通知: "+pOrder.getStatusMsg() + "价格：" + pOrder.getLimitPrice() + "手数：" + pOrder.getVolumeTotalOriginal());
+	}
+	
+	/* 
+	 * 成交回报。当发生成交时交易托管系统会通知客户端，该方法会被调用
+	 */
+	@Override
+	public void onRtnTrade(CThostFtdcTradeField pTrade) {
+		System.out.println("$$成交回报通知："+pTrade.getInstrumentID()+" 价格："+pTrade.getPrice());
+	}
+	
 	@Override
 	public void onErrRtnOrderInsert(CThostFtdcInputOrderField pInputOrder,
 			CThostFtdcRspInfoField pRspInfo) {
-		System.out.println("报单录入错误回调： 方向："+pInputOrder.getDirection()+ "价格：" +pInputOrder.getLimitPrice()+ "手数：" +pInputOrder.getVolumeTotalOriginal()+ "返回信息：" +pRspInfo.getErrorMsg());
+		System.out.println("$$报单录入错误回调： 方向："+pInputOrder.getDirection()+ "价格：" +pInputOrder.getLimitPrice()+ "手数：" +pInputOrder.getVolumeTotalOriginal()+ "返回信息：" +pRspInfo.getErrorMsg());
 	}
 	
 }

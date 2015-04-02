@@ -120,7 +120,7 @@ public class TraderUtil {
 //		positionField.setInstrumentID("");
 		positionField.setInvestorID(ServerParams.USER_ID);
 		System.out.println("查询全部持仓......");
-		Super.INVESTOR_POSITION.clear();//清理历史持仓情况
+//		Super.INVESTOR_POSITION.clear();//清理历史持仓情况
 		sleepThread();
 		return TestTrader.traderApi.reqQryInvestorPosition(positionField, ++Super.requestID);
 	}

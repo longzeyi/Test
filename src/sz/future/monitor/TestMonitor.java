@@ -12,7 +12,6 @@ import sz.future.util.StatisticsUtil;
 import sz.future.util.TraderUtil;
 
 /**
- * @author Sean
  * 行情监测线程
  */
 public class TestMonitor extends Thread{
@@ -25,7 +24,7 @@ public class TestMonitor extends Thread{
 		//克隆合约数组
 		instruments = new String[ServerParams.instruments2.length];
 		for (int i = 0; i < ServerParams.instruments2.length; i++) {
-			System.out.println("ServerParams.instruments2[i]: "+ServerParams.instruments2[i]);
+//			System.out.println("ServerParams.instruments2[i]: "+ServerParams.instruments2[i]);
 			instruments[i] = ServerParams.instruments2[i];
 			//装载历史收盘价（一段时间内）
 			Super.HISTORY_CLOSE_PRICE.put(instruments[i], dao.getHistoryClosePrice(Super.historyDateRange, instruments[i]));
@@ -59,6 +58,12 @@ public class TestMonitor extends Thread{
 			bool = false;
 			System.err.println("查询持仓失败");
 		}
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		if(Super.INVESTOR_POSITION.size() > 0){
 			Iterator<String> it = Super.INVESTOR_POSITION.keySet().iterator();
 			while(it.hasNext()){
@@ -85,8 +90,11 @@ public class TestMonitor extends Thread{
 			for (int i = 0; i < instruments.length; i++) {
 				lastTick = tickData.get(instruments[i]);//获取当前合约的最新行情
 				if(lastTick == null){
-					System.err.println("lastTick is null");
+//					System.err.println(instruments[i]+" TICK行情丢失1");
 					continue;
+				} else if (lastTick[0] ==0){
+//					System.err.println(instruments[i]+" TICK行情丢失2");
+					break;
 				}
 //				System.out.println("监测"+instruments[i] + " 价格：" +lastTick[0]);
 				Double highestPpriceOfPeriod = dao.getLimitPrice(Global.period, instruments[i], 1);
@@ -111,11 +119,6 @@ public class TestMonitor extends Thread{
 							TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
 							System.out.println(instruments[i] + "： 卖空5手 "+lastTick[0]);
 					} 
-//					else {
-//						//卖空
-//						TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
-//						System.out.println(instruments[i] + "： 卖空1手"+lastTick[0]);
-//					}
 				} else {
 					//有持仓该合约
 					boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
@@ -142,6 +145,7 @@ public class TestMonitor extends Thread{
 						if(preMA5 > preMA10){
 							closeFlag2 = true;
 						}
+						System.out.println("instruments[i]:  "+instruments[i]);
 						closeFlag1 = (lastTick[0] - Super.INVESTOR_POSITION_OPEN_PRICE.get(instruments[i])) > ServerParams.floatSpace*lastTick[0];
 						if(closeFlag1||closeFlag2){
 							InverstorPosition ip = Super.INVESTOR_POSITION.get(instruments[i]);
