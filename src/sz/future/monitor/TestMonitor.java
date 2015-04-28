@@ -110,15 +110,25 @@ public class TestMonitor extends Thread{
 //				System.out.println("instrumentId: "+instruments[i]);
 				if(Super.INVESTOR_POSITION.size() == 0 || Super.INVESTOR_POSITION.get(instruments[i]) == null){
 					//没有持仓该合约
-					if((lastTick[0] - highestPpriceOfPeriod) > Global.breakPoint && (currMA5 > currMA10)) {
-							//买多
-							TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
-							System.out.println(instruments[i] + "： 买多5手 "+lastTick[0]);
-					} else if ((lowestPriceOfPeriod - lastTick[0]) > Global.breakPoint && (currMA10 > currMA5)) {
-							//卖空
-							TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
-							System.out.println(instruments[i] + "： 卖空5手 "+lastTick[0]);
-					} 
+//					if((lastTick[0] - highestPpriceOfPeriod) > Global.breakPoint && (currMA5 > currMA10)) {
+//							//买多
+//							TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
+//							System.out.println(instruments[i] + "： 买多5手 "+lastTick[0]);
+//							TraderUtil.qryPosition();
+//					} else if ((lowestPriceOfPeriod - lastTick[0]) > Global.breakPoint && (currMA10 > currMA5)) {
+//							//卖空
+//							TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
+//							System.out.println(instruments[i] + "： 卖空5手 "+lastTick[0]);
+//							TraderUtil.qryPosition();
+//					} 
+					long ll = Math.round(Math.random() * 8);
+					if(ll==5){
+						TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
+						TraderUtil.qryPosition();
+					} else if (ll==6){
+						TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
+						TraderUtil.qryPosition();
+					}
 				} else {
 					//有持仓该合约
 					boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
@@ -126,43 +136,60 @@ public class TestMonitor extends Thread{
 //					boolean closeFlag3 = false ;//当前利润小于最高利润百分比
 					InverstorPosition inverstorPostion = Super.INVESTOR_POSITION.get(instruments[i]);
 					char c = inverstorPostion.getPosiDirectionType();
+					long ll = Math.round(Math.random() * 8);
 					if(c=='2'){//多仓 
-						if(preMA5 < preMA10){
-							closeFlag2 = true;
+						if(inverstorPostion.getPosition() > 0 && ll == 5){
+							TraderUtil.orderInsert(instruments[i], false, 5, "3", lastTick[6]);
+							TraderUtil.qryPosition();
+						} else if(inverstorPostion.getYdposition() > 0 && ll == 5){
+							TraderUtil.orderInsert(instruments[i], false, 5, "1", lastTick[6]);
+							TraderUtil.qryPosition();
 						}
-						closeFlag1 = (Super.INVESTOR_POSITION_OPEN_PRICE.get(instruments[i]) - lastTick[0]) > ServerParams.floatSpace*lastTick[0];
-						if(closeFlag1||closeFlag2){
-							InverstorPosition ip = Super.INVESTOR_POSITION.get(instruments[i]);
-							if(ip.getPosition() > 0){//平今仓
-								TraderUtil.orderInsert(instruments[i], false, 5, "3", lastTick[6]);
-								System.out.println(instruments[i] + "： 平今多仓5手 "+lastTick[0]);
-							} else if (ip.getYdposition() > 0){//平昨仓
-								TraderUtil.orderInsert(instruments[i], false, 5, "1", lastTick[6]);
-								System.out.println(instruments[i] + "： 平昨多仓5手 "+lastTick[0]);
-							}
-						}
+//						if(preMA5 < preMA10){
+//							closeFlag2 = true;
+//						}
+//						closeFlag1 = (Super.INVESTOR_POSITION_OPEN_PRICE.get(instruments[i]) - lastTick[0]) > ServerParams.floatSpace*lastTick[0];
+//						if(closeFlag1||closeFlag2){
+//							InverstorPosition ip = Super.INVESTOR_POSITION.get(instruments[i]);
+//							if(ip.getPosition() > 0){//平今仓
+////								TraderUtil.orderInsert(instruments[i], false, 5, "3", lastTick[6]);
+//								System.out.println(instruments[i] + "： 平今多仓5手 "+lastTick[0]);
+//								TraderUtil.qryPosition();
+//							} else if (ip.getYdposition() > 0){//平昨仓
+////								TraderUtil.orderInsert(instruments[i], false, 5, "1", lastTick[6]);
+//								System.out.println(instruments[i] + "： 平昨多仓5手 "+lastTick[0]);
+//								TraderUtil.qryPosition();
+//							}
+//						}
 					} else if(c=='3'){//空仓
-						if(preMA5 > preMA10){
-							closeFlag2 = true;
+						if(inverstorPostion.getPosition() > 0 && ll == 5){
+							TraderUtil.orderInsert(instruments[i], true, 5, "3", lastTick[5]);
+							TraderUtil.qryPosition();
+						} else if(inverstorPostion.getYdposition() > 0 && ll == 5){
+							TraderUtil.orderInsert(instruments[i], true, 5, "1", lastTick[5]);
+							TraderUtil.qryPosition();
 						}
-						System.out.println("instruments[i]:  "+instruments[i]);
-						closeFlag1 = (lastTick[0] - Super.INVESTOR_POSITION_OPEN_PRICE.get(instruments[i])) > ServerParams.floatSpace*lastTick[0];
-						if(closeFlag1||closeFlag2){
-							InverstorPosition ip = Super.INVESTOR_POSITION.get(instruments[i]);
-							if(ip.getPosition() > 0){//平今仓
-								TraderUtil.orderInsert(instruments[i], true, 5, "3", lastTick[5]);
-								//从持仓容器里移除
-								Super.INVESTOR_POSITION_OPEN_PRICE.remove(instruments[i]);
-								Super.INVESTOR_POSITION.remove(instruments[i]);
-								System.out.println(instruments[i] + "： 平今空仓5手 "+lastTick[0]);
-							} else if (ip.getYdposition() > 0){//平昨仓
-								TraderUtil.orderInsert(instruments[i], true, 5, "1", lastTick[5]);
-								//从持仓容器里移除
-								Super.INVESTOR_POSITION_OPEN_PRICE.remove(instruments[i]);
-								Super.INVESTOR_POSITION.remove(instruments[i]);
-								System.out.println(instruments[i] + "： 平昨空仓5手 "+lastTick[0]);
-							}
-						}
+//						if(preMA5 > preMA10){
+//							closeFlag2 = true;
+//						}
+//						System.out.println("instruments[i]:  "+instruments[i]);
+//						closeFlag1 = (lastTick[0] - Super.INVESTOR_POSITION_OPEN_PRICE.get(instruments[i])) > ServerParams.floatSpace*lastTick[0];
+//						if(closeFlag1||closeFlag2){
+//							InverstorPosition ip = Super.INVESTOR_POSITION.get(instruments[i]);
+//							if(ip.getPosition() > 0){//平今仓
+////								TraderUtil.orderInsert(instruments[i], true, 5, "3", lastTick[5]);
+//								//从持仓容器里移除
+//								Super.INVESTOR_POSITION_OPEN_PRICE.remove(instruments[i]);
+//								Super.INVESTOR_POSITION.remove(instruments[i]);
+//								System.out.println(instruments[i] + "： 平今空仓5手 "+lastTick[0]);
+//							} else if (ip.getYdposition() > 0){//平昨仓
+////								TraderUtil.orderInsert(instruments[i], true, 5, "1", lastTick[5]);
+//								//从持仓容器里移除
+//								Super.INVESTOR_POSITION_OPEN_PRICE.remove(instruments[i]);
+//								Super.INVESTOR_POSITION.remove(instruments[i]);
+//								System.out.println(instruments[i] + "： 平昨空仓5手 "+lastTick[0]);
+//							}
+//						}
 					}
 				}
 //				System.err.println(instruments[i] + " : " + lastTick[0] + ":" + lastTick[1] + " : " + lastTick[2] + ":" + lastTick[3] + " : " + lastTick[4] + ":" + lastTick[5] + " : " + lastTick[6]);

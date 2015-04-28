@@ -30,7 +30,7 @@ public class TraderUtil {
 	 * @param directionFlag 买卖方向 买：true  卖：fasle
 	 * @param volumeTotal 申买/卖量
 	 * @param offsetFlag 开平标志（开仓=0，平仓=1，强平=2，平今=3，平昨=4，强减=5，本地强平=6）
-	 * @param limitPrice 价格
+	 * @param limitPrice 价格 md[0]最新价 md[1]最高价 md[2]最低价 md[3]开盘价 md[4]前日收盘价 md[5]涨停价 md[6]跌停价 
 	 * @return 
 	 */
 	public static int orderInsert(String instrumentId,  boolean directionFlag, int volumeTotal, String offsetFlag, double limitPrice){
@@ -43,7 +43,8 @@ public class TraderUtil {
 				// 合约代码
 				inputOrderField.setInstrumentID(instrumentId);
 				///报单引用
-				inputOrderField.setOrderRef(instrumentId+(++M.currOrderRef));
+				inputOrderField.setOrderRef((++Super.currOrderRef)+"");
+				System.err.println("OrderRef: " + (Super.currOrderRef));
 				// 用户代码
 				inputOrderField.setUserID(ServerParams.USER_ID);
 				// 报单价格条件

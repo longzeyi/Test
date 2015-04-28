@@ -9,13 +9,13 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import sz.future.conn.DBConnectionManager;
+import sz.future.domain.InverstorPosition;
 import sz.future.domain.MdDay;
 
 /**
@@ -195,6 +195,70 @@ public class FutureDevDao {
 			DBConnectionManager.closeConnection(conn);
 		}
 		return closePrices;
+	}
+	
+	public void saveInvestorPosition(
+			InverstorPosition ip){
+		conn = DBConnectionManager.getConnection();
+		String sql = "INSERT INTO tb_investor_position (instrument_id, direction_type, open_date, volume, open_price, stop_price) VALUES (?, ?, ?, ?, ?, ?)";
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			conn.setAutoCommit(false);
+			Iterator<String> it = dayData.keySet().iterator();
+//			while(it.hasNext()){
+//				System.out.println("----"+it.next());
+//			}
+			pst.setString(1, ip.getInstrumentID());
+			while(it.hasNext()){
+				MdDay data = dayData.get(it.next());
+				pst.setDate(2, new java.sql.Date(data.getTradingDay().getTime()));
+				pst.setDouble(3, data.getHighest_price());
+				pst.setDouble(4, data.getLowest_price());
+				pst.setDouble(5, data.getOpen_price());
+				pst.setDouble(6, data.getClose_price());
+				pst.setInt(7, data.getVolume());
+				pst.setDouble(8, data.getOpen_interest());
+//				pst.setDate(10, sfDate2.format(new java.sql.Date()));
+				pst.setTimestamp(9, (Timestamp) new Timestamp(new Date().getTime()));
+				pst.addBatch();
+				System.out.println("TradingDate: "+data.getTradingDay().toLocaleString());
+				System.out.println("InstrumentID: " + data.getInstrumentID());
+			}
+			pst.executeBatch();
+			conn.commit();
+			System.err.println("保存完成！");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+	}
+	
+	/**
+	 * 根据合约ID获取止损价
+	 * @param instrumentId
+	 * @return
+	 */
+	public double getStopPrice(String instrumentId){
+		double stopPrice = 0;
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT stop_price FROM tb_investor_position WHERE instrument_id = ?";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			rs = pst.executeQuery();
+			if (rs.next()){
+				stopPrice = rs.getDouble(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return stopPrice;
 	}
 	
 	public static void main(String[] args) {
