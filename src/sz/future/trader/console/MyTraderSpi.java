@@ -148,9 +148,19 @@ public class MyTraderSpi extends JCTPTraderSpi {
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 		if(pInvestorPositionDetail != null){
 				Super.INVESTOR_POSITION_OPEN_PRICE.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail.getOpenPrice());
-				System.out.println("$$No."+nRequestID + "持仓合约开仓价: "+pInvestorPositionDetail.getInstrumentID()+" "+pInvestorPositionDetail.getOpenPrice() + " " + pInvestorPositionDetail.getDirection());
-//				Super.INVESTOR_POSITION_DETAIL.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail);
-//				System.err.println("查询投资者持仓明细响应错误： " + pRspInfo.getErrorID() + "--" +pRspInfo.getErrorMsg());
+//				System.out.println("$$No."+nRequestID + "持仓合约开仓价: "+pInvestorPositionDetail.getInstrumentID()+" "+pInvestorPositionDetail.getOpenPrice() + " " + pInvestorPositionDetail.getDirection());
+				System.out.println("$$查询持仓明细通知: " + 
+						" 【结算编号：" + pInvestorPositionDetail.getSettlementID() +
+						"  合约：" + pInvestorPositionDetail.getInstrumentID()+ 
+						"  买卖方向：" + pInvestorPositionDetail.getDirection() + 
+						"  开仓价：" + pInvestorPositionDetail.getOpenPrice() + 
+						"  数量：" + pInvestorPositionDetail.getVolume() + 
+						"  交易所保证金：" + pInvestorPositionDetail.getExchMargin() +
+						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() +
+						"  成交编号：" + pInvestorPositionDetail.getTradeID() +
+						"  开仓日期：" + pInvestorPositionDetail.getOpenDate() + 
+						"  交易日：" + pInvestorPositionDetail.getTradingDay() + 
+						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() + "】");
 		} else {
 			System.out.println("$$没有持仓该合约");
 		}
@@ -165,6 +175,19 @@ public class MyTraderSpi extends JCTPTraderSpi {
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 //		System.err.println("bIsLast: "+bIsLast + "  " + pInvestorPosition.getInstrumentID());
 		if(pInvestorPosition != null){
+			System.out.println("$$查询持仓通知: " + 
+					" 【结算编号：" + pInvestorPosition.getSettlementID() +
+					"  合约：" + pInvestorPosition.getInstrumentID()+ 
+					"  持仓日期：" + pInvestorPosition.getPositionDate()+ 
+					"  上日持仓：" + pInvestorPosition.getYdPosition()+ 
+					"  今日持仓：" + pInvestorPosition.getPosition()+ 
+					"  买卖方向：" + pInvestorPosition.getPosiDirection() +
+					"  开仓金额：" + pInvestorPosition.getOpenAmount() +
+					"  开仓量：" + pInvestorPosition.getOpenVolume() +
+					"  交易日：" + pInvestorPosition.getTradingDay() +
+					"  交易所保证金：" + pInvestorPosition.getExchangeMargin() +
+					"  今日持仓：" + pInvestorPosition.getTodayPosition() +
+					"  保证金率：" + pInvestorPosition.getMarginRateByMoney() + "】");
 			//如果今仓和昨仓总和不为0，表示持仓该合约
 			if((pInvestorPosition.getPosition() + pInvestorPosition.getYdPosition()) > 0){
 					InverstorPosition ip = new InverstorPosition();
