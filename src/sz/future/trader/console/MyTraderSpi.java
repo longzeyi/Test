@@ -155,12 +155,23 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						"  买卖方向：" + pInvestorPositionDetail.getDirection() + 
 						"  开仓价：" + pInvestorPositionDetail.getOpenPrice() + 
 						"  数量：" + pInvestorPositionDetail.getVolume() + 
-						"  交易所保证金：" + pInvestorPositionDetail.getExchMargin() +
-						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() +
 						"  成交编号：" + pInvestorPositionDetail.getTradeID() +
 						"  开仓日期：" + pInvestorPositionDetail.getOpenDate() + 
 						"  交易日：" + pInvestorPositionDetail.getTradingDay() + 
-						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() + "】");
+						"  成交类型：" + pInvestorPositionDetail.getTradeType() + 
+						"  交易所代码：" + pInvestorPositionDetail.getExchangeID() + 
+						"  逐日盯市平仓盈亏：" + pInvestorPositionDetail.getCloseProfitByDate() + 
+						"  逐笔对冲平仓盈亏：" + pInvestorPositionDetail.getCloseProfitByTrade() + 
+						"  逐日盯市持仓盈亏：" + pInvestorPositionDetail.getPositionProfitByDate() + 
+						"  逐笔对冲持仓盈亏：" + pInvestorPositionDetail.getPositionProfitByTrade() + 
+						"  投资者保证金：" + pInvestorPositionDetail.getMargin() + 
+						"  交易所保证金：" + pInvestorPositionDetail.getExchMargin() +
+						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() +
+						"  保证金率(按手数)：" + pInvestorPositionDetail.getMarginRateByVolume() + 
+						"  昨结算价：" + pInvestorPositionDetail.getLastSettlementPrice() + 
+						"  结算价：" + pInvestorPositionDetail.getSettlementPrice() + 
+						"  平仓量：" + pInvestorPositionDetail.getCloseVolume() + 
+						"  平仓金额：" + pInvestorPositionDetail.getCloseAmount() + "】");
 		} else {
 			System.out.println("$$没有持仓该合约");
 		}
@@ -250,8 +261,10 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				" 【报单引用：" + pTrade.getOrderRef() +
 				"  合约：" + pTrade.getInstrumentID() + 
 				"  买卖方向：" + pTrade.getDirection() +
+				"  开平标志：" + pTrade.getOffsetFlag() +
 				"  成交价格：" + pTrade.getPrice() +
 				"  数量：" + pTrade.getVolume() +
+				"  成交时期：" + pTrade.getTradeDate() +
 				"  报单编号：" + pTrade.getOrderSysID() +"】");
 	}
 	
