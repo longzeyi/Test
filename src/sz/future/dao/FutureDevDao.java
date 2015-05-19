@@ -16,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 
 import sz.future.conn.DBConnectionManager;
 import sz.future.domain.InverstorPosition;
+import sz.future.domain.InverstorPositionDetail;
 import sz.future.domain.MdDay;
 
 /**
@@ -197,43 +198,43 @@ public class FutureDevDao {
 		return closePrices;
 	}
 	
-	public void saveInvestorPosition(
-			InverstorPosition ip){
-		conn = DBConnectionManager.getConnection();
-		String sql = "INSERT INTO tb_investor_position (instrument_id, direction_type, open_date, volume, open_price, stop_price) VALUES (?, ?, ?, ?, ?, ?)";
-		try {
-			pst = (PreparedStatement) conn.prepareStatement(sql);
-			conn.setAutoCommit(false);
-			Iterator<String> it = dayData.keySet().iterator();
+//	public void saveInvestorPosition(
+//			InverstorPosition ip){
+//		conn = DBConnectionManager.getConnection();
+//		String sql = "INSERT INTO tb_investor_position (instrument_id, direction_type, open_date, volume, open_price, stop_price) VALUES (?, ?, ?, ?, ?, ?)";
+//		try {
+//			pst = (PreparedStatement) conn.prepareStatement(sql);
+//			conn.setAutoCommit(false);
+//			Iterator<String> it = dayData.keySet().iterator();
+////			while(it.hasNext()){
+////				System.out.println("----"+it.next());
+////			}
+//			pst.setString(1, ip.getInstrumentID());
 //			while(it.hasNext()){
-//				System.out.println("----"+it.next());
+//				MdDay data = dayData.get(it.next());
+//				pst.setDate(2, new java.sql.Date(data.getTradingDay().getTime()));
+//				pst.setDouble(3, data.getHighest_price());
+//				pst.setDouble(4, data.getLowest_price());
+//				pst.setDouble(5, data.getOpen_price());
+//				pst.setDouble(6, data.getClose_price());
+//				pst.setInt(7, data.getVolume());
+//				pst.setDouble(8, data.getOpen_interest());
+////				pst.setDate(10, sfDate2.format(new java.sql.Date()));
+//				pst.setTimestamp(9, (Timestamp) new Timestamp(new Date().getTime()));
+//				pst.addBatch();
+//				System.out.println("TradingDate: "+data.getTradingDay().toLocaleString());
+//				System.out.println("InstrumentID: " + data.getInstrumentID());
 //			}
-			pst.setString(1, ip.getInstrumentID());
-			while(it.hasNext()){
-				MdDay data = dayData.get(it.next());
-				pst.setDate(2, new java.sql.Date(data.getTradingDay().getTime()));
-				pst.setDouble(3, data.getHighest_price());
-				pst.setDouble(4, data.getLowest_price());
-				pst.setDouble(5, data.getOpen_price());
-				pst.setDouble(6, data.getClose_price());
-				pst.setInt(7, data.getVolume());
-				pst.setDouble(8, data.getOpen_interest());
-//				pst.setDate(10, sfDate2.format(new java.sql.Date()));
-				pst.setTimestamp(9, (Timestamp) new Timestamp(new Date().getTime()));
-				pst.addBatch();
-				System.out.println("TradingDate: "+data.getTradingDay().toLocaleString());
-				System.out.println("InstrumentID: " + data.getInstrumentID());
-			}
-			pst.executeBatch();
-			conn.commit();
-			System.err.println("保存完成！");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBConnectionManager.closePreparedStatement(pst);
-			DBConnectionManager.closeConnection(conn);
-		}
-	}
+//			pst.executeBatch();
+//			conn.commit();
+//			System.err.println("保存完成！");
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBConnectionManager.closePreparedStatement(pst);
+//			DBConnectionManager.closeConnection(conn);
+//		}
+//	}
 	
 	/**
 	 * 根据合约ID获取止损价
@@ -259,6 +260,36 @@ public class FutureDevDao {
 			DBConnectionManager.closeConnection(conn);
 		}
 		return stopPrice;
+	}
+	
+	
+	public void savePositionDetail(
+			InverstorPositionDetail ipd){
+		conn = DBConnectionManager.getConnection();
+		String sql = "INSERT INTO tb_position_detail (trade_id, instrument_id, direction, volume, price, open_date, trading_day, " +
+				"exch_margin, margin_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			conn.setAutoCommit(false);
+			pst.setInt(1, ipd.getTradeID());
+			pst.setString(2, ipd.getInstrumentID());
+			pst.setBoolean(3, ipd.isDirection());
+			pst.setInt(4, ipd.getVolume());
+			pst.setDouble(5, ipd.getPrice());
+			pst.setString(6, ipd.getOpenDate());
+			pst.setString(7, ipd.getTradingDay());
+			pst.setDouble(8, ipd.getExchMargin());
+			pst.setString(9, ipd.getInstrumentID());
+			if(pst.execute()){
+				System.err.println(ipd.getInstrumentID() + " ：持仓明细保存成功！");
+			}
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
 	}
 	
 	public static void main(String[] args) {
