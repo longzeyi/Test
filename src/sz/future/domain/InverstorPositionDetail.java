@@ -7,204 +7,186 @@ package sz.future.domain;
  */
 public class InverstorPositionDetail {
 	///合约代码
-	private String	InstrumentID;
-		///经纪公司代码
-	private String	BrokerID;
-		///投资者代码
-	private String	InvestorID;
-		///投机套保标志
-	private char	HedgeFlag;
+	private String	instrumentID;
 		///买卖
-	private char	Direction;
+	private boolean	direction;
 		///开仓日期
-	private String OpenDate;
+	private String openDate;
 		///成交编号
-	private String TradeID;
+	private int tradeID;
 		///数量
-	private int Volume;
+	private int volume;
 		///开仓价
-	private double	OpenPrice;
+	private double	price;
 		///交易日
-	private String TradingDay;
+	private String tradingDay;
 		///结算编号
-	private int	SettlementID;
-		///成交类型
-	private char	TradeType;
-		///交易所代码
-	private char	ExchangeID;
-		///逐日盯市平仓盈亏
-	private double	CloseProfitByDate;
-		///逐笔对冲平仓盈亏
-	private double	CloseProfitByTrade;
-		///逐日盯市持仓盈亏
-	private double	PositionProfitByDate;
-		///逐笔对冲持仓盈亏
-	private double	PositionProfitByTrade;
+	private int	settlementID;
 		///投资者保证金
-	private double	Margin;
+	private double	margin;
 		///交易所保证金
-	private double	ExchMargin;
+	private double	exchMargin;
 		///保证金率
-	private double	MarginRateByMoney;
-		///保证金率(按手数)
-	private double	MarginRateByVolume;
+	private double	marginRateByMoney;
 	///昨结算价
-	private double	LastSettlementPrice;
+	private double	lastSettlementPrice;
 	///结算价
-	private double	SettlementPrice;
-	///平仓量
-	private int	CloseVolume;
-	///平仓金额
-	private double	CloseAmount;
+	private double	settlementPrice;
+	/**
+	 * @return the instrumentID
+	 */
 	public String getInstrumentID() {
-		return InstrumentID;
+		return instrumentID;
 	}
+	/**
+	 * @param instrumentID the instrumentID to set
+	 */
 	public void setInstrumentID(String instrumentID) {
-		InstrumentID = instrumentID;
+		this.instrumentID = instrumentID;
 	}
-	public String getBrokerID() {
-		return BrokerID;
+	/**
+	 * @return the direction
+	 */
+	public boolean isDirection() {
+		return direction;
 	}
-	public void setBrokerID(String brokerID) {
-		BrokerID = brokerID;
+	/**
+	 * @param direction the direction to set
+	 */
+	public void setDirection(boolean direction) {
+		this.direction = direction;
 	}
-	public String getInvestorID() {
-		return InvestorID;
-	}
-	public void setInvestorID(String investorID) {
-		InvestorID = investorID;
-	}
-	public char getHedgeFlag() {
-		return HedgeFlag;
-	}
-	public void setHedgeFlag(char hedgeFlag) {
-		HedgeFlag = hedgeFlag;
-	}
-	public char getDirection() {
-		return Direction;
-	}
-	public void setDirection(char direction) {
-		Direction = direction;
-	}
+	/**
+	 * @return the openDate
+	 */
 	public String getOpenDate() {
-		return OpenDate;
+		return openDate;
 	}
+	/**
+	 * @param openDate the openDate to set
+	 */
 	public void setOpenDate(String openDate) {
-		OpenDate = openDate;
+		this.openDate = openDate;
 	}
-	public String getTradeID() {
-		return TradeID;
+	/**
+	 * @return the tradeID
+	 */
+	public int getTradeID() {
+		return tradeID;
 	}
-	public void setTradeID(String tradeID) {
-		TradeID = tradeID;
+	/**
+	 * @param tradeID the tradeID to set
+	 */
+	public void setTradeID(int tradeID) {
+		this.tradeID = tradeID;
 	}
+	/**
+	 * @return the volume
+	 */
 	public int getVolume() {
-		return Volume;
+		return volume;
 	}
+	/**
+	 * @param volume the volume to set
+	 */
 	public void setVolume(int volume) {
-		Volume = volume;
+		this.volume = volume;
 	}
-	public double getOpenPrice() {
-		return OpenPrice;
+	/**
+	 * @return the price
+	 */
+	public double getPrice() {
+		return price;
 	}
-	public void setOpenPrice(double openPrice) {
-		OpenPrice = openPrice;
+	/**
+	 * @param price the price to set
+	 */
+	public void setPrice(double price) {
+		this.price = price;
 	}
+	/**
+	 * @return the tradingDay
+	 */
 	public String getTradingDay() {
-		return TradingDay;
+		return tradingDay;
 	}
+	/**
+	 * @param tradingDay the tradingDay to set
+	 */
 	public void setTradingDay(String tradingDay) {
-		TradingDay = tradingDay;
+		this.tradingDay = tradingDay;
 	}
+	/**
+	 * @return the settlementID
+	 */
 	public int getSettlementID() {
-		return SettlementID;
+		return settlementID;
 	}
+	/**
+	 * @param settlementID the settlementID to set
+	 */
 	public void setSettlementID(int settlementID) {
-		SettlementID = settlementID;
+		this.settlementID = settlementID;
 	}
-	public char getTradeType() {
-		return TradeType;
-	}
-	public void setTradeType(char tradeType) {
-		TradeType = tradeType;
-	}
-	public char getExchangeID() {
-		return ExchangeID;
-	}
-	public void setExchangeID(char exchangeID) {
-		ExchangeID = exchangeID;
-	}
-	public double getCloseProfitByDate() {
-		return CloseProfitByDate;
-	}
-	public void setCloseProfitByDate(double closeProfitByDate) {
-		CloseProfitByDate = closeProfitByDate;
-	}
-	public double getCloseProfitByTrade() {
-		return CloseProfitByTrade;
-	}
-	public void setCloseProfitByTrade(double closeProfitByTrade) {
-		CloseProfitByTrade = closeProfitByTrade;
-	}
-	public double getPositionProfitByDate() {
-		return PositionProfitByDate;
-	}
-	public void setPositionProfitByDate(double positionProfitByDate) {
-		PositionProfitByDate = positionProfitByDate;
-	}
-	public double getPositionProfitByTrade() {
-		return PositionProfitByTrade;
-	}
-	public void setPositionProfitByTrade(double positionProfitByTrade) {
-		PositionProfitByTrade = positionProfitByTrade;
-	}
+	/**
+	 * @return the margin
+	 */
 	public double getMargin() {
-		return Margin;
+		return margin;
 	}
+	/**
+	 * @param margin the margin to set
+	 */
 	public void setMargin(double margin) {
-		Margin = margin;
+		this.margin = margin;
 	}
+	/**
+	 * @return the exchMargin
+	 */
 	public double getExchMargin() {
-		return ExchMargin;
+		return exchMargin;
 	}
+	/**
+	 * @param exchMargin the exchMargin to set
+	 */
 	public void setExchMargin(double exchMargin) {
-		ExchMargin = exchMargin;
+		this.exchMargin = exchMargin;
 	}
+	/**
+	 * @return the marginRateByMoney
+	 */
 	public double getMarginRateByMoney() {
-		return MarginRateByMoney;
+		return marginRateByMoney;
 	}
+	/**
+	 * @param marginRateByMoney the marginRateByMoney to set
+	 */
 	public void setMarginRateByMoney(double marginRateByMoney) {
-		MarginRateByMoney = marginRateByMoney;
+		this.marginRateByMoney = marginRateByMoney;
 	}
-	public double getMarginRateByVolume() {
-		return MarginRateByVolume;
-	}
-	public void setMarginRateByVolume(double marginRateByVolume) {
-		MarginRateByVolume = marginRateByVolume;
-	}
+	/**
+	 * @return the lastSettlementPrice
+	 */
 	public double getLastSettlementPrice() {
-		return LastSettlementPrice;
+		return lastSettlementPrice;
 	}
+	/**
+	 * @param lastSettlementPrice the lastSettlementPrice to set
+	 */
 	public void setLastSettlementPrice(double lastSettlementPrice) {
-		LastSettlementPrice = lastSettlementPrice;
+		this.lastSettlementPrice = lastSettlementPrice;
 	}
+	/**
+	 * @return the settlementPrice
+	 */
 	public double getSettlementPrice() {
-		return SettlementPrice;
+		return settlementPrice;
 	}
+	/**
+	 * @param settlementPrice the settlementPrice to set
+	 */
 	public void setSettlementPrice(double settlementPrice) {
-		SettlementPrice = settlementPrice;
+		this.settlementPrice = settlementPrice;
 	}
-	public int getCloseVolume() {
-		return CloseVolume;
-	}
-	public void setCloseVolume(int closeVolume) {
-		CloseVolume = closeVolume;
-	}
-	public double getCloseAmount() {
-		return CloseAmount;
-	}
-	public void setCloseAmount(double closeAmount) {
-		CloseAmount = closeAmount;
-	}
-
+	
 }
