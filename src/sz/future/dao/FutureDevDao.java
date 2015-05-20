@@ -15,7 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import sz.future.conn.DBConnectionManager;
-import sz.future.domain.InverstorPosition;
 import sz.future.domain.InverstorPositionDetail;
 import sz.future.domain.MdDay;
 
@@ -263,6 +262,10 @@ public class FutureDevDao {
 	}
 	
 	
+	/**
+	 * 保存持仓明细
+	 * @param ipd
+	 */
 	public void savePositionDetail(
 			InverstorPositionDetail ipd){
 		conn = DBConnectionManager.getConnection();
@@ -279,7 +282,7 @@ public class FutureDevDao {
 			pst.setString(6, ipd.getOpenDate());
 			pst.setString(7, ipd.getTradingDay());
 			pst.setDouble(8, ipd.getExchMargin());
-			pst.setString(9, ipd.getInstrumentID());
+			pst.setDouble(9, ipd.getMarginRateByMoney());
 			if(pst.execute()){
 				System.err.println(ipd.getInstrumentID() + " ：持仓明细保存成功！");
 			}
@@ -290,6 +293,32 @@ public class FutureDevDao {
 			DBConnectionManager.closePreparedStatement(pst);
 			DBConnectionManager.closeConnection(conn);
 		}
+	}
+	
+	/**
+	 * 查询是否持有这个合约
+	 * @param instrumentId
+	 * @return
+	 */
+	public boolean hasPosition(String instrumentId){
+		boolean flag = false;
+		conn = DBConnectionManager.getConnection();
+		String query = "SELECT * FROM tb_position_detail WHERE instrument_id = ?";
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			rs = pst.executeQuery();
+			if (rs.next()){
+				flag = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return flag;
 	}
 	
 	public static void main(String[] args) {
