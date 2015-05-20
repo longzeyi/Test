@@ -10,8 +10,8 @@ public  class ServerParams {
 //	public static final String[] instruments = new String[] {"rb1510","TA509","m1509","RM509","SR509"};//全部监测合约，上下一致
 //	public static final String[] instruments2 = new String[] {"rb1510","TA509","m1509","RM509","SR509"};//全部监测合约，上下一致
 	
-	public static final String[] instruments = new String[] {"rb1510","m1509","ag1506","p1509"};//全部监测合约，上下一致（夜盘）
-	public static final String[] instruments2 = new String[] {"rb1510","m1509","ag1506","p1509"};//全部监测合约，上下一致（夜盘）
+	public static final String[] instruments = new String[] {"rb1510","ag1506"};//全部监测合约，上下一致（夜盘）
+	public static final String[] instruments2 = new String[] {"rb1510","ag1506"};//全部监测合约，上下一致（夜盘）
 	
 //	public static final String FRONT_ADDR_TR = "tcp://mn104.ctp.gtja-futures.com:41205";//国泰君安交易CTP模拟
 //	public static final String BROKER_ID = "1038";

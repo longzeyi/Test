@@ -163,7 +163,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						"  交易日：" + pInvestorPositionDetail.getTradingDay() + 
 						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() + "】");
 				InverstorPositionDetail ipd = new InverstorPositionDetail();
-				ipd.setTradeID(Integer.parseInt(pInvestorPositionDetail.getTradeID()));
+				ipd.setTradeID(Integer.parseInt(pInvestorPositionDetail.getTradeID().trim()));
 				ipd.setInstrumentID(pInvestorPositionDetail.getInstrumentID());
 				if(pInvestorPositionDetail.getDirection() == '0'){
 					ipd.setDirection(false);

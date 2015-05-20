@@ -51,30 +51,13 @@ public class TestMonitor extends Thread{
 			bool =false;
 			System.err.println("查询资金失败");
 		}
-		if(TraderUtil.qryPosition()==0){
+		
+		if(TraderUtil.qryPositionDetail()==0){
 			bool = true;
-			System.out.println("查询持仓成功");
+			System.out.println("查询开仓价成功");
 		} else {
 			bool = false;
-			System.err.println("查询持仓失败");
-		}
-		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		if(Super.INVESTOR_POSITION.size() > 0){
-			Iterator<String> it = Super.INVESTOR_POSITION.keySet().iterator();
-			while(it.hasNext()){
-				if(TraderUtil.qryPositionDetail(it.next())==0){
-					bool = true;
-					System.out.println("查询开仓价成功");
-				} else {
-					bool = false;
-					System.err.println("查询开仓价失败");
-				}
-			}
+			System.err.println("查询开仓价失败");
 		}
 		return bool;
 	}
@@ -108,28 +91,7 @@ public class TestMonitor extends Thread{
 					System.err.println(instruments[i]+"合约的历史数据不完整....");
 				}
 //				System.out.println("instrumentId: "+instruments[i]);
-				if(Super.INVESTOR_POSITION.size() == 0 || Super.INVESTOR_POSITION.get(instruments[i]) == null){
-					//没有持仓该合约
-//					if((lastTick[0] - highestPpriceOfPeriod) > Global.breakPoint && (currMA5 > currMA10)) {
-//							//买多
-//							TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
-//							System.out.println(instruments[i] + "： 买多5手 "+lastTick[0]);
-//							TraderUtil.qryPosition();
-//					} else if ((lowestPriceOfPeriod - lastTick[0]) > Global.breakPoint && (currMA10 > currMA5)) {
-//							//卖空
-//							TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
-//							System.out.println(instruments[i] + "： 卖空5手 "+lastTick[0]);
-//							TraderUtil.qryPosition();
-//					} 
-					long ll = Math.round(Math.random() * 8);
-					if(ll==5){
-						TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
-						TraderUtil.qryPosition();
-					} else if (ll==6){
-						TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
-						TraderUtil.qryPosition();
-					}
-				} else {
+				if(dao.hasPosition(instruments[i])){
 					//有持仓该合约
 					boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
 					boolean closeFlag2 = false ;//前一日MA5小于或大于MA10
@@ -190,6 +152,27 @@ public class TestMonitor extends Thread{
 //								System.out.println(instruments[i] + "： 平昨空仓5手 "+lastTick[0]);
 //							}
 //						}
+					}
+				} else {
+					//没有持仓该合约
+//					if((lastTick[0] - highestPpriceOfPeriod) > Global.breakPoint && (currMA5 > currMA10)) {
+//							//买多
+//							TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
+//							System.out.println(instruments[i] + "： 买多5手 "+lastTick[0]);
+//							TraderUtil.qryPosition();
+//					} else if ((lowestPriceOfPeriod - lastTick[0]) > Global.breakPoint && (currMA10 > currMA5)) {
+//							//卖空
+//							TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
+//							System.out.println(instruments[i] + "： 卖空5手 "+lastTick[0]);
+//							TraderUtil.qryPosition();
+//					} 
+					long ll = Math.round(Math.random() * 8);
+					if(ll==5){
+						TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
+						TraderUtil.qryPosition();
+					} else if (ll==6){
+						TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
+						TraderUtil.qryPosition();
 					}
 				}
 //				System.err.println(instruments[i] + " : " + lastTick[0] + ":" + lastTick[1] + " : " + lastTick[2] + ":" + lastTick[3] + " : " + lastTick[4] + ":" + lastTick[5] + " : " + lastTick[6]);
