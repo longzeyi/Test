@@ -3,7 +3,6 @@ package sz.future.trader.console;
 
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderActionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionCombineDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcOrderField;
@@ -16,7 +15,9 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcTradingAccountFie
 import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 
+import sz.future.dao.FutureDevDao;
 import sz.future.domain.InverstorPosition;
+import sz.future.domain.InverstorPositionDetail;
 import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
 
@@ -29,6 +30,7 @@ import sz.future.trader.comm.Super;
 public class MyTraderSpi extends JCTPTraderSpi {
 
 	JCTPTraderApi traderApi;
+	private FutureDevDao dao = new FutureDevDao();
 //	public static int nRequestID = 0;
 	
 	//国泰君安
@@ -150,28 +152,31 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				Super.INVESTOR_POSITION_OPEN_PRICE.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail.getOpenPrice());
 //				System.out.println("$$No."+nRequestID + "持仓合约开仓价: "+pInvestorPositionDetail.getInstrumentID()+" "+pInvestorPositionDetail.getOpenPrice() + " " + pInvestorPositionDetail.getDirection());
 				System.out.println("$$查询持仓明细通知: " + 
-						" 【结算编号：" + pInvestorPositionDetail.getSettlementID() +
+						" 【结算编号：" + pInvestorPositionDetail.getSettlementID() + 
 						"  合约：" + pInvestorPositionDetail.getInstrumentID()+ 
 						"  买卖方向：" + pInvestorPositionDetail.getDirection() + 
 						"  开仓价：" + pInvestorPositionDetail.getOpenPrice() + 
 						"  数量：" + pInvestorPositionDetail.getVolume() + 
-						"  成交编号：" + pInvestorPositionDetail.getTradeID() +
+						"  交易所保证金：" + pInvestorPositionDetail.getExchMargin() + 
+						"  成交编号：" + pInvestorPositionDetail.getTradeID() + 
 						"  开仓日期：" + pInvestorPositionDetail.getOpenDate() + 
 						"  交易日：" + pInvestorPositionDetail.getTradingDay() + 
-						"  成交类型：" + pInvestorPositionDetail.getTradeType() + 
-						"  交易所代码：" + pInvestorPositionDetail.getExchangeID() + 
-						"  逐日盯市平仓盈亏：" + pInvestorPositionDetail.getCloseProfitByDate() + 
-						"  逐笔对冲平仓盈亏：" + pInvestorPositionDetail.getCloseProfitByTrade() + 
-						"  逐日盯市持仓盈亏：" + pInvestorPositionDetail.getPositionProfitByDate() + 
-						"  逐笔对冲持仓盈亏：" + pInvestorPositionDetail.getPositionProfitByTrade() + 
-						"  投资者保证金：" + pInvestorPositionDetail.getMargin() + 
-						"  交易所保证金：" + pInvestorPositionDetail.getExchMargin() +
-						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() +
-						"  保证金率(按手数)：" + pInvestorPositionDetail.getMarginRateByVolume() + 
-						"  昨结算价：" + pInvestorPositionDetail.getLastSettlementPrice() + 
-						"  结算价：" + pInvestorPositionDetail.getSettlementPrice() + 
-						"  平仓量：" + pInvestorPositionDetail.getCloseVolume() + 
-						"  平仓金额：" + pInvestorPositionDetail.getCloseAmount() + "】");
+						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() + "】");
+				InverstorPositionDetail ipd = new InverstorPositionDetail();
+				ipd.setTradeID(Integer.parseInt(pInvestorPositionDetail.getTradeID()));
+				ipd.setInstrumentID(pInvestorPositionDetail.getInstrumentID());
+				if(pInvestorPositionDetail.getDirection() == '0'){
+					ipd.setDirection(false);
+				}else{
+					ipd.setDirection(true);
+				}
+				ipd.setVolume(pInvestorPositionDetail.getVolume());
+				ipd.setPrice(pInvestorPositionDetail.getOpenPrice());
+				ipd.setOpenDate(pInvestorPositionDetail.getOpenDate());
+				ipd.setTradingDay(pInvestorPositionDetail.getTradingDay());
+				ipd.setExchMargin(pInvestorPositionDetail.getExchMargin());
+				ipd.setMarginRateByMoney(pInvestorPositionDetail.getMarginRateByMoney());
+				dao.savePositionDetail(ipd);
 		} else {
 			System.out.println("$$没有持仓该合约");
 		}
@@ -261,10 +266,8 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				" 【报单引用：" + pTrade.getOrderRef() +
 				"  合约：" + pTrade.getInstrumentID() + 
 				"  买卖方向：" + pTrade.getDirection() +
-				"  开平标志：" + pTrade.getOffsetFlag() +
 				"  成交价格：" + pTrade.getPrice() +
 				"  数量：" + pTrade.getVolume() +
-				"  成交时期：" + pTrade.getTradeDate() +
 				"  报单编号：" + pTrade.getOrderSysID() +"】");
 	}
 	
