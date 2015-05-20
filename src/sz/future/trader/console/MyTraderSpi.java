@@ -166,9 +166,9 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				ipd.setTradeID(Integer.parseInt(pInvestorPositionDetail.getTradeID().trim()));
 				ipd.setInstrumentID(pInvestorPositionDetail.getInstrumentID());
 				if(pInvestorPositionDetail.getDirection() == '0'){
-					ipd.setDirection(false);
-				}else{
 					ipd.setDirection(true);
+				}else{
+					ipd.setDirection(false);
 				}
 				ipd.setVolume(pInvestorPositionDetail.getVolume());
 				ipd.setPrice(pInvestorPositionDetail.getOpenPrice());
@@ -177,6 +177,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				ipd.setExchMargin(pInvestorPositionDetail.getExchMargin());
 				ipd.setMarginRateByMoney(pInvestorPositionDetail.getMarginRateByMoney());
 				dao.savePositionDetail(ipd);
+				Super.INVESTOR_POSITION_DETAIL.add(ipd);
 		} else {
 			System.out.println("$$没有持仓该合约");
 		}

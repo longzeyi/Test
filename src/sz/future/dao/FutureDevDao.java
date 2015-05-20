@@ -283,8 +283,10 @@ public class FutureDevDao {
 			pst.setString(7, ipd.getTradingDay());
 			pst.setDouble(8, ipd.getExchMargin());
 			pst.setDouble(9, ipd.getMarginRateByMoney());
-			if(pst.execute()){
-				System.err.println(ipd.getInstrumentID() + " ：持仓明细保存成功！");
+			if(pst.executeUpdate()>0){
+				System.out.println(ipd.getInstrumentID() + " ：持仓明细保存成功！");
+			} else {
+				System.err.println(ipd.getInstrumentID() + " ：持仓明细保存失败！");
 			}
 			conn.commit();
 		} catch (SQLException e) {

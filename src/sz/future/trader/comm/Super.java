@@ -1,6 +1,8 @@
 package sz.future.trader.comm;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import sz.future.domain.InverstorPosition;
@@ -44,7 +46,7 @@ public class Super {
 	/**
 	 * 持仓明细
 	 */
-	public static Map<String, InverstorPositionDetail> INVESTOR_POSITION_DETAIL = new HashMap<String, InverstorPositionDetail>();
+	public static List<InverstorPositionDetail> INVESTOR_POSITION_DETAIL = new ArrayList<InverstorPositionDetail>();
 	
 	/**
 	 * 持仓开仓价
