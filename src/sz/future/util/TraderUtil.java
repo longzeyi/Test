@@ -100,14 +100,14 @@ public class TraderUtil {
 	 * 查询持仓明细
 	 * @return
 	 */
-	public static int qryPositionDetail(String instrumentId){
+	public static int qryPositionDetail(){
 		CThostFtdcQryInvestorPositionDetailField positionField = new CThostFtdcQryInvestorPositionDetailField();
 		positionField.setBrokerID(ServerParams.BROKER_ID);
-		positionField.setInstrumentID(instrumentId);
+//		positionField.setInstrumentID(instrumentId);
 		positionField.setInvestorID(ServerParams.USER_ID);
 //		Super.INVESTOR_POSITION_DETAIL.clear();//清理历史持仓情况
 		sleepThread();
-		System.out.println("##查询持仓明细## " + instrumentId);
+		System.out.println("##查询全部持仓明细## ");
 		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
 	}
 	
