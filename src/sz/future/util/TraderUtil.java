@@ -10,13 +10,13 @@ import static org.hraink.futures.ctp.thostftdcuserapidatatype.ThostFtdcUserApiDa
 
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderActionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
-import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionCombineDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionDetailField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryInvestorPositionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradeField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcQryTradingAccountField;
 
+import sz.future.dao.FutureDevDao;
 import sz.future.trader.comm.M;
 import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
@@ -25,6 +25,7 @@ import sz.future.trader.console.TestTrader;
 public class TraderUtil {
 //	private static int requestID = 0;
 
+	static FutureDevDao dao = new FutureDevDao();
 	/**
 	 * @param instrumentId 合约代码
 	 * @param directionFlag 买卖方向 买：true  卖：fasle
@@ -108,6 +109,7 @@ public class TraderUtil {
 //		Super.INVESTOR_POSITION_DETAIL.clear();//清理历史持仓情况
 		sleepThread();
 		System.out.println("##查询全部持仓明细## ");
+		dao.delPositionDetail();
 		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
 	}
 	

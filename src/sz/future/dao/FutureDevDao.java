@@ -270,7 +270,7 @@ public class FutureDevDao {
 			InverstorPositionDetail ipd){
 		conn = DBConnectionManager.getConnection();
 		String sql = "INSERT INTO tb_position_detail (trade_id, instrument_id, direction, volume, price, open_date, trading_day, " +
-				"exch_margin, margin_rate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"exch_margin, margin_rate,create_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			pst = (PreparedStatement) conn.prepareStatement(sql);
 			conn.setAutoCommit(false);
@@ -283,11 +283,28 @@ public class FutureDevDao {
 			pst.setString(7, ipd.getTradingDay());
 			pst.setDouble(8, ipd.getExchMargin());
 			pst.setDouble(9, ipd.getMarginRateByMoney());
+			pst.setTimestamp(10, new Timestamp(new Date().getTime()));
 			if(pst.executeUpdate()>0){
 				System.out.println(ipd.getInstrumentID() + " ：持仓明细保存成功！");
 			} else {
 				System.err.println(ipd.getInstrumentID() + " ：持仓明细保存失败！");
 			}
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+	}
+	
+	public void delPositionDetail(){
+		conn = DBConnectionManager.getConnection();
+		String sql = "delete  from tb_position_detail";
+		try {
+			pst = (PreparedStatement) conn.prepareStatement(sql);
+			conn.setAutoCommit(false);
+			pst.executeUpdate();
 			conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();

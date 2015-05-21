@@ -20,6 +20,7 @@ import sz.future.domain.InverstorPosition;
 import sz.future.domain.InverstorPositionDetail;
 import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
+import sz.future.util.TraderUtil;
 
 /**
  * Custom TraderSpi
@@ -148,7 +149,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryInvestorPositionDetail(
 			CThostFtdcInvestorPositionDetailField pInvestorPositionDetail,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-		if(pInvestorPositionDetail != null){
+		if(pInvestorPositionDetail != null && pInvestorPositionDetail.getVolume()>0){
 				Super.INVESTOR_POSITION_OPEN_PRICE.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail.getOpenPrice());
 //				System.out.println("$$No."+nRequestID + "持仓合约开仓价: "+pInvestorPositionDetail.getInstrumentID()+" "+pInvestorPositionDetail.getOpenPrice() + " " + pInvestorPositionDetail.getDirection());
 				System.out.println("$$查询持仓明细通知: " + 
@@ -262,7 +263,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	 */
 	@Override
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
-		Super.INVESTOR_POSITION_OPEN_PRICE.put(pTrade.getInstrumentID(), pTrade.getPrice());
+		TraderUtil.qryPositionDetail();//每次成交后查询持仓明细来更新持仓情况
 		System.out.println("$$成交回报通知：" +
 				" 【报单引用：" + pTrade.getOrderRef() +
 				"  合约：" + pTrade.getInstrumentID() + 
