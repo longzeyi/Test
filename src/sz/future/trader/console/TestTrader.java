@@ -31,9 +31,9 @@ public class TestTrader extends Thread{
 		//注册traderpi
 		traderApi.registerSpi(traderSpi);//注册一个事件处理的实例
 		//订阅公有流
-		traderApi.subscribePublicTopic(THOST_TE_RESUME_TYPE.THOST_TERT_RESTART);
+		traderApi.subscribePublicTopic(THOST_TE_RESUME_TYPE.THOST_TERT_QUICK);
 		//订阅私有流
-		traderApi.subscribePrivateTopic(THOST_TE_RESUME_TYPE.THOST_TERT_RESTART);
+		traderApi.subscribePrivateTopic(THOST_TE_RESUME_TYPE.THOST_TERT_QUICK);
 		//注册前置机地址
 		traderApi.registerFront(ServerParams.FRONT_ADDR_TR);
 		//初始化API与CTP前置服务器连接

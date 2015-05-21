@@ -38,6 +38,7 @@ public class TestMonitor extends Thread{
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				System.err.println("重新开始查询资金和全部持仓明细");
 			}
 		}
 	}
@@ -54,10 +55,10 @@ public class TestMonitor extends Thread{
 		
 		if(TraderUtil.qryPositionDetail()==0){
 			bool = true;
-			System.out.println("查询开仓价成功");
+			System.out.println("查询全部持仓明细成功");
 		} else {
 			bool = false;
-			System.err.println("查询开仓价失败");
+			System.err.println("查询全部持仓明细失败");
 		}
 		return bool;
 	}
@@ -113,6 +114,8 @@ public class TestMonitor extends Thread{
 					}
 				}
 				openPriceAvg = openPriceAvg/volume;//开仓均价
+				System.out.println("SIZE: "+Super.INVESTOR_POSITION_DETAIL.size());
+				System.out.println(instruments[i] + " : " + hasPosition + " : " + direction + " : " + volume + " : " + openPriceAvg);
 				if(hasPosition){
 					//有持仓该合约
 					boolean closeFlag1 = false ;//浮亏超过限定值Global.floatSpace
@@ -172,13 +175,13 @@ public class TestMonitor extends Thread{
 					//没有持仓该合约
 					if((lastTick[0] - highestPpriceOfPeriod) > Global.breakPoint && (currMA5 > currMA10)) {
 							//买多
-							TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
-							System.out.println(instruments[i] + "： 买多5手 "+lastTick[0]);
+							TraderUtil.orderInsert(instruments[i], true, 3, "0", lastTick[5]);
+							System.out.println(instruments[i] + "： 买多3手 "+lastTick[0]);
 					} else if ((lowestPriceOfPeriod - lastTick[0]) > Global.breakPoint && (currMA10 > currMA5)) {
 							//卖空
-							TraderUtil.orderInsert(instruments[i], false, 5, "0", lastTick[6]);
-							System.out.println(instruments[i] + "： 卖空5手 "+lastTick[0]);
-					} 
+							TraderUtil.orderInsert(instruments[i], false, 3, "0", lastTick[6]);
+							System.out.println(instruments[i] + "： 卖空3手 "+lastTick[0]);
+					}
 //					long ll = Math.round(Math.random() * 8);
 //					if(ll==5){
 //						TraderUtil.orderInsert(instruments[i], true, 5, "0", lastTick[5]);
@@ -190,7 +193,7 @@ public class TestMonitor extends Thread{
 			}
 			
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(20000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

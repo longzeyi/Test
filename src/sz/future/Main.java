@@ -18,6 +18,7 @@ public class Main {
 		tt.start();
 		Thread.sleep(3000);
 		TestMonitor tmo = new TestMonitor();//行情监测线程
+		Thread.sleep(3000);
 		tmo.start();
 	}
 
