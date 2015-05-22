@@ -18,6 +18,10 @@ public class InverstorPosition {
 	 */
 	private String tradingDay;
 	/**
+	 * 开仓日
+	 */
+	private String openDate;
+	/**
 	 * 今仓量
 	 */
 	private int tdPosition;
@@ -52,7 +56,7 @@ public class InverstorPosition {
 	/**
 	 * 逐日盯市（平仓盈亏）
 	 */
-	private double CloseProfitByDate;
+	private double closeProfitByDate;
 	/**
 	 * 昨仓持仓成本
 	 */
@@ -70,6 +74,13 @@ public class InverstorPosition {
 	 */
 	private double tdUseMargin;
 	
+	
+	public String getOpenDate() {
+		return openDate;
+	}
+	public void setOpenDate(String openDate) {
+		this.openDate = openDate;
+	}
 	public String getInstrumentID() {
 		return instrumentID;
 	}
@@ -103,7 +114,7 @@ public class InverstorPosition {
 	public int getPosition() {
 		return position;
 	}
-	public void setPostion(int position) {
+	public void setPosition(int position) {
 		this.position = position;
 	}
 	public double getPreSettlementPrice() {
@@ -137,10 +148,10 @@ public class InverstorPosition {
 		this.positionProfit = positionProfit;
 	}
 	public double getCloseProfitByDate() {
-		return CloseProfitByDate;
+		return closeProfitByDate;
 	}
 	public void setCloseProfitByDate(double closeProfitByDate) {
-		CloseProfitByDate = closeProfitByDate;
+		this.closeProfitByDate = closeProfitByDate;
 	}
 	public double getYdPostionCost() {
 		return ydPostionCost;

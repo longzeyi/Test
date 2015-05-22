@@ -106,10 +106,12 @@ public class TraderUtil {
 		positionField.setBrokerID(ServerParams.BROKER_ID);
 //		positionField.setInstrumentID(instrumentId);
 		positionField.setInvestorID(ServerParams.USER_ID);
-		dao.delPositionDetail();//先清空数据库里持仓明细，更新为最新的数据
+//		dao.delPositionDetail();//先清空数据库里持仓明细，更新为最新的数据
 		sleepThread();
 		System.out.println("##查询全部持仓明细## ");
-		return TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
+		int i = TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
+		sleepThread();
+		return i;
 	}
 	
 	/**
@@ -173,7 +175,7 @@ public class TraderUtil {
 	
 	private static void sleepThread(){
 		try {
-			Thread.sleep(1200);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
