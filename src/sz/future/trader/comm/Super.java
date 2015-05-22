@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionDetailField;
+
 import sz.future.domain.InverstorPosition;
 import sz.future.domain.InverstorPositionDetail;
 
@@ -46,12 +48,7 @@ public class Super {
 	/**
 	 * 持仓明细
 	 */
-	public static List<InverstorPositionDetail> INVESTOR_POSITION_DETAIL = new ArrayList<InverstorPositionDetail>();
-	
-	/**
-	 * 持仓开仓价
-	 */
-	public static Map<String, Double> INVESTOR_POSITION_OPEN_PRICE = new HashMap<String, Double>();
+	public static List<CThostFtdcInvestorPositionDetailField> INVESTOR_POSITION_DETAIL = new ArrayList<CThostFtdcInvestorPositionDetailField>();
 	
 	/**
 	 * 历史收盘价（日期降序排列）

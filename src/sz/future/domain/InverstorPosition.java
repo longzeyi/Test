@@ -5,42 +5,82 @@ package sz.future.domain;
  *
  */
 public class InverstorPosition {
-	//合约代码
+	/**
+	 * 合约代码
+	 */
 	private String instrumentID;
-	//交易日
+	/**
+	 * 持仓多空方向
+	 */
+	private char direction;
+	/**
+	 * 交易日
+	 */
 	private String tradingDay;
-	//持仓多空方向
-	private char posiDirectionType;
-	//持仓日期类型：今仓，昨仓
-	private char positionDateType;
-	//今日持仓量
-	private int position;
-	//上日持仓量
+	/**
+	 * 今仓量
+	 */
+	private int tdPosition;
+	/**
+	 * 昨仓量
+	 */
 	private int ydPosition;
-	//占用的保证金
+	/**
+	 * 总仓量
+	 */
+	private int position;
+	/**
+	 * 昨结算价
+	 */
+	private double preSettlementPrice;
+	/**
+	 * 投机套保标志
+	 */
+	private char hedgeFlag;
+	/**
+	 * 开仓均价
+	 */
+	private double openPrice;
+	/**
+	 * 投资者保证金
+	 */
 	private double useMargin;
-	//持仓盈亏
+	/**
+	 * 持仓盈亏
+	 */
 	private double positionProfit;
-	//保证金率
-	private double marginRateByMoney;
-	//逐笔对冲平仓盈亏
-	private double CloseProfitByTrade;
-	//逐日盯市平仓盈亏
+	/**
+	 * 逐日盯市（平仓盈亏）
+	 */
 	private double CloseProfitByDate;
+	/**
+	 * 昨仓持仓成本
+	 */
+	private double ydPostionCost;
+	/**
+	 * 昨仓占用保证金
+	 */
+	private double ydUseMargin;
+	/**
+	 * 今仓持仓成本
+	 */
+	private double tdPostionCost;
+	/**
+	 * 今仓占用保证金
+	 */
+	private double tdUseMargin;
 	
-	private int settlementID;
-	
-	public int getSettlementID() {
-		return settlementID;
-	}
-	public void setSettlementID(int settlementID) {
-		this.settlementID = settlementID;
-	}
 	public String getInstrumentID() {
 		return instrumentID;
 	}
 	public void setInstrumentID(String instrumentID) {
 		this.instrumentID = instrumentID;
+	}
+	public char getDirection() {
+		return direction;
+	}
+	public void setDirection(char direction) {
+		this.direction = direction;
 	}
 	public String getTradingDay() {
 		return tradingDay;
@@ -48,29 +88,41 @@ public class InverstorPosition {
 	public void setTradingDay(String tradingDay) {
 		this.tradingDay = tradingDay;
 	}
-	public char getPosiDirectionType() {
-		return posiDirectionType;
+	public int getTdPosition() {
+		return tdPosition;
 	}
-	public void setPosiDirectionType(char posiDirectionType) {
-		this.posiDirectionType = posiDirectionType;
+	public void setTdPosition(int tdPosition) {
+		this.tdPosition = tdPosition;
 	}
-	public char getPositionDateType() {
-		return positionDateType;
+	public int getYdPosition() {
+		return ydPosition;
 	}
-	public void setPositionDateType(char positionDateType) {
-		this.positionDateType = positionDateType;
+	public void setYdPosition(int ydPosition) {
+		this.ydPosition = ydPosition;
 	}
 	public int getPosition() {
 		return position;
 	}
-	public void setPosition(int position) {
+	public void setPostion(int position) {
 		this.position = position;
 	}
-	public int getYdposition() {
-		return ydPosition;
+	public double getPreSettlementPrice() {
+		return preSettlementPrice;
 	}
-	public void setYdposition(int ydPosition) {
-		this.ydPosition = ydPosition;
+	public void setPreSettlementPrice(double preSettlementPrice) {
+		this.preSettlementPrice = preSettlementPrice;
+	}
+	public char getHedgeFlag() {
+		return hedgeFlag;
+	}
+	public void setHedgeFlag(char hedgeFlag) {
+		this.hedgeFlag = hedgeFlag;
+	}
+	public double getOpenPrice() {
+		return openPrice;
+	}
+	public void setOpenPrice(double openPrice) {
+		this.openPrice = openPrice;
 	}
 	public double getUseMargin() {
 		return useMargin;
@@ -84,29 +136,34 @@ public class InverstorPosition {
 	public void setPositionProfit(double positionProfit) {
 		this.positionProfit = positionProfit;
 	}
-	public double getMarginRateByMoney() {
-		return marginRateByMoney;
-	}
-	public void setMarginRateByMoney(double marginRateByMoney) {
-		this.marginRateByMoney = marginRateByMoney;
-	}
-	public double getCloseProfitByTrade() {
-		return CloseProfitByTrade;
-	}
-	public void setCloseProfitByTrade(double closeProfitByTrade) {
-		CloseProfitByTrade = closeProfitByTrade;
-	}
 	public double getCloseProfitByDate() {
 		return CloseProfitByDate;
 	}
 	public void setCloseProfitByDate(double closeProfitByDate) {
 		CloseProfitByDate = closeProfitByDate;
 	}
-	public int getYdPosition() {
-		return ydPosition;
+	public double getYdPostionCost() {
+		return ydPostionCost;
 	}
-	public void setYdPosition(int ydPosition) {
-		this.ydPosition = ydPosition;
+	public void setYdPostionCost(double ydPostionCost) {
+		this.ydPostionCost = ydPostionCost;
 	}
-	
+	public double getYdUseMargin() {
+		return ydUseMargin;
+	}
+	public void setYdUseMargin(double ydUseMargin) {
+		this.ydUseMargin = ydUseMargin;
+	}
+	public double getTdPostionCost() {
+		return tdPostionCost;
+	}
+	public void setTdPostionCost(double tdPostionCost) {
+		this.tdPostionCost = tdPostionCost;
+	}
+	public double getTdUseMargin() {
+		return tdUseMargin;
+	}
+	public void setTdUseMargin(double tdUseMargin) {
+		this.tdUseMargin = tdUseMargin;
+	}
 }

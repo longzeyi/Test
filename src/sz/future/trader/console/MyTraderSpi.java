@@ -1,6 +1,8 @@
 package sz.future.trader.console;
 
 
+import java.util.Iterator;
+
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderActionField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInputOrderField;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionDetailField;
@@ -149,9 +151,27 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryInvestorPositionDetail(
 			CThostFtdcInvestorPositionDetailField pInvestorPositionDetail,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+		CThostFtdcInvestorPositionDetailField ipd = pInvestorPositionDetail;
+		if (ipd != null && ipd.getVolume()>0){
+			Super.INVESTOR_POSITION_DETAIL.add(ipd);
+		}
+		if (bIsLast){
+			//将明细合成持仓
+			Super.INVESTOR_POSITION.clear();//将之前的持仓清空，准备更新新的持仓数据
+			for (CThostFtdcInvestorPositionDetailField detail : Super.INVESTOR_POSITION_DETAIL) {
+				String key = detail.getInstrumentID() + "_" + detail.getDirection();
+				InverstorPosition ip = new InverstorPosition(); 
+				ip.setInstrumentID(detail.getInstrumentID());
+				ip.setDirection(detail.getDirection());
+				ip.setPreSettlementPrice(detail.getLastSettlementPrice());
+				ip.setPostion(detail.getVolume());
+				
+				
+				
+				Super.INVESTOR_POSITION.put(key, ip);
+			}
+		}
 		if(pInvestorPositionDetail != null && pInvestorPositionDetail.getVolume()>0){
-				Super.INVESTOR_POSITION_OPEN_PRICE.put(pInvestorPositionDetail.getInstrumentID(), pInvestorPositionDetail.getOpenPrice());
-//				System.out.println("$$No."+nRequestID + "持仓合约开仓价: "+pInvestorPositionDetail.getInstrumentID()+" "+pInvestorPositionDetail.getOpenPrice() + " " + pInvestorPositionDetail.getDirection());
 				System.out.println("$$查询持仓明细通知: " + 
 						" 【结算编号：" + pInvestorPositionDetail.getSettlementID() + 
 						"  合约：" + pInvestorPositionDetail.getInstrumentID()+ 
@@ -179,8 +199,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				ipd.setMarginRateByMoney(pInvestorPositionDetail.getMarginRateByMoney());
 				dao.savePositionDetail(ipd);
 				Super.INVESTOR_POSITION_DETAIL.add(ipd);
-		} else {
-			System.out.println("$$没有持仓该合约");
 		}
 	}
 	
