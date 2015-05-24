@@ -1,7 +1,9 @@
 package sz.future.trader.console;
 
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -19,8 +21,8 @@ import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcTradingAccountFie
 import org.hraink.futures.jctp.trader.JCTPTraderApi;
 import org.hraink.futures.jctp.trader.JCTPTraderSpi;
 
-import sz.future.dao.FutureDevDao;
 import sz.future.domain.InverstorPosition;
+import sz.future.domain.InverstorPositionDetail;
 import sz.future.trader.comm.ServerParams;
 import sz.future.trader.comm.Super;
 import sz.future.util.TraderUtil;
@@ -34,7 +36,10 @@ import sz.future.util.TraderUtil;
 public class MyTraderSpi extends JCTPTraderSpi {
 
 	JCTPTraderApi traderApi;
-	private FutureDevDao dao = new FutureDevDao();
+	/**
+	 * 当前持仓明细
+	 */
+	private List<InverstorPositionDetail> investorPositionDetail = new ArrayList<InverstorPositionDetail>();
 //	public static int nRequestID = 0;
 	
 	//国泰君安
@@ -158,20 +163,39 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				"  买卖方向：" + pInvestorPositionDetail.getDirection() + 
 				"  开仓价：" + pInvestorPositionDetail.getOpenPrice() + 
 				"  数量：" + pInvestorPositionDetail.getVolume() + 
-				"  交易所保证金：" + pInvestorPositionDetail.getExchMargin() + 
+				"  保证金：" + pInvestorPositionDetail.getMargin() + 
 				"  成交编号：" + pInvestorPositionDetail.getTradeID() + 
+				"  昨结算：" + pInvestorPositionDetail.getLastSettlementPrice() + 
+				"  平仓盈亏：" + pInvestorPositionDetail.getCloseProfitByDate() + 
+				"  持仓盈亏：" + pInvestorPositionDetail.getPositionProfitByDate() + 
 				"  开仓日期：" + pInvestorPositionDetail.getOpenDate() + 
 				"  交易日：" + pInvestorPositionDetail.getTradingDay() + 
 				"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() + "】");
-		
-		CThostFtdcInvestorPositionDetailField ipd = pInvestorPositionDetail;
+		InverstorPositionDetail ipd = new InverstorPositionDetail();
+		ipd.setInstrumentID(pInvestorPositionDetail.getInstrumentID());
+		ipd.setDirection(pInvestorPositionDetail.getDirection());
+		ipd.setOpenDate(pInvestorPositionDetail.getOpenDate());
+		ipd.setTradeID(Integer.parseInt(pInvestorPositionDetail.getTradeID().trim()));
+		ipd.setVolume(pInvestorPositionDetail.getVolume());
+		ipd.setOpenPrice(pInvestorPositionDetail.getOpenPrice());
+		ipd.setTradingDay(pInvestorPositionDetail.getTradingDay());
+		ipd.setSettlementID(pInvestorPositionDetail.getSettlementID());
+		ipd.setMargin(pInvestorPositionDetail.getMargin());
+		ipd.setExchMargin(pInvestorPositionDetail.getExchMargin());
+		ipd.setMarginRateByMoney(pInvestorPositionDetail.getMarginRateByMoney());
+		ipd.setLastSettlementPrice(pInvestorPositionDetail.getLastSettlementPrice());
+		ipd.setSettlementPrice(pInvestorPositionDetail.getSettlementPrice());
+		ipd.setHedgeFlag(pInvestorPositionDetail.getHedgeFlag());
+		ipd.setCloseProfitByDate(pInvestorPositionDetail.getCloseProfitByDate());
+		ipd.setPositionProfitByDate(pInvestorPositionDetail.getPositionProfitByDate());
 		if (ipd != null && ipd.getVolume()>0){
-			Super.INVESTOR_POSITION_DETAIL.add(ipd);
+			investorPositionDetail.add(ipd);
 			if (bIsLast){
 				//将明细合成持仓
 				Super.INVESTOR_POSITION.clear();//将之前的持仓清空，准备更新新的持仓数据
-				for (CThostFtdcInvestorPositionDetailField detail : Super.INVESTOR_POSITION_DETAIL) {
+				for (InverstorPositionDetail detail : investorPositionDetail) {
 					String key = detail.getInstrumentID() + "_" + detail.getDirection();
+					System.out.println("key : "+key);
 					InverstorPosition ip = Super.INVESTOR_POSITION.get(key);
 					if(ip == null){
 						ip = new InverstorPosition();
@@ -218,34 +242,34 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						Super.INVESTOR_POSITION.put(key, tempIp);
 					}
 				}
-				
+				investorPositionDetail.clear();
 				Set<Entry<String, InverstorPosition>> set = Super.INVESTOR_POSITION.entrySet();
 				Iterator<Entry<String, InverstorPosition>> it =set.iterator();
-				System.out.println("合约代码\t"
-						+"方向\t"
-						+"开仓日\t"
-						+"总仓\t"
-						+"今仓\t"
-						+"昨仓\t"
-						+"持仓成本\t"
-						+"开仓均价\t"
-						+"昨结算\t"
-						+"持仓盈亏\t"
-						+"平仓盈亏\t"
+				System.out.println("合约代码\t\t"
+						+"方向\t\t"
+						+"开仓日\t\t"
+						+"总仓\t\t"
+						+"今仓\t\t"
+						+"昨仓\t\t"
+						+"持仓成本\t\t"
+//						+"开仓均价\t\t"
+						+"昨结算\t\t"
+						+"持仓盈亏\t\t"
+						+"平仓盈亏\t\t"
 						+"保证金");
 				while(it.hasNext()){
 					Entry<String, InverstorPosition> en = it.next();
-					System.out.println(en.getValue().getInstrumentID()+"\t"
-					+en.getValue().getDirection()+"\t"
+					System.out.println(en.getValue().getInstrumentID()+"\t\t"
+					+en.getValue().getDirection()+"\t\t"
 					+en.getValue().getOpenDate()+"\t"
-					+en.getValue().getPosition()+"\t"
-					+en.getValue().getTdPosition()+"\t"
-					+en.getValue().getYdPosition()+"\t"
-					+en.getValue().getYdPostionCost()+en.getValue().getTdPostionCost()+"\t"
-					+(en.getValue().getYdPostionCost()/en.getValue().getYdPosition() + en.getValue().getTdPostionCost()/en.getValue().getTdPosition())/2+"\t"
-					+en.getValue().getPreSettlementPrice()+"\t"
-					+en.getValue().getPositionProfit()+"\t"
-					+en.getValue().getCloseProfitByDate()+"\t"
+					+en.getValue().getPosition()+"\t\t"
+					+en.getValue().getTdPosition()+"\t\t"
+					+en.getValue().getYdPosition()+"\t\t"
+					+(en.getValue().getYdPostionCost()+en.getValue().getTdPostionCost())+"\t\t"
+//					+((en.getValue().getYdPostionCost()/en.getValue().getYdPosition() + en.getValue().getTdPostionCost()/en.getValue().getTdPosition())/2)+"\t\t"
+					+en.getValue().getPreSettlementPrice()+"\t\t"
+					+en.getValue().getPositionProfit()+"\t\t"
+					+en.getValue().getCloseProfitByDate()+"\t\t"
 					+en.getValue().getUseMargin()+en.getValue().getTdUseMargin());
 				}
 			}

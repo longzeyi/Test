@@ -8,7 +8,6 @@ import java.util.Map;
 import org.hraink.futures.ctp.thostftdcuserapistruct.CThostFtdcInvestorPositionDetailField;
 
 import sz.future.domain.InverstorPosition;
-import sz.future.domain.InverstorPositionDetail;
 
 /**
  * 全局变量类
@@ -48,7 +47,7 @@ public class Super {
 	/**
 	 * 持仓明细
 	 */
-	public static List<CThostFtdcInvestorPositionDetailField> INVESTOR_POSITION_DETAIL = new ArrayList<CThostFtdcInvestorPositionDetailField>();
+	
 	
 	/**
 	 * 历史收盘价（日期降序排列）

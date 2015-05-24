@@ -2,14 +2,14 @@ package sz.future.domain;
 
 
 /**
- * 投资者持仓详细情况
+ * 投资者持仓明细
  *
  */
 public class InverstorPositionDetail {
 	///合约代码
 	private String	instrumentID;
 		///买卖
-	private boolean	direction;
+	private char direction;
 		///开仓日期
 	private String openDate;
 		///成交编号
@@ -17,7 +17,7 @@ public class InverstorPositionDetail {
 		///数量
 	private int volume;
 		///开仓价
-	private double	price;
+	private double	openPrice;
 		///交易日
 	private String tradingDay;
 		///结算编号
@@ -32,6 +32,12 @@ public class InverstorPositionDetail {
 	private double	lastSettlementPrice;
 	///结算价
 	private double	settlementPrice;
+	
+	private char hedgeFlag;
+	
+	private double closeProfitByDate;
+	
+	private double positionProfitByDate;
 	/**
 	 * @return the instrumentID
 	 */
@@ -47,13 +53,13 @@ public class InverstorPositionDetail {
 	/**
 	 * @return the direction
 	 */
-	public boolean isDirection() {
+	public char getDirection() {
 		return direction;
 	}
 	/**
 	 * @param direction the direction to set
 	 */
-	public void setDirection(boolean direction) {
+	public void setDirection(char direction) {
 		this.direction = direction;
 	}
 	/**
@@ -93,16 +99,16 @@ public class InverstorPositionDetail {
 		this.volume = volume;
 	}
 	/**
-	 * @return the price
+	 * @return the openPrice
 	 */
-	public double getPrice() {
-		return price;
+	public double getOpenPrice() {
+		return openPrice;
 	}
 	/**
-	 * @param price the price to set
+	 * @param openPrice the openPrice to set
 	 */
-	public void setPrice(double price) {
-		this.price = price;
+	public void setOpenPrice(double openPrice) {
+		this.openPrice = openPrice;
 	}
 	/**
 	 * @return the tradingDay
@@ -187,6 +193,42 @@ public class InverstorPositionDetail {
 	 */
 	public void setSettlementPrice(double settlementPrice) {
 		this.settlementPrice = settlementPrice;
+	}
+	/**
+	 * @return the hedgeFlag
+	 */
+	public char getHedgeFlag() {
+		return hedgeFlag;
+	}
+	/**
+	 * @param hedgeFlag the hedgeFlag to set
+	 */
+	public void setHedgeFlag(char hedgeFlag) {
+		this.hedgeFlag = hedgeFlag;
+	}
+	/**
+	 * @return the closeProfitByDate
+	 */
+	public double getCloseProfitByDate() {
+		return closeProfitByDate;
+	}
+	/**
+	 * @param closeProfitByDate the closeProfitByDate to set
+	 */
+	public void setCloseProfitByDate(double closeProfitByDate) {
+		this.closeProfitByDate = closeProfitByDate;
+	}
+	/**
+	 * @return the positionProfitByDate
+	 */
+	public double getPositionProfitByDate() {
+		return positionProfitByDate;
+	}
+	/**
+	 * @param positionProfitByDate the positionProfitByDate to set
+	 */
+	public void setPositionProfitByDate(double positionProfitByDate) {
+		this.positionProfitByDate = positionProfitByDate;
 	}
 	
 }
