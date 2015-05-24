@@ -152,121 +152,104 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryInvestorPositionDetail(
 			CThostFtdcInvestorPositionDetailField pInvestorPositionDetail,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
+		System.out.println("$$查询持仓明细通知: " + 
+				" 【结算编号：" + pInvestorPositionDetail.getSettlementID() + 
+				"  合约：" + pInvestorPositionDetail.getInstrumentID()+ 
+				"  买卖方向：" + pInvestorPositionDetail.getDirection() + 
+				"  开仓价：" + pInvestorPositionDetail.getOpenPrice() + 
+				"  数量：" + pInvestorPositionDetail.getVolume() + 
+				"  交易所保证金：" + pInvestorPositionDetail.getExchMargin() + 
+				"  成交编号：" + pInvestorPositionDetail.getTradeID() + 
+				"  开仓日期：" + pInvestorPositionDetail.getOpenDate() + 
+				"  交易日：" + pInvestorPositionDetail.getTradingDay() + 
+				"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() + "】");
+		
 		CThostFtdcInvestorPositionDetailField ipd = pInvestorPositionDetail;
 		if (ipd != null && ipd.getVolume()>0){
 			Super.INVESTOR_POSITION_DETAIL.add(ipd);
-		}
-		if (bIsLast){
-			//将明细合成持仓
-			Super.INVESTOR_POSITION.clear();//将之前的持仓清空，准备更新新的持仓数据
-			for (CThostFtdcInvestorPositionDetailField detail : Super.INVESTOR_POSITION_DETAIL) {
-				String key = detail.getInstrumentID() + "_" + detail.getDirection();
-				InverstorPosition ip = Super.INVESTOR_POSITION.get(key);
-				if(ip == null){
-					ip = new InverstorPosition();
-					ip.setInstrumentID(detail.getInstrumentID());
-					ip.setDirection(detail.getDirection());
-					ip.setPreSettlementPrice(detail.getLastSettlementPrice());
-					ip.setPosition(detail.getVolume());
-					ip.setTradingDay(detail.getTradingDay());
-					ip.setOpenDate(detail.getOpenDate());
-					if(detail.getTradingDay().equals(detail.getOpenDate())){//今仓
-						ip.setTdPosition(detail.getVolume());
-						ip.setTdPostionCost(detail.getVolume() * detail.getOpenPrice());//持仓成本
-						ip.setUseMargin(detail.getMargin());
-					} else {//昨仓
-						ip.setYdPosition(detail.getVolume());
-						ip.setYdPostionCost(detail.getVolume() * detail.getLastSettlementPrice());//持仓成本
-						ip.setYdUseMargin(detail.getMargin());
-					}
-					ip.setHedgeFlag(detail.getHedgeFlag());
-					ip.setCloseProfitByDate(detail.getCloseProfitByDate());//平仓盈亏
-					ip.setPositionProfit(detail.getPositionProfitByDate());//持仓盈亏
-					Super.INVESTOR_POSITION.put(key, ip);
-				} else {
-					InverstorPosition tempIp = new InverstorPosition();
-					tempIp.setInstrumentID(ip.getInstrumentID());
-					tempIp.setDirection(ip.getDirection());
-					tempIp.setPreSettlementPrice(ip.getPreSettlementPrice());
-					tempIp.setPosition(detail.getVolume() + ip.getPosition());
-					tempIp.setTradingDay(detail.getTradingDay());
-					tempIp.setOpenDate(detail.getOpenDate());
-					if(detail.getTradingDay().equals(detail.getOpenDate())){
-						tempIp.setTdPosition(ip.getPosition()+detail.getVolume());
-						tempIp.setTdPostionCost(ip.getTdPostionCost() + detail.getVolume() * detail.getOpenPrice());
-						tempIp.setUseMargin(detail.getMargin());
+			if (bIsLast){
+				//将明细合成持仓
+				Super.INVESTOR_POSITION.clear();//将之前的持仓清空，准备更新新的持仓数据
+				for (CThostFtdcInvestorPositionDetailField detail : Super.INVESTOR_POSITION_DETAIL) {
+					String key = detail.getInstrumentID() + "_" + detail.getDirection();
+					InverstorPosition ip = Super.INVESTOR_POSITION.get(key);
+					if(ip == null){
+						ip = new InverstorPosition();
+						ip.setInstrumentID(detail.getInstrumentID());
+						ip.setDirection(detail.getDirection());
+						ip.setPreSettlementPrice(detail.getLastSettlementPrice());
+						ip.setPosition(detail.getVolume());
+						ip.setTradingDay(detail.getTradingDay());
+						ip.setOpenDate(detail.getOpenDate());
+						if(detail.getTradingDay().equals(detail.getOpenDate())){//今仓
+							ip.setTdPosition(detail.getVolume());
+							ip.setTdPostionCost(detail.getVolume() * detail.getOpenPrice());//持仓成本
+							ip.setUseMargin(detail.getMargin());
+						} else {//昨仓
+							ip.setYdPosition(detail.getVolume());
+							ip.setYdPostionCost(detail.getVolume() * detail.getLastSettlementPrice());//持仓成本
+							ip.setYdUseMargin(detail.getMargin());
+						}
+						ip.setHedgeFlag(detail.getHedgeFlag());
+						ip.setCloseProfitByDate(detail.getCloseProfitByDate());//平仓盈亏
+						ip.setPositionProfit(detail.getPositionProfitByDate());//持仓盈亏
+						Super.INVESTOR_POSITION.put(key, ip);
 					} else {
-						tempIp.setYdPosition(ip.getYdPosition() + detail.getVolume());
-						tempIp.setYdPostionCost(ip.getYdPostionCost() + detail.getVolume() * detail.getLastSettlementPrice());
-						tempIp.setYdUseMargin(detail.getMargin());
+						InverstorPosition tempIp = new InverstorPosition();
+						tempIp.setInstrumentID(ip.getInstrumentID());
+						tempIp.setDirection(ip.getDirection());
+						tempIp.setPreSettlementPrice(ip.getPreSettlementPrice());
+						tempIp.setPosition(detail.getVolume() + ip.getPosition());
+						tempIp.setTradingDay(detail.getTradingDay());
+						tempIp.setOpenDate(detail.getOpenDate());
+						if(detail.getTradingDay().equals(detail.getOpenDate())){
+							tempIp.setTdPosition(ip.getPosition()+detail.getVolume());
+							tempIp.setTdPostionCost(ip.getTdPostionCost() + detail.getVolume() * detail.getOpenPrice());
+							tempIp.setUseMargin(detail.getMargin());
+						} else {
+							tempIp.setYdPosition(ip.getYdPosition() + detail.getVolume());
+							tempIp.setYdPostionCost(ip.getYdPostionCost() + detail.getVolume() * detail.getLastSettlementPrice());
+							tempIp.setYdUseMargin(detail.getMargin());
+						}
+						tempIp.setHedgeFlag(detail.getHedgeFlag());
+						tempIp.setCloseProfitByDate(detail.getCloseProfitByDate());
+						tempIp.setPositionProfit(detail.getPositionProfitByDate());
+						Super.INVESTOR_POSITION.remove(key);
+						Super.INVESTOR_POSITION.put(key, tempIp);
 					}
-					tempIp.setHedgeFlag(detail.getHedgeFlag());
-					tempIp.setCloseProfitByDate(detail.getCloseProfitByDate());
-					tempIp.setPositionProfit(detail.getPositionProfitByDate());
-					Super.INVESTOR_POSITION.remove(key);
-					Super.INVESTOR_POSITION.put(key, tempIp);
+				}
+				
+				Set<Entry<String, InverstorPosition>> set = Super.INVESTOR_POSITION.entrySet();
+				Iterator<Entry<String, InverstorPosition>> it =set.iterator();
+				System.out.println("合约代码\t"
+						+"方向\t"
+						+"开仓日\t"
+						+"总仓\t"
+						+"今仓\t"
+						+"昨仓\t"
+						+"持仓成本\t"
+						+"开仓均价\t"
+						+"昨结算\t"
+						+"持仓盈亏\t"
+						+"平仓盈亏\t"
+						+"保证金");
+				while(it.hasNext()){
+					Entry<String, InverstorPosition> en = it.next();
+					System.out.println(en.getValue().getInstrumentID()+"\t"
+					+en.getValue().getDirection()+"\t"
+					+en.getValue().getOpenDate()+"\t"
+					+en.getValue().getPosition()+"\t"
+					+en.getValue().getTdPosition()+"\t"
+					+en.getValue().getYdPosition()+"\t"
+					+en.getValue().getYdPostionCost()+en.getValue().getTdPostionCost()+"\t"
+					+(en.getValue().getYdPostionCost()/en.getValue().getYdPosition() + en.getValue().getTdPostionCost()/en.getValue().getTdPosition())/2+"\t"
+					+en.getValue().getPreSettlementPrice()+"\t"
+					+en.getValue().getPositionProfit()+"\t"
+					+en.getValue().getCloseProfitByDate()+"\t"
+					+en.getValue().getUseMargin()+en.getValue().getTdUseMargin());
 				}
 			}
-			
-			Set<Entry<String, InverstorPosition>> set = Super.INVESTOR_POSITION.entrySet();
-			Iterator<Entry<String, InverstorPosition>> it =set.iterator();
-			System.out.println("合约代码\t"
-					+"方向\t"
-					+"开仓日\t"
-					+"总仓\t"
-					+"今仓\t"
-					+"昨仓\t"
-					+"持仓成本\t"
-					+"开仓均价\t"
-					+"昨结算\t"
-					+"持仓盈亏\t"
-					+"平仓盈亏\t"
-					+"保证金");
-			while(it.hasNext()){
-				Entry<String, InverstorPosition> en = it.next();
-				System.out.println(en.getValue().getInstrumentID()+"\t"
-				+en.getValue().getDirection()+"\t"
-				+en.getValue().getOpenDate()+"\t"
-				+en.getValue().getPosition()+"\t"
-				+en.getValue().getTdPosition()+"\t"
-				+en.getValue().getYdPosition()+"\t"
-				+en.getValue().getYdPostionCost()+en.getValue().getTdPostionCost()+"\t"
-				+(en.getValue().getYdPostionCost()/en.getValue().getYdPosition() + en.getValue().getTdPostionCost()/en.getValue().getTdPosition())/2+"\t"
-				+en.getValue().getPreSettlementPrice()+"\t"
-				+en.getValue().getPositionProfit()+"\t"
-				+en.getValue().getCloseProfitByDate()+"\t"
-				+en.getValue().getUseMargin()+en.getValue().getTdUseMargin());
-			}
 		}
-//		if(pInvestorPositionDetail != null && pInvestorPositionDetail.getVolume()>0){
-//				System.out.println("$$查询持仓明细通知: " + 
-//						" 【结算编号：" + pInvestorPositionDetail.getSettlementID() + 
-//						"  合约：" + pInvestorPositionDetail.getInstrumentID()+ 
-//						"  买卖方向：" + pInvestorPositionDetail.getDirection() + 
-//						"  开仓价：" + pInvestorPositionDetail.getOpenPrice() + 
-//						"  数量：" + pInvestorPositionDetail.getVolume() + 
-//						"  交易所保证金：" + pInvestorPositionDetail.getExchMargin() + 
-//						"  成交编号：" + pInvestorPositionDetail.getTradeID() + 
-//						"  开仓日期：" + pInvestorPositionDetail.getOpenDate() + 
-//						"  交易日：" + pInvestorPositionDetail.getTradingDay() + 
-//						"  保证金率：" + pInvestorPositionDetail.getMarginRateByMoney() + "】");
-//				InverstorPositionDetail ipd = new InverstorPositionDetail();
-//				ipd.setTradeID(Integer.parseInt(pInvestorPositionDetail.getTradeID().trim()));
-//				ipd.setInstrumentID(pInvestorPositionDetail.getInstrumentID());
-//				if(pInvestorPositionDetail.getDirection() == '0'){
-//					ipd.setDirection(true);
-//				}else{
-//					ipd.setDirection(false);
-//				}
-//				ipd.setVolume(pInvestorPositionDetail.getVolume());
-//				ipd.setPrice(pInvestorPositionDetail.getOpenPrice());
-//				ipd.setOpenDate(pInvestorPositionDetail.getOpenDate());
-//				ipd.setTradingDay(pInvestorPositionDetail.getTradingDay());
-//				ipd.setExchMargin(pInvestorPositionDetail.getExchMargin());
-//				ipd.setMarginRateByMoney(pInvestorPositionDetail.getMarginRateByMoney());
-//				dao.savePositionDetail(ipd);
-//				Super.INVESTOR_POSITION_DETAIL.add(ipd);
-//		}
 	}
 	
 	/* 

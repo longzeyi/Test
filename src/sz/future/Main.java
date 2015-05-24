@@ -11,6 +11,7 @@ public class Main {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
+		
 		TestMd tm = new TestMd();//行情采集线程
 		tm.start();
 		Thread.sleep(3000);

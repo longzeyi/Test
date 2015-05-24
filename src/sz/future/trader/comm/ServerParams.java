@@ -25,7 +25,7 @@ public  class ServerParams {
 	
 	public static final String BROKER_ID = "0295";
 	public static final String USER_ID = "00134";
-	public static final String PWD = "2803855";
+	public static final String PWD = "123456";
 	public static final String FRONT_ADDR_TR = "tcp://180.168.146.181:10200";//美尔雅交易模拟
 	
 //	public static final String FRONT_ADDR_MD = "tcp://mn101.ctp.gtja-futures.com:41213";//国泰君安行情模拟
