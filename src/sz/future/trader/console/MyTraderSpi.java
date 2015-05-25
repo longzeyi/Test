@@ -195,7 +195,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				Super.INVESTOR_POSITION.clear();//将之前的持仓清空，准备更新新的持仓数据
 				for (InverstorPositionDetail detail : investorPositionDetail) {
 					String key = detail.getInstrumentID() + "_" + detail.getDirection();
-					System.out.println("key : "+key);
 					InverstorPosition ip = Super.INVESTOR_POSITION.get(key);
 					if(ip == null){
 						ip = new InverstorPosition();
@@ -217,6 +216,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						ip.setHedgeFlag(detail.getHedgeFlag());
 						ip.setCloseProfitByDate(detail.getCloseProfitByDate());//平仓盈亏
 						ip.setPositionProfit(detail.getPositionProfitByDate());//持仓盈亏
+						System.out.println("ip: "+ip.getInstrumentID() + " : " + ip.getTdPosition());
 						Super.INVESTOR_POSITION.put(key, ip);
 					} else {
 						InverstorPosition tempIp = new InverstorPosition();
@@ -226,19 +226,26 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						tempIp.setPosition(detail.getVolume() + ip.getPosition());
 						tempIp.setTradingDay(detail.getTradingDay());
 						tempIp.setOpenDate(detail.getOpenDate());
+						
 						if(detail.getTradingDay().equals(detail.getOpenDate())){
-							tempIp.setTdPosition(ip.getPosition()+detail.getVolume());
+							tempIp.setYdPosition(ip.getYdPosition());
+							tempIp.setYdPostionCost(ip.getYdPostionCost());
+							tempIp.setYdUseMargin(ip.getYdUseMargin());
+							tempIp.setTdPosition(ip.getTdPosition()+detail.getVolume());
 							tempIp.setTdPostionCost(ip.getTdPostionCost() + detail.getVolume() * detail.getOpenPrice());
 							tempIp.setTdUseMargin(ip.getTdUseMargin() + detail.getMargin());
 						} else {
+							tempIp.setTdPosition(ip.getTdPosition());
+							tempIp.setTdPostionCost(ip.getTdPostionCost());
+							tempIp.setTdUseMargin(ip.getTdUseMargin());
 							tempIp.setYdPosition(ip.getYdPosition() + detail.getVolume());
 							tempIp.setYdPostionCost(ip.getYdPostionCost() + detail.getVolume() * detail.getLastSettlementPrice());
 							tempIp.setYdUseMargin(ip.getYdUseMargin() + detail.getMargin());
-							System.out.println(ip.getYdUseMargin() + " : " + detail.getMargin());
 						}
 						tempIp.setHedgeFlag(detail.getHedgeFlag());
 						tempIp.setCloseProfitByDate(detail.getCloseProfitByDate());
 						tempIp.setPositionProfit(detail.getPositionProfitByDate());
+						System.out.println("tempIp: "+tempIp.getInstrumentID() + " : " + tempIp.getTdPosition());
 						Super.INVESTOR_POSITION.remove(key);
 						Super.INVESTOR_POSITION.put(key, tempIp);
 					}
@@ -246,31 +253,31 @@ public class MyTraderSpi extends JCTPTraderSpi {
 				investorPositionDetail.clear();
 				Set<Entry<String, InverstorPosition>> set = Super.INVESTOR_POSITION.entrySet();
 				Iterator<Entry<String, InverstorPosition>> it =set.iterator();
-				System.out.println("合约代码\t\t"
-						+"方向\t\t"
-						+"开仓日\t\t"
-						+"总仓\t\t"
-						+"今仓\t\t"
-						+"昨仓\t\t"
-						+"持仓成本\t\t"
+				System.out.println("合约代码\t\t\t"
+						+"方向\t\t\t"
+						+"开仓日\t\t\t"
+						+"总仓\t\t\t"
+						+"今仓\t\t\t"
+						+"昨仓\t\t\t"
+						+"持仓成本\t\t\t"
 //						+"开仓均价\t\t"
-						+"昨结算\t\t"
-						+"持仓盈亏\t\t"
-						+"平仓盈亏\t\t"
+						+"昨结算\t\t\t"
+						+"持仓盈亏\t\t\t"
+						+"平仓盈亏\t\t\t"
 						+"保证金");
 				while(it.hasNext()){
 					Entry<String, InverstorPosition> en = it.next();
-					System.out.println(en.getValue().getInstrumentID()+"\t\t"
-					+en.getValue().getDirection()+"\t\t"
-					+en.getValue().getOpenDate()+"\t"
-					+en.getValue().getPosition()+"\t\t"
-					+en.getValue().getTdPosition()+"\t\t"
-					+en.getValue().getYdPosition()+"\t\t"
-					+(en.getValue().getYdPostionCost()+en.getValue().getTdPostionCost())+"\t\t"
+					System.out.println(en.getValue().getInstrumentID()+"\t\t\t"
+					+en.getValue().getDirection()+"\t\t\t"
+					+en.getValue().getOpenDate()+"\t\t\t"
+					+en.getValue().getPosition()+"\t\t\t"
+					+en.getValue().getTdPosition()+"\t\t\t"
+					+en.getValue().getYdPosition()+"\t\t\t"
+					+(en.getValue().getYdPostionCost()+en.getValue().getTdPostionCost())+"\t\t\t"
 //					+((en.getValue().getYdPostionCost()/en.getValue().getYdPosition() + en.getValue().getTdPostionCost()/en.getValue().getTdPosition())/2)+"\t\t"
-					+en.getValue().getPreSettlementPrice()+"\t\t"
-					+en.getValue().getPositionProfit()+"\t\t"
-					+en.getValue().getCloseProfitByDate()+"\t\t"
+					+en.getValue().getPreSettlementPrice()+"\t\t\t"
+					+en.getValue().getPositionProfit()+"\t\t\t"
+					+en.getValue().getCloseProfitByDate()+"\t\t\t"
 					+(en.getValue().getYdUseMargin()+en.getValue().getTdUseMargin()));
 				}
 			}
