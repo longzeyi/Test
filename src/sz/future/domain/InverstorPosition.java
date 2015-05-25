@@ -42,9 +42,13 @@ public class InverstorPosition {
 	 */
 	private char hedgeFlag;
 	/**
-	 * 开仓均价
+	 * 开仓价
 	 */
 	private double openPrice;
+	/**
+	 * 开仓均价
+	 */
+	private double openAvgPrice;
 	/**
 	 * 投资者保证金
 	 */
@@ -176,5 +180,11 @@ public class InverstorPosition {
 	}
 	public void setTdUseMargin(double tdUseMargin) {
 		this.tdUseMargin = tdUseMargin;
+	}
+	public double getOpenAvgPrice() {
+		return openAvgPrice;
+	}
+	public void setOpenAvgPrice(double openAvgPrice) {
+		this.openAvgPrice = openAvgPrice;
 	}
 }
