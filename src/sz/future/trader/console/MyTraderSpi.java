@@ -208,7 +208,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						if(detail.getTradingDay().equals(detail.getOpenDate())){//今仓
 							ip.setTdPosition(detail.getVolume());
 							ip.setTdPostionCost(detail.getVolume() * detail.getOpenPrice());//持仓成本
-							ip.setUseMargin(detail.getMargin());
+							ip.setTdUseMargin(detail.getMargin());
 						} else {//昨仓
 							ip.setYdPosition(detail.getVolume());
 							ip.setYdPostionCost(detail.getVolume() * detail.getLastSettlementPrice());//持仓成本
@@ -229,11 +229,12 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						if(detail.getTradingDay().equals(detail.getOpenDate())){
 							tempIp.setTdPosition(ip.getPosition()+detail.getVolume());
 							tempIp.setTdPostionCost(ip.getTdPostionCost() + detail.getVolume() * detail.getOpenPrice());
-							tempIp.setUseMargin(detail.getMargin());
+							tempIp.setTdUseMargin(ip.getTdUseMargin() + detail.getMargin());
 						} else {
 							tempIp.setYdPosition(ip.getYdPosition() + detail.getVolume());
 							tempIp.setYdPostionCost(ip.getYdPostionCost() + detail.getVolume() * detail.getLastSettlementPrice());
-							tempIp.setYdUseMargin(detail.getMargin());
+							tempIp.setYdUseMargin(ip.getYdUseMargin() + detail.getMargin());
+							System.out.println(ip.getYdUseMargin() + " : " + detail.getMargin());
 						}
 						tempIp.setHedgeFlag(detail.getHedgeFlag());
 						tempIp.setCloseProfitByDate(detail.getCloseProfitByDate());
@@ -270,7 +271,7 @@ public class MyTraderSpi extends JCTPTraderSpi {
 					+en.getValue().getPreSettlementPrice()+"\t\t"
 					+en.getValue().getPositionProfit()+"\t\t"
 					+en.getValue().getCloseProfitByDate()+"\t\t"
-					+en.getValue().getUseMargin()+en.getValue().getTdUseMargin());
+					+(en.getValue().getYdUseMargin()+en.getValue().getTdUseMargin()));
 				}
 			}
 		}
