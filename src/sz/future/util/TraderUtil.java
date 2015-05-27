@@ -80,7 +80,7 @@ public class TraderUtil {
 		inputOrderField.setForceCloseReason(THOST_FTDC_FCC_NotForceClose);
 		// 自动挂起标志
 		inputOrderField.setIsAutoSuspend(0);
-		sleepThread();
+//		sleepThread();
 		System.out.println("##输入报单## " + instrumentId); 
 		int returnMsg = TestTrader.traderApi.reqOrderInsert(inputOrderField, ++Super.requestID);
 		return returnMsg;
@@ -93,7 +93,7 @@ public class TraderUtil {
 		actionField.setInvestorID(ServerParams.USER_ID);
 		actionField.setInstrumentID(instrumentId);
 		actionField.setActionFlag('0');//0删除 3修改
-		sleepThread();
+//		sleepThread();
 		return TestTrader.traderApi.reqOrderAction(actionField, ++Super.requestID);
 	}
 	
@@ -106,7 +106,6 @@ public class TraderUtil {
 		positionField.setBrokerID(ServerParams.BROKER_ID);
 //		positionField.setInstrumentID(instrumentId);
 		positionField.setInvestorID(ServerParams.USER_ID);
-//		dao.delPositionDetail();//先清空数据库里持仓明细，更新为最新的数据
 		sleepThread();
 		System.out.println("##查询全部持仓明细## ");
 		int i = TestTrader.traderApi.reqQryInvestorPositionDetail(positionField, ++Super.requestID);
@@ -162,14 +161,14 @@ public class TraderUtil {
 	 * 查询成交单
 	 * @return
 	 */
-	public static int qryTrade(String instrumentId){
+	public static int qryTrade(){
 		CThostFtdcQryTradeField tradeField = new CThostFtdcQryTradeField();
 		tradeField.setBrokerID(ServerParams.BROKER_ID);
-		tradeField.setInstrumentID(instrumentId);
+//		tradeField.setInstrumentID(instrumentId);
 		tradeField.setInvestorID(ServerParams.USER_ID);
-		tradeField.setTradeID(M.instrumentId+M.currOrderRef);
+//		tradeField.setTradeID(M.instrumentId+M.currOrderRef);
 		sleepThread();
-		System.out.println("##查询成交## " + instrumentId);
+		System.out.println("##查询成交## ");
 		return TestTrader.traderApi.reqQryTrade(tradeField, ++Super.requestID);
 	}
 	

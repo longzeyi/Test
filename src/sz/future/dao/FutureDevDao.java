@@ -266,37 +266,37 @@ public class FutureDevDao {
 	 * 保存持仓明细
 	 * @param ipd
 	 */
-	public void savePositionDetail(
-			InverstorPositionDetail ipd){
-		conn = DBConnectionManager.getConnection();
-		String sql = "INSERT INTO tb_position_detail (trade_id, instrument_id, direction, volume, price, open_date, trading_day, " +
-				"exch_margin, margin_rate,create_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		try {
-			pst = (PreparedStatement) conn.prepareStatement(sql);
-			conn.setAutoCommit(false);
-			pst.setInt(1, ipd.getTradeID());
-			pst.setString(2, ipd.getInstrumentID());
-			pst.setBoolean(3, ipd.isDirection());
-			pst.setInt(4, ipd.getVolume());
-			pst.setDouble(5, ipd.getPrice());
-			pst.setString(6, ipd.getOpenDate());
-			pst.setString(7, ipd.getTradingDay());
-			pst.setDouble(8, ipd.getExchMargin());
-			pst.setDouble(9, ipd.getMarginRateByMoney());
-			pst.setTimestamp(10, new Timestamp(new Date().getTime()));
-			if(pst.executeUpdate()>0){
-				System.out.println(ipd.getInstrumentID() + " ：持仓明细保存成功！");
-			} else {
-				System.err.println(ipd.getInstrumentID() + " ：持仓明细保存失败！");
-			}
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			DBConnectionManager.closePreparedStatement(pst);
-			DBConnectionManager.closeConnection(conn);
-		}
-	}
+//	public void savePositionDetail(
+//			InverstorPositionDetail ipd){
+//		conn = DBConnectionManager.getConnection();
+//		String sql = "INSERT INTO tb_position_detail (trade_id, instrument_id, direction, volume, price, open_date, trading_day, " +
+//				"exch_margin, margin_rate,create_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//		try {
+//			pst = (PreparedStatement) conn.prepareStatement(sql);
+//			conn.setAutoCommit(false);
+//			pst.setInt(1, ipd.getTradeID());
+//			pst.setString(2, ipd.getInstrumentID());
+//			pst.setBoolean(3, ipd.isDirection());
+//			pst.setInt(4, ipd.getVolume());
+//			pst.setDouble(5, ipd.getPrice());
+//			pst.setString(6, ipd.getOpenDate());
+//			pst.setString(7, ipd.getTradingDay());
+//			pst.setDouble(8, ipd.getExchMargin());
+//			pst.setDouble(9, ipd.getMarginRateByMoney());
+//			pst.setTimestamp(10, new Timestamp(new Date().getTime()));
+//			if(pst.executeUpdate()>0){
+//				System.out.println(ipd.getInstrumentID() + " ：持仓明细保存成功！");
+//			} else {
+//				System.err.println(ipd.getInstrumentID() + " ：持仓明细保存失败！");
+//			}
+//			conn.commit();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} finally {
+//			DBConnectionManager.closePreparedStatement(pst);
+//			DBConnectionManager.closeConnection(conn);
+//		}
+//	}
 	
 	public void delPositionDetail(){
 		conn = DBConnectionManager.getConnection();
@@ -338,6 +338,44 @@ public class FutureDevDao {
 			DBConnectionManager.closeConnection(conn);
 		}
 		return flag;
+	}
+	
+	/**
+	 * 查询该合约持仓天数和这段时间的最高价
+	 * @param date 开仓日
+	 * @param instrumentId 合约名称
+	 * @param day 统计多少天内的最高价
+	 * @param flag true为获取最高价，false为获取最低价 
+	 * @return
+	 */
+	public double getLimitPriceBy(Date date, String instrumentId, int day, boolean flag){
+		int dayCount = 0;
+		double limitPrice = 0d;
+		conn = DBConnectionManager.getConnection();
+		String query = null;
+		if(flag){
+			query = "SELECT count(*),max(highest_price) FROM `tb_md_day_history` where instrument_id=? and trading_day>? group by instrument_id";
+		} else {
+			query = "SELECT count(*),min(lowest_price) FROM `tb_md_day_history` where instrument_id=? and trading_day>? group by instrument_id";
+		}
+		try {
+			pst = conn.prepareStatement(query);
+			pst.setString(1, instrumentId);
+			pst.setDate(2, new java.sql.Date(date.getTime()));
+			rs = pst.executeQuery();
+			rs.next();
+			dayCount = rs.getInt(1);
+			if(dayCount > day){
+				limitPrice = rs.getDouble(2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DBConnectionManager.closeResultSet(rs);
+			DBConnectionManager.closePreparedStatement(pst);
+			DBConnectionManager.closeConnection(conn);
+		}
+		return limitPrice;
 	}
 	
 	public static void main(String[] args) {

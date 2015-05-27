@@ -40,12 +40,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	 * 当前持仓明细
 	 */
 	private List<InverstorPositionDetail> investorPositionDetail = new ArrayList<InverstorPositionDetail>();
-//	public static int nRequestID = 0;
-	
-	//国泰君安
-//	public static final String brokerId = "1038";
-//	public static final String userId = "00000015";
-//	public static final String password = "123456"; 
 	
 	public MyTraderSpi(JCTPTraderApi traderApi) {
 		this.traderApi = traderApi;
@@ -69,18 +63,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 		System.out.println("登录时间："+pRspUserLogin.getLoginTime());
 		System.out.println("登录状态："+pRspInfo.getErrorID() + " : " + pRspInfo.getErrorMsg());
 		System.out.println("最大OrderRef: "+pRspUserLogin.getMaxOrderRef());
-		
-		//查询持仓明细
-//		CThostFtdcQryInvestorPositionDetailField positionField = new CThostFtdcQryInvestorPositionDetailField();
-//		positionField.setBrokerID(brokerId);
-//		positionField.setInstrumentID("m1405");
-//		positionField.setInvestorID(userId);
-//		System.out.println("查询持仓明细: "+traderApi.reqQryInvestorPositionDetail(positionField, ++nRequestID));
-		
-//		CThostFtdcQryTradingAccountField accountField = new CThostFtdcQryTradingAccountField ();
-//		accountField.setBrokerID(brokerId);
-//		accountField.setInvestorID(userId);
-//		System.out.println("查询资金账户: "+traderApi.reqQryTradingAccount(accountField, ++nRequestID));
 		
 		//确认结算单
 		CThostFtdcSettlementInfoConfirmField confirmField = new CThostFtdcSettlementInfoConfirmField();
@@ -142,13 +124,25 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryOrder(CThostFtdcOrderField pOrder,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
 //		System.out.println("合约代码: " + pOrder.getInstrumentID());
-//		super.onRspQryOrder(pOrder, pRspInfo, nRequestID, bIsLast);
 	}
+	
+	/* 
+	 * 查询全部成交响应
+	 */
 	@Override
 	public void onRspQryTrade(CThostFtdcTradeField pTrade,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-//		super.onRspQryTrade(pTrade, pRspInfo, nRequestID, bIsLast);
-		System.out.println("$$No."+nRequestID + "成交通知: "+pTrade.getInstrumentID() + "价格：" + pTrade.getPrice() + "数量：" + pTrade.getVolume() + "订单引用：" + pTrade.getOrderRef());
+		//当天有平仓记录的加入集合
+		if(Integer.valueOf(pTrade.getOffsetFlag()+"")>0){
+			Super.TODAY_TRADE.add(pTrade.getInstrumentID());
+		} 
+		System.out.println("$$成交通知: "+pTrade.getInstrumentID() + 
+				"价格：" + pTrade.getPrice() + 
+				"数量：" + pTrade.getVolume() + 
+				"方向：" + pTrade.getDirection() + 
+				"开平标志：" + pTrade.getOffsetFlag() + 
+				"数量：" + pTrade.getTradeTime() + 
+				"订单引用：" + pTrade.getOrderRef());
 	}
 	/* 
 	 * 请求查询投资者持仓明细响应。当客户端发出请求请求查询投资者持仓明细指令后，交易托管系统返回响应时，该方法会被调用
@@ -217,7 +211,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						ip.setHedgeFlag(detail.getHedgeFlag());
 						ip.setCloseProfitByDate(detail.getCloseProfitByDate());//平仓盈亏
 						ip.setPositionProfit(detail.getPositionProfitByDate());//持仓盈亏
-						System.out.println("ip: "+ip.getInstrumentID() + " : " + ip.getTdPosition());
 						Super.INVESTOR_POSITION.put(key, ip);
 					} else {//多笔明细,要在之前的明细上累加
 						InverstorPosition tempIp = new InverstorPosition();
@@ -246,7 +239,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						tempIp.setHedgeFlag(detail.getHedgeFlag());
 						tempIp.setCloseProfitByDate(detail.getCloseProfitByDate());
 						tempIp.setPositionProfit(detail.getPositionProfitByDate());
-						System.out.println("tempIp: "+tempIp.getInstrumentID() + " : " + tempIp.getTdPosition());
 						Super.INVESTOR_POSITION.remove(key);
 						Super.INVESTOR_POSITION.put(key, tempIp);
 					}
@@ -262,22 +254,12 @@ public class MyTraderSpi extends JCTPTraderSpi {
 						+"持仓成本\t"
 						+"开仓均价\t"
 						+"昨结算\t"
-						+"持仓盈亏\t"
-						+"平仓盈亏\t"
+//						+"持仓盈亏\t"
+//						+"平仓盈亏\t"
 						+"保证金\t"
 						+"开仓日");
 				while(it.hasNext()){
 					Entry<String, InverstorPosition> en = it.next();
-//					double price =0d;
-//					if(en.getValue().getYdPosition()>0&&en.getValue().getTdPosition()>0){
-//						System.out.println("1:" + en.getValue().getYdPostionCost() + ":" + en.getValue().getTdPostionCost());
-//						price = (en.getValue().getYdPostionCost()/(double)en.getValue().getYdPosition() + en.getValue().getTdPostionCost()/(double)en.getValue().getTdPosition())/2;
-//					} else if(en.getValue().getYdPosition()>0){
-////						System.out.println("2:" + en.getValue().getYdPostionCost() + ":" + en.getValue().getYdPosition());
-//						price = en.getValue().getYdPostionCost()/en.getValue().getYdPosition();
-//					} else if (en.getValue().getTdPosition()>0){
-//						price = en.getValue().getTdPostionCost()/en.getValue().getTdPosition();
-//					}
 					System.out.println(en.getValue().getInstrumentID()+"\t"
 					+en.getValue().getDirection()+"\t"
 					+en.getValue().getPosition()+"\t"
@@ -286,8 +268,8 @@ public class MyTraderSpi extends JCTPTraderSpi {
 					+(en.getValue().getYdPostionCost()+en.getValue().getTdPostionCost())+"\t"
 					+en.getValue().getOpenAvgPrice() +"\t"
 					+en.getValue().getPreSettlementPrice()+"\t"
-					+en.getValue().getPositionProfit()+"\t"
-					+en.getValue().getCloseProfitByDate()+"\t"
+//					+en.getValue().getPositionProfit()+"\t"
+//					+en.getValue().getCloseProfitByDate()+"\t"
 					+(en.getValue().getYdUseMargin()+en.getValue().getTdUseMargin())+"\t"
 					+en.getValue().getOpenDate());
 				}
@@ -302,7 +284,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	public void onRspQryInvestorPosition(
 			CThostFtdcInvestorPositionField pInvestorPosition,
 			CThostFtdcRspInfoField pRspInfo, int nRequestID, boolean bIsLast) {
-//		System.err.println("bIsLast: "+bIsLast + "  " + pInvestorPosition.getInstrumentID());
 		if(pInvestorPosition != null){
 			System.out.println("$$查询持仓通知: " + 
 					" 【结算编号：" + pInvestorPosition.getSettlementID() +
@@ -317,25 +298,6 @@ public class MyTraderSpi extends JCTPTraderSpi {
 					"  交易所保证金：" + pInvestorPosition.getExchangeMargin() +
 					"  今日持仓：" + pInvestorPosition.getTodayPosition() +
 					"  保证金率：" + pInvestorPosition.getMarginRateByMoney() + "】");
-			//如果今仓和昨仓总和不为0，表示持仓该合约
-//			if((pInvestorPosition.getPosition() + pInvestorPosition.getYdPosition()) > 0){
-//					InverstorPosition ip = new InverstorPosition();
-//					ip.setInstrumentID(pInvestorPosition.getInstrumentID());
-//					ip.setTradingDay(pInvestorPosition.getTradingDay());
-//					ip.setPosiDirectionType(pInvestorPosition.getPosiDirection());
-//					ip.setPositionDateType(pInvestorPosition.getPositionDate());
-//					ip.setPosition(pInvestorPosition.getPosition());
-//					ip.setYdposition(pInvestorPosition.getYdPosition());
-//					ip.setUseMargin(pInvestorPosition.getUseMargin());
-//					ip.setPositionProfit(pInvestorPosition.getPositionProfit());
-//					ip.setMarginRateByMoney(pInvestorPosition.getMarginRateByMoney());
-//					ip.setCloseProfitByDate(pInvestorPosition.getCloseProfitByDate());
-//					ip.setCloseProfitByTrade(pInvestorPosition.getCloseProfitByTrade());
-//					ip.setSettlementID(pInvestorPosition.getSettlementID());
-//					Super.INVESTOR_POSITION.put(pInvestorPosition.getInstrumentID(), ip);
-//					System.out.println("$$No."+nRequestID + "持仓合约：" + pInvestorPosition.getInstrumentID() );
-////					System.out.println("交易日: "+pInvestorPosition.getTradingDay());
-//			}
 		} else {
 			System.out.println("$$没有持仓合约");
 		}
@@ -374,14 +336,26 @@ public class MyTraderSpi extends JCTPTraderSpi {
 	 */
 	@Override
 	public void onRtnTrade(CThostFtdcTradeField pTrade) {
-		TraderUtil.qryPositionDetail();//每次成交后查询持仓明细来更新持仓情况
+		String flag = pTrade.getOffsetFlag()+"";
+		if("0".equals(flag)){
+			flag = "开仓";
+		} else if ("1".equals(flag)){
+			flag = "平仓";
+		} else if ("3".equals(flag)){
+			flag = "平今";
+		} else if ("4".equals(flag)){
+			flag = "平昨";
+		} 
 		System.out.println("$$成交回报通知：" +
 				" 【报单引用：" + pTrade.getOrderRef() +
 				"  合约：" + pTrade.getInstrumentID() + 
 				"  买卖方向：" + pTrade.getDirection() +
 				"  成交价格：" + pTrade.getPrice() +
+				"  开平标志：" + flag +
 				"  数量：" + pTrade.getVolume() +
 				"  报单编号：" + pTrade.getOrderSysID() +"】");
+		TraderUtil.qryPositionDetail();//每次成交后查询持仓明细来更新持仓情况
+		TraderUtil.qryTrade();//每次成交后查询成交来更新当天平仓情况
 	}
 	
 	@Override
